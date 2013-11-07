@@ -4,7 +4,14 @@ Golden Contact Computing - Testingkamen
 
 Installation
 -----------------
-To install testingkamen cli on your machine do the following. You'll need to already have php5 and git installed.
+
+The preferred way to install any of the Pharoah apps (including this) is through cleopatra. If you install cleopatra
+on your machine (http://github.com/phpengine/cleopatra), then you can install testingkamen using the following:
+
+sudo cleopatra testingkamen install --yes=true
+
+You can omit the --yes=true to pick your own installation directory. To install testingkamen cli on your machine
+without cleopatra, do the following. You'll need to already have php5 and git installed.
 
 git clone https://github.com/phpengine/cleopatra && sudo php cleopatra/install-silent
 
