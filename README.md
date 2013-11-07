@@ -1,13 +1,10 @@
-Golden Contact Computing - Cleopatra Tool
+Golden Contact Computing - Testingkamen
 -------------------
 
 
 Installation
 -----------------
-To install cleopatra cli on your machine do the following. If you already have php5 and git installed skip line 1:
-
-  CentOS do this              | Ubuntu do this
-  sudo yum install php5 git   | sudo apt-get install php5 git
+To install testingkamen cli on your machine do the following. You'll need to already have php5 and git installed.
 
 git clone https://github.com/phpengine/cleopatra && sudo php cleopatra/install-silent
 
@@ -20,14 +17,12 @@ git clone https://github.com/phpengine/cleopatra && sudo php cleopatra/install (
 
 About:
 -----------------
-Systems Automation in PHP for Linux - think Chef, Puppet, and now Cleopatra. Set up your Dev client, Dev server, Git
-Server, Testing Server or Prod Server in minutes - or silently.
+Testingkamen is for Test Automation. It can be used to generate starter test suites for your applications,
+and automated test execution scripts within minutes.
 
-This tools is for provisioning software and configurations to your boxes
-
-Can be used to set up a Development Client, Development Server, Testing Server, or Production Server in minutes
-
-You can set up complex provisions to your systems with one or two PHP files.
+By providing an common API by which to execute tests in a wide range
+of languages and test tools, you can run complex test suites across a range of platforms with little to no
+extra configuration.
 
 
 
@@ -38,23 +33,14 @@ So, there are a few simple commands...
 
 First, you can just use
 
-cleopatra
+testingkamen
 
 ...This will give you a list of the available modules...
 
 
 Then you can use
 
-cleopatra *ModuleName* help
+testingkamen *ModuleName* help
 
 ...This will display the help for that module, and tell you a list of available alias for the module command, and the
 available actions too.
-
-
-You can also use these out of the box groups of packages...
-
-cleopatra InstallPackage dev-client - Install preconfigured software/config for a dev client (Your Workstation)
-cleopatra InstallPackage dev-server - Install preconfigured software/config for a dev server (Team Playaround Box)
-cleopatra InstallPackage test-server - Install preconfigured software/config for a Build/Testing server
-cleopatra InstallPackage git-server - Install preconfigured software/config for a Git SCM server
-cleopatra InstallPackage production - Install preconfigured software/config for a Production server (Public Server)
