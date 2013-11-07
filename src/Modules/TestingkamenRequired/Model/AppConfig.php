@@ -90,7 +90,7 @@ class AppConfig {
     }
 
     private static function loadAppFile() {
-        $appFile = self::getAppBaseDir().DIRECTORY_SEPARATOR.'cleovars';
+        $appFile = self::getAppBaseDir().DIRECTORY_SEPARATOR.'tkvars';
         if (!file_exists($appFile)){ shell_exec("touch ".$appFile); }
         $appConfigArrayString = file_get_contents($appFile);
         $decoded = unserialize($appConfigArrayString);
@@ -99,7 +99,7 @@ class AppConfig {
 
     private static function saveAppFile($appConfigArray) {
         $coded = serialize($appConfigArray);
-        file_put_contents(self::getAppBaseDir().DIRECTORY_SEPARATOR.'cleovars', $coded);
+        file_put_contents(self::getAppBaseDir().DIRECTORY_SEPARATOR.'tkvars', $coded);
     }
 
     private static function getAppBaseDir() {
@@ -109,8 +109,8 @@ class AppConfig {
 
 //
 //    public static function checkSettingsExistOrCreateIt() {
-//        if (!file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../cleovars')) {
-//            touch(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../cleovars'); }
+//        if (!file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../tkvars')) {
+//            touch(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../tkvars'); }
 //        return true;
 //    }
 //
@@ -158,15 +158,15 @@ class AppConfig {
 //    }
 //
 //    public static function loadDHProjectFile() {
-//        $appConfigArraySerialized = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../cleovars');
+//        $appConfigArraySerialized = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../tkvars');
 //        $decoded = unserialize($appConfigArraySerialized);
 //        return $decoded ;
 //    }
 //
 //    public static function saveDHProjectFile($appConfigArray) {
 //        $appConfigObjectSerialized = serialize($appConfigArray);
-//        file_put_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../cleovars', $appConfigObjectSerialized);
-//        chmod(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../cleovars', 0777);
+//        file_put_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../tkvars', $appConfigObjectSerialized);
+//        chmod(dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../tkvars', 0777);
 //    }
 
 }
