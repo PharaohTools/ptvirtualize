@@ -2,17 +2,17 @@
 
 Namespace Model;
 
-class GeneratorAllLinux extends Base {
+class GeneratorLinuxMac extends Base {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("Linux", "Darwin") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("Installer") ;
+    public $modelGroup = array("any") ;
 
     private $fileName;
     private $allEntries;

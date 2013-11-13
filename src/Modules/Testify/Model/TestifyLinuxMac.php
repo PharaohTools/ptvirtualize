@@ -2,17 +2,17 @@
 
 Namespace Model;
 
-class TestifyUbuntu extends Base {
+class TestifyLinuxMac extends Base {
 
     // Compatibility
-    public $os = array("Linux") ;
-    public $linuxType = array("Debian") ;
-    public $distros = array("Ubuntu") ;
-    public $versions = array("12.04", "12.10") ;
-    public $architectures = array("64") ;
+    public $os = array("Linux", "Darwin") ;
+    public $linuxType = array("any") ;
+    public $distros = array("any") ;
+    public $versions = array("any") ;
+    public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("Installer") ;
+    public $modelGroup = array("any") ;
 
     private $environments ;
     private $environmentReplacements ;
