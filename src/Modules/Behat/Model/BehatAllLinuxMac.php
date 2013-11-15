@@ -12,13 +12,15 @@ class BehatAllLinuxMac extends BaseTestInit {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("any") ;
+    public $modelGroup = array("Initializer") ;
 
     public function __construct($params) {
         parent::__construct($params);
         $this->autopilotDefiner = "BehatInitializer";
         $this->initCommands = array(
-           "echo shakalak"
+            "mkdir -p build/tests/behat",
+            "cd build/tests/behat",
+            "behat --init",
         );
         $this->programNameFriendly = "Behat Test Suite Initializer! "; // 12 chars
         $this->initialize();
