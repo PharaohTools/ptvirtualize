@@ -12,7 +12,7 @@ class Base {
     }
 
     public function routesAvailable() {
-      return array("help", "initialize", "execute");
+      return array("help", "initialize", "init", "execute");
     }
 
     public function routeAliases() {
