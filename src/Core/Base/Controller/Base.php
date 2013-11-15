@@ -25,7 +25,7 @@ class Base {
       return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
     if (isset($thisModel)) {
-        if ($action=="init" && !in_array($action, $ignored_actions)) {
+        if (in_array($action, array("init", "initialize")) && !in_array($action, $ignored_actions)) {
             $this->content["params"] = $thisModel->params;
             $this->content["appName"] = $thisModel->autopilotDefiner;
             $this->content["appInstallResult"] = $thisModel->askInit();
@@ -104,7 +104,11 @@ class Base {
         $myModuleAndDependencies = array_merge(array($module), $myInfo->dependencies() ) ;
         $dependencyCheck = $this->checkForRegisteredModels($pageVars["route"]["extraParams"], $myModuleAndDependencies) ;
         if ($dependencyCheck === true) {
-            $thisModel = \Model\SystemDetectionFactory::getCompatibleModel($module, "Installer", $pageVars["route"]["extraParams"]);
+            if (method_exists($myInfo, "modelGroups")) {
+                $modelGroups = $myInfo->modelGroups();
+                $action = $modelGroups[$pageVars["route"]["action"]] ; }
+            $modelType = (isset($action)) ? $action : "any" ;
+            $thisModel = \Model\SystemDetectionFactory::getCompatibleModel($module, $modelType, $pageVars["route"]["extraParams"]);
             return $thisModel; }
         return $dependencyCheck ;
     }
