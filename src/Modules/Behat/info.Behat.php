@@ -17,7 +17,11 @@ class BehatInfo extends Base {
     }
 
     public function routeAliases() {
-      return array("behat"=>"Behat");
+        return array("behat"=>"Behat");
+    }
+
+    public function modelGroups() {
+        return array("init"=>"Initializer","initialize"=>"Initializer");
     }
 
     public function autoPilotVariables() {
@@ -32,13 +36,13 @@ class BehatInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This command allows you to initialise Behat testing into your app.
+  This command allows you to initialize Behat testing into your app.
 
   Behat, behat
 
-        - initialise
-        initialises your behat files
-        example: testingkamen behat initialise
+        - initialize
+        initializes your behat files
+        example: testingkamen behat initialize
 
 HELPDATA;
       return $help ;
