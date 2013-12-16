@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class TemplatingUbuntu extends BaseLinuxApp {
+class TemplatingUbuntu extends BaseTemplater {
 
     // Compatibility
     public $os = array("Linux") ;
@@ -32,6 +32,8 @@ class TemplatingUbuntu extends BaseLinuxApp {
      * @param $replacements an array of replacements
      * @param $targetLocation a file path string to put the end file
      * @param $perms string
+     * @param $owner string
+     * @param $group string
      */
     public function template($original, $replacements, $targetLocation, $perms = null, $owner = null, $group = null) {
         $fData = (is_file($original)) ? file_get_contents($original) : $original ;

@@ -4,7 +4,7 @@ Namespace Info;
 
 class TemplatingInfo extends Base {
 
-    public $hidden = true;
+    public $hidden = false;
 
     public $name = "Templating";
 
@@ -36,16 +36,14 @@ class TemplatingInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This command allows you to add an entry to the system sudo file that will
-  allow your user to have passwordless sudo. This is required for
-  quite a few of the  builds provided by Golden Contact, as
-  will perform test execution, software installs and more, silently.
+  This command allows you to apply a templated file within the file system.
+
 
   Templating, templating, template
 
         - install
         Installs a template
-        example: cleopatra template install
+        example: testingkamen template install
 
 HELPDATA;
       return $help ;
