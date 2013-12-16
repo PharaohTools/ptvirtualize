@@ -6,25 +6,25 @@ class BehatInfo extends Base {
 
     public $hidden = false;
 
-    public $name = "Behat - Initilase or Execute a Behat Test Suite";
+    public $name = "Behat - Initialize or Execute a Behat Test Suite";
 
     public function __construct() {
       parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "Behat" =>  array_merge(parent::routesAvailable(), array("install") ) );
+      return array( "Behat" =>  array_merge(parent::routesAvailable(), array() ) );
     }
 
     public function routeAliases() {
-      return array("cleo"=>"Behat", "cleopatra"=>"Behat");
+      return array("behat"=>"Behat");
     }
 
     public function autoPilotVariables() {
       return array(
         "Behat" => array(
           "Behat" => array(
-            "programNameMachine" => "cleopatra", // command and app dir name
+            "programNameMachine" => "behat", // command and app dir name
             "programNameFriendly" => " Behat! ",
             "programNameInstaller" => "Behat - Update to latest version",
             "programExecutorTargetPath" => 'cleopatra/src/Bootstrap.php',
@@ -35,13 +35,18 @@ class BehatInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This command allows you to update Behat.
+  This command allows you to initialize a Behat test suite.
 
-  Behat, cleo, cleopatra
+  Behat, behat
 
-        - install
-        Installs the latest version of cleopatra
-        example: cleopatra cleopatra install
+        - init, initialize
+        Initialises the Behat test suite of this project
+        example: testingkamen behat init
+        example: testingkamen behat initialise
+
+        - execute
+        Executes the Behat test suite of this project
+        example: testingkamen behat execute
 
 HELPDATA;
       return $help ;

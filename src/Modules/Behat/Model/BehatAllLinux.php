@@ -14,21 +14,20 @@ class BehatAllLinux extends BaseTestInit {
     // Model Group
     public $modelGroup = array("Initializer") ;
 
-  public function __construct($params) {
-    parent::__construct($params);
-    $this->autopilotDefiner = "Behat";
-    $this->fileSources = array(
-      array(
-        "https://github.com/phpengine/cleopatra.git",
-        "cleopatra",
-        null // can be null for none
-      )
-    );
-    $this->programNameMachine = "cleopatra"; // command and app dir name
-    $this->programNameFriendly = " Behat! "; // 12 chars
-    $this->programNameInstaller = "Behat - Update to latest version";
-    $this->programExecutorTargetPath = 'cleopatra/src/Bootstrap.php';
-    $this->initialize();
-  }
+    public function __construct($params) {
+        parent::__construct($params);
+        $this->autopilotDefiner = "Behat";
+        $this->installCommands = array(
+            "mkdir -p build/tests/behat/",
+            "cd build/tests/behat/",
+            "behat --init" );
+        $this->uninstallCommands = array(
+            "sudo rm -rf build/tests/behat/" );
+        $this->programNameMachine = "behat"; // command and app dir name
+        $this->programNameFriendly = " Behat "; // 12 chars
+        $this->programNameInstaller = "Behat";
+        $this->programExecutorTargetPath = 'behat/bin/behat';
+        $this->initialize();
+    }
 
 }
