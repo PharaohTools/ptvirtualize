@@ -1,6 +1,6 @@
 <?php
 
-   echo $pageVars["genCreateResult"] ;
+   echo $pageVars["testifyResult"] ;
 ?>
 
 In Testify
