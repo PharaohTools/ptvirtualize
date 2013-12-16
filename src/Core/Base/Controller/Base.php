@@ -25,7 +25,7 @@ class Base {
       return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
     if (isset($thisModel)) {
-        if ($action=="install" && !in_array($action, $ignored_actions)) {
+        if (in_array($action, array("init", "initialize")) && !in_array($action, $ignored_actions)) {
             $this->content["params"] = $thisModel->params;
             $this->content["appName"] = $thisModel->autopilotDefiner;
             $this->content["appInstallResult"] = $thisModel->askInstall();
@@ -35,13 +35,7 @@ class Base {
             $this->content["params"] = $thisModel->params;
             $this->content["appName"] = $thisModel->autopilotDefiner;
             $this->content["appInstallResult"] = $thisModel->askUninstall();
-            return array ("type"=>"view", "view"=>"appUninstall", "pageVars"=>$this->content); }
-
-        if ($action=="status" && !in_array($action, $ignored_actions)) {
-            $this->content["params"] = $thisModel->params;
-            $this->content["appName"] = $thisModel->autopilotDefiner;
-            $this->content["appStatusResult"] = $thisModel->askStatus();
-            return array ("type"=>"view", "view"=>"appStatus", "pageVars"=>$this->content); } }
+            return array ("type"=>"view", "view"=>"appUninstall", "pageVars"=>$this->content); } }
 
      else if (!isset($thisModel)) {
          $this->content["messages"][] = "Required Model Missing. Cannot Continue.";
@@ -111,12 +105,12 @@ class Base {
         $this->content["results"][] = $miniRay ; }
   }
 
-    protected function getModelAndCheckDependencies($module, $pageVars) {
+    protected function getModelAndCheckDependencies($module, $pageVars, $moduleType="Installer") {
         $myInfo = \Core\AutoLoader::getSingleInfoObject($module);
         $myModuleAndDependencies = array_merge(array($module), $myInfo->dependencies() ) ;
         $dependencyCheck = $this->checkForRegisteredModels($pageVars["route"]["extraParams"], $myModuleAndDependencies) ;
         if ($dependencyCheck === true) {
-            $thisModel = \Model\SystemDetectionFactory::getCompatibleModel($module, "Installer", $pageVars["route"]["extraParams"]);
+            $thisModel = \Model\SystemDetectionFactory::getCompatibleModel($module, $moduleType, $pageVars["route"]["extraParams"]);
             return $thisModel; }
         return $dependencyCheck ;
     }
