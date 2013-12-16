@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BaseTemplater extends BaseLinuxApp {
+class BaseTemplater extends BaseTestInit {
 
     protected $replacements ;
     protected $templateFile ;
