@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class TestifyUbuntu extends Base {
+class TestifyLinuxMac extends Base {
 
     // Compatibility
     public $os = array("Linux") ;

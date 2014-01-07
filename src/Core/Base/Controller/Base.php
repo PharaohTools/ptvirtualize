@@ -28,14 +28,8 @@ class Base {
         if (in_array($action, array("init", "initialize")) && !in_array($action, $ignored_actions)) {
             $this->content["params"] = $thisModel->params;
             $this->content["appName"] = $thisModel->autopilotDefiner;
-            $this->content["appInstallResult"] = $thisModel->askInstall();
-            return array ("type"=>"view", "view"=>"appInstall", "pageVars"=>$this->content); }
-
-        if ($action=="uninstall" && !in_array($action, $ignored_actions)) {
-            $this->content["params"] = $thisModel->params;
-            $this->content["appName"] = $thisModel->autopilotDefiner;
-            $this->content["appInstallResult"] = $thisModel->askUninstall();
-            return array ("type"=>"view", "view"=>"appUninstall", "pageVars"=>$this->content); } }
+            $this->content["appInstallResult"] = $thisModel->askInit();
+            return array ("type"=>"view", "view"=>"appInstall", "pageVars"=>$this->content); } }
 
      else if (!isset($thisModel)) {
          $this->content["messages"][] = "Required Model Missing. Cannot Continue.";
@@ -75,42 +69,46 @@ class Base {
     echo "All required Modules found, all with compatible Models"."\n";
     return true ;
   }
-
-  protected function executeMyRegisteredModels($params = null) {
-    foreach ($this->registeredModels as $modelClassNameOrArray) {
-      if ( is_array($modelClassNameOrArray) ) {
-        $currentKeys = array_keys($modelClassNameOrArray) ;
-        $currentKey = $currentKeys[0] ;
-        $fullClassName = '\Model\\'.$currentKey;}
-      else {
-        $fullClassName = '\Model\\'.$modelClassNameOrArray; }
-      $currentModelFactory = new $fullClassName();
-      $currentModel = new $currentModelFactory->getModel($params);
-      $miniRay = array();
-      $miniRay["appName"] = $currentModel->programNameInstaller;
-      $miniRay["installResult"] = $currentModel->askInstall();
-      $this->content["results"][] = $miniRay ; }
-  }
-
-  protected function executeMyRegisteredModelsAutopilot($autoPilot, $params = null) {
-    foreach ($autoPilot->steps as $modelArray) {
-        $currentKeys = array_keys($modelArray) ;
-        $currentKey = $currentKeys[0] ;
-        $fullClassName = '\Model\\'.$currentKey;
-        $modelFactory = new $fullClassName($params);
-        $currentModel = $modelFactory->getModel($params);
-        $miniRay = array();
-        $miniRay["appName"] = $currentModel->programNameInstaller;
-        $miniRay["installResult"] = $currentModel->runAutoPilotInstall($modelArray);
-        $this->content["results"][] = $miniRay ; }
-  }
+//
+//  protected function executeMyRegisteredModels($params = null) {
+//    foreach ($this->registeredModels as $modelClassNameOrArray) {
+//      if ( is_array($modelClassNameOrArray) ) {
+//        $currentKeys = array_keys($modelClassNameOrArray) ;
+//        $currentKey = $currentKeys[0] ;
+//        $fullClassName = '\Model\\'.$currentKey;}
+//      else {
+//        $fullClassName = '\Model\\'.$modelClassNameOrArray; }
+//      $currentModelFactory = new $fullClassName();
+//      $currentModel = new $currentModelFactory->getModel($params);
+//      $miniRay = array();
+//      $miniRay["appName"] = $currentModel->programNameInstaller;
+//      $miniRay["installResult"] = $currentModel->askInstall();
+//      $this->content["results"][] = $miniRay ; }
+//  }
+//
+//  protected function executeMyRegisteredModelsAutopilot($autoPilot, $params = null) {
+//    foreach ($autoPilot->steps as $modelArray) {
+//        $currentKeys = array_keys($modelArray) ;
+//        $currentKey = $currentKeys[0] ;
+//        $fullClassName = '\Model\\'.$currentKey;
+//        $modelFactory = new $fullClassName($params);
+//        $currentModel = $modelFactory->getModel($params);
+//        $miniRay = array();
+//        $miniRay["appName"] = $currentModel->programNameInstaller;
+//        $miniRay["installResult"] = $currentModel->runAutoPilotInstall($modelArray);
+//        $this->content["results"][] = $miniRay ; }
+//  }
 
     protected function getModelAndCheckDependencies($module, $pageVars, $moduleType="Installer") {
         $myInfo = \Core\AutoLoader::getSingleInfoObject($module);
         $myModuleAndDependencies = array_merge(array($module), $myInfo->dependencies() ) ;
         $dependencyCheck = $this->checkForRegisteredModels($pageVars["route"]["extraParams"], $myModuleAndDependencies) ;
         if ($dependencyCheck === true) {
-            $thisModel = \Model\SystemDetectionFactory::getCompatibleModel($module, $moduleType, $pageVars["route"]["extraParams"]);
+            if (method_exists($myInfo, "modelGroups")) {
+                $modelGroups = $myInfo->modelGroups();
+                $action = $modelGroups[$pageVars["route"]["action"]] ; }
+            $modelType = (isset($action)) ? $action : "any" ;
+            $thisModel = \Model\SystemDetectionFactory::getCompatibleModel($module, $modelType, $pageVars["route"]["extraParams"]);
             return $thisModel; }
         return $dependencyCheck ;
     }
@@ -118,6 +116,7 @@ class Base {
     protected function failDependencies($pageVars, $content, $errors) {
         $this->content = array_merge($pageVars, $content) ;
         foreach($errors as $error) { $this->content["messages"][] = $error ; }
+        var_dump($this->content) ;
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
     }
 

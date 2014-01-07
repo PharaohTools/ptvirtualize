@@ -20,14 +20,15 @@ class BehatInfo extends Base {
       return array("behat"=>"Behat");
     }
 
+    public function modelGroups() {
+        return array("init"=>"Initializer","initialize"=>"Initializer");
+    }
+
     public function autoPilotVariables() {
       return array(
         "Behat" => array(
           "Behat" => array(
             "programNameMachine" => "behat", // command and app dir name
-            "programNameFriendly" => " Behat! ",
-            "programNameInstaller" => "Behat - Update to latest version",
-            "programExecutorTargetPath" => 'cleopatra/src/Bootstrap.php',
           )
         )
       );
