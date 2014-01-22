@@ -69,35 +69,6 @@ class Base {
     echo "All required Modules found, all with compatible Models"."\n";
     return true ;
   }
-//
-//  protected function executeMyRegisteredModels($params = null) {
-//    foreach ($this->registeredModels as $modelClassNameOrArray) {
-//      if ( is_array($modelClassNameOrArray) ) {
-//        $currentKeys = array_keys($modelClassNameOrArray) ;
-//        $currentKey = $currentKeys[0] ;
-//        $fullClassName = '\Model\\'.$currentKey;}
-//      else {
-//        $fullClassName = '\Model\\'.$modelClassNameOrArray; }
-//      $currentModelFactory = new $fullClassName();
-//      $currentModel = new $currentModelFactory->getModel($params);
-//      $miniRay = array();
-//      $miniRay["appName"] = $currentModel->programNameInstaller;
-//      $miniRay["installResult"] = $currentModel->askInstall();
-//      $this->content["results"][] = $miniRay ; }
-//  }
-//
-//  protected function executeMyRegisteredModelsAutopilot($autoPilot, $params = null) {
-//    foreach ($autoPilot->steps as $modelArray) {
-//        $currentKeys = array_keys($modelArray) ;
-//        $currentKey = $currentKeys[0] ;
-//        $fullClassName = '\Model\\'.$currentKey;
-//        $modelFactory = new $fullClassName($params);
-//        $currentModel = $modelFactory->getModel($params);
-//        $miniRay = array();
-//        $miniRay["appName"] = $currentModel->programNameInstaller;
-//        $miniRay["installResult"] = $currentModel->runAutoPilotInstall($modelArray);
-//        $this->content["results"][] = $miniRay ; }
-//  }
 
     protected function getModelAndCheckDependencies($module, $pageVars, $moduleType="Installer") {
         $myInfo = \Core\AutoLoader::getSingleInfoObject($module);
@@ -116,7 +87,6 @@ class Base {
     protected function failDependencies($pageVars, $content, $errors) {
         $this->content = array_merge($pageVars, $content) ;
         foreach($errors as $error) { $this->content["messages"][] = $error ; }
-        var_dump($this->content) ;
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
     }
 

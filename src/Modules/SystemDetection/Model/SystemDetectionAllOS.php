@@ -16,9 +16,9 @@ class SystemDetectionAllOS extends Base {
 
     public function __construct() {
         $this->setOperatingSystem();
+        $this->setDistro();
         $this->setLinuxType();
         $this->setVersion();
-        $this->setDistro();
         $this->setArchitecture();
         $this->setHostname();
         $this->setIPAddresses();

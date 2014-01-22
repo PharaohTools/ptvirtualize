@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class TemplatingUbuntu extends BaseTemplater {
+class TemplatingLinuxMac extends BaseTemplater {
 
     // Compatibility
     public $os = array("Linux", "Darwin") ;
@@ -34,11 +34,15 @@ class TemplatingUbuntu extends BaseTemplater {
      * @param $perms string
      * @param $owner string
      * @param $group string
+     *
+     * @todo the recursive mkdir should specify perms, owner and group
      */
     public function template($original, $replacements, $targetLocation, $perms = null, $owner = null, $group = null) {
         $fData = (is_file($original)) ? file_get_contents($original) : $original ;
         foreach ($replacements as $replaceKey => $replaceValue) {
             $fData = $this->replaceData($fData, $replaceKey, $replaceValue); }
+        if (!file_exists(dirname($targetLocation))) {
+            mkdir(dirname($targetLocation), 0775, true) ;}
         file_put_contents($targetLocation, $fData) ;
         if ($perms != null) { exec("chmod $perms $targetLocation"); }
         if ($owner != null) { exec("chown $owner $targetLocation"); }

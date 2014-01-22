@@ -23,11 +23,11 @@ class BaseTestInit extends Base {
     return $this->performTestInitInstall();
   }
 
-  public function askInstall() {
+  public function askInit() {
     return $this->askWhetherToInstallTestInit();
   }
 
-  public function askUnInstall() {
+  public function askUnInit() {
     return $this->askWhetherToUnInstallTestInit();
   }
 

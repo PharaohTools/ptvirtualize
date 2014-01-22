@@ -1,15 +1,16 @@
 <?php
 
 use Behat\Behat\Context\ContextInterface;
-use Behat\Behat\Snippet\Context\SnippetsFriendlyInterface;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 
+use Behat\MinkExtension\Context\MinkContext;
+
 /**
  * Behat context class.
  */
-class FeatureContext extends MinkContext implements ContextInterface, SnippetsFriendlyInterface
+class FeatureContext extends MinkContext implements ContextInterface
 {
     /**
      * Initializes context. Every scenario gets it's own context object.
@@ -21,39 +22,37 @@ class FeatureContext extends MinkContext implements ContextInterface, SnippetsFr
     }
 
     /**
-     * @Given /^I am on the home page "([^"]*)"$/
+     * @Given /^I am on the home page$/
      */
-    public function iAmOnTheHomePage($argument1)
+    public function iAmOnTheHomePage()
     {
-        $client = new \Selenium\Client($host, $port);
-        $driver = new \Behat\Mink\Driver\SeleniumDriver(
-            'firefox', 'base_url', $client
-        );
+        $driver = new \Behat\Mink\Driver\Selenium2Driver('firefox');
+
         $session = new \Behat\Mink\Session($driver);
 
         // start session:
         $session->start();
+
         // open some page in browser:
-        $session->visit('http://my_project.dev/some_page.php');
+        $session->visit('<%tpl.php%>site_url</%tpl.php%>');
 
         // get the current page URL:
         echo $session->getCurrentUrl();
 
-        // get the response status code:
-        echo $session->getStatusCode();
+        // stop session:
+        $session->stop();
+
     }
 
     /**
-     * @Then /^I should see some text "([^"]*)"$/
+     * @Then /^I should see some text$/
      */
-    public function iShouldSeeSomeText($argument1)
+    public function iShouldSeeSomeText()
     {
-        $client = new \Selenium\Client($host, $port);
-        $driver = new \Behat\Mink\Driver\SeleniumDriver(
-            'firefox', 'base_url', $client
-        );
+//        $client = new \Selenium\Client($host, $port);
+//        $driver = new \Behat\Mink\Driver\SeleniumDriver(
+//            'firefox', 'base_url', $client
+//        );
     }
-
-
 
 }

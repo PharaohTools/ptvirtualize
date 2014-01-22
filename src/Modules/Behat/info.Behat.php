@@ -43,7 +43,7 @@ class BehatInfo extends Base {
         - init, initialize
         Initialises the Behat test suite of this project
         example: testingkamen behat init
-        example: testingkamen behat initialise
+        example: testingkamen behat initialize
 
         - execute
         Executes the Behat test suite of this project

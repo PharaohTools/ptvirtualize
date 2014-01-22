@@ -20,6 +20,7 @@ class SystemDetectionFactory {
         return $groupModels;
     }
 
+    // @todo refactor this ugly 40 line function, just create other methods from the if clauses
     public static function getCompatibleModelFromAllInGroup($models) {
         include_once("SystemDetectionAllOS.php");
         $system = new \Model\SystemDetectionAllOS();
