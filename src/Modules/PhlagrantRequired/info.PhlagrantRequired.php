@@ -2,18 +2,18 @@
 
 Namespace Info;
 
-class TestingkamenRequiredInfo extends Base {
+class PhlagrantRequiredInfo extends Base {
 
     public $hidden = true;
 
-    public $name = "Testingkamen Required Models";
+    public $name = "Phlagrant Required Models";
 
     public function __construct() {
       parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "TestingkamenRequired" =>  array_merge(parent::routesAvailable() ) );
+      return array( "PhlagrantRequired" =>  array_merge(parent::routesAvailable() ) );
     }
 
     public function routeAliases() {
@@ -22,7 +22,7 @@ class TestingkamenRequiredInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This module provides no commands, but is required for Testingkamen. It provides Models which are required for Testingkamen.
+  This module provides no commands, but is required for Phlagrant. It provides Models which are required for Phlagrant.
 
 
 HELPDATA;

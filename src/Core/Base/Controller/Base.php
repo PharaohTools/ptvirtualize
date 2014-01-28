@@ -29,6 +29,11 @@ class Base {
             $this->content["params"] = $thisModel->params;
             $this->content["appName"] = $thisModel->autopilotDefiner;
             $this->content["appInstallResult"] = $thisModel->askInit();
+            return array ("type"=>"view", "view"=>"appInstall", "pageVars"=>$this->content); }
+        if (in_array($action, array("exec", "execute")) && !in_array($action, $ignored_actions)) {
+            $this->content["params"] = $thisModel->params;
+            $this->content["appName"] = $thisModel->autopilotDefiner;
+            $this->content["appInstallResult"] = $thisModel->askExec();
             return array ("type"=>"view", "view"=>"appInstall", "pageVars"=>$this->content); } }
 
      else if (!isset($thisModel)) {

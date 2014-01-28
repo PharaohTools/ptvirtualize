@@ -1,0 +1,130 @@
+Phlagrant Modules to be created
+---------------------------------------
+
+phlagrant command list
+-------------------------
+
+box          manages boxes: installation, removal, etc.
+             download/install/remove a base box
+ - hmmm lots of stuff
+ - weeks, lots of resource
+
+destroy      stops and deletes all traces of the vagrant machine
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - api control->stop(machine)
+ - 3 days
+
+halt         stops the vagrant machine
+ - api control->stop(machine)
+ - 1 day
+
+help         shows the help for a subcommand
+ - already in pyramid
+ - 1 day/none if built in
+
+init         initializes a new Vagrant environment by creating a Vagrantfile
+ - already in pharoah, templating, testingkamen stylee
+ - 1 day
+
+package      packages a running vagrant environment into a box
+ - hmmm lots of stuff
+ - weeks, lots of resource
+
+plugin       manages plugins: install, uninstall, update, etc.
+ - already in, to be, dependencies, composering etc
+ - 1 day/none if built in
+
+provision    provisions the vagrant machine, install pharoah and execute pharoah autopilots
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - get config from Phlagrantfile
+ - api control->start(machine) (if not running)
+ - api control->provision(machine, config)
+ - 3 days
+
+reload       restarts vagrant machine, loads new Vagrantfile configuration
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - api control->stop(machine)
+ - get config from Phlagrantfile
+ - api config->load(machine, config)
+ - api control->start(machine)
+ - 3 days
+
+resume       resume a suspended vagrant machine, resume the box described in local-papyrus
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - api control->resume(machine)
+ - 1/2 days
+
+ssh          connects to machine via SSH
+             invoke ssh using the ssh params configured during phlagrant up and put into local-papyrus
+ - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - invokessh with these details
+ - 1/2 days
+
+ssh-config   outputs OpenSSH valid configuration to connect to the machine
+ - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
+ - display the details
+ - 1 day
+
+status       outputs status of the vagrant machine
+ -
+ - display the details
+ - 1 day
+
+suspend      suspends the machine
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - api control->suspend(machine)
+ - 1/2 days
+
+up           starts, configs and provisions the vagrant environment
+             (also add flirt (phlagrant flirt now))
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - api control->stop(machine)
+ - get config from Phlagrantfile
+ - api config->load(machine, config)
+ - api control->start(machine)
+ - api control->provision(machine, config)
+ - 3 days
+
+
+------------------------------------------------------------------------------
+
+Concepts
+
+Phlagrantfile
+  - This is an autopilot file
+
+Networking
+    Basic Usage
+    Forwarded Ports
+    Private Network
+    Public Network
+
+Synced Folders
+
+Providers
+    VirtualBox - This comes with using the Virtualbox SDK Library I guess
+    VMware - Contact VMWare and ask them to write their own one
+
+Plugins
+    The software is built on the Pyramid framework as are all Pharoah tools, and extensions are written and provided
+    through modules and composer
+
+Command-Line Interface
+
+Almost all interaction with Vagrant is done through the command-line interface.
+The interface is available using the vagrant command, and comes installed with Vagrant automatically. The vagrant
+command in turn has many subcommands, such as vagrant up, vagrant destroy, etc. If you run vagrant by itself, help
+will be displayed showing all available subcommands. In addition to this, you can run any Vagrant command with the -h
+flag to output help about that specific command. For example, try running vagrant init -h. The help will output a one
+sentence synopsis of what the command does as well as a list of all the flags the command accepts. In depth
+documentation and use cases of various Vagrant commands is available by reading the appropriate sub-section available
+in the left navigational area of this site.
+
+------------------------------------------------------------------------------
