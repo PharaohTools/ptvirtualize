@@ -4,8 +4,9 @@ Phlagrant Modules to be created
 phlagrant command list
 -------------------------
 
-box          manages boxes: installation, removal, etc.
-             download/install/remove a base box
+box
+ - manages boxes: installation, removal, etc.
+ - download/install/remove a base box
  - hmmm lots of stuff
  - weeks, lots of resource
 
@@ -24,7 +25,7 @@ help         shows the help for a subcommand
  - 1 day/none if built in
 
 init         initializes a new Vagrant environment by creating a Vagrantfile
- - already in pharoah, templating, testingkamen stylee
+ - already in pharoah, templating, phlagrant stylee
  - 1 day
 
 package      packages a running vagrant environment into a box
