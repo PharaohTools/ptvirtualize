@@ -1,6 +1,5 @@
-
 ******************************
-GC Testingkamen
+Pharoah Tools - Phlagrant
 ******************************
 
 <?php echo $this->renderMessages($pageVars); ?>
