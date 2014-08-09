@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class Behat extends BaseModelFactory {
+class Box extends BaseModelFactory {
 
     public static function getModel($params) {
         $thisModule = substr(get_called_class(), 6) ;

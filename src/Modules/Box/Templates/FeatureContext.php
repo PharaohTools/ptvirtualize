@@ -1,21 +1,21 @@
 <?php
 
-use Behat\Behat\Context\ContextInterface;
-use Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
+use Box\Box\Context\ContextInterface;
+use Box\Box\Exception\PendingException;
+use Box\Gherkin\Node\PyStringNode;
+use Box\Gherkin\Node\TableNode;
 
-use Behat\MinkExtension\Context\MinkContext;
+use Box\MinkExtension\Context\MinkContext;
 
 /**
- * Behat context class.
+ * Box context class.
  */
 class FeatureContext extends MinkContext implements ContextInterface
 {
     /**
      * Initializes context. Every scenario gets it's own context object.
      *
-     * @param array $parameters Suite parameters (set them up through behat.yml)
+     * @param array $parameters Suite parameters (set them up through box.yml)
      */
     public function __construct(array $parameters)
     {
@@ -26,9 +26,9 @@ class FeatureContext extends MinkContext implements ContextInterface
      */
     public function iAmOnTheHomePage()
     {
-        $driver = new \Behat\Mink\Driver\Selenium2Driver('firefox');
+        $driver = new \Box\Mink\Driver\Selenium2Driver('firefox');
 
-        $session = new \Behat\Mink\Session($driver);
+        $session = new \Box\Mink\Session($driver);
 
         // start session:
         $session->start();
@@ -50,7 +50,7 @@ class FeatureContext extends MinkContext implements ContextInterface
     public function iShouldSeeSomeText()
     {
 //        $client = new \Selenium\Client($host, $port);
-//        $driver = new \Behat\Mink\Driver\SeleniumDriver(
+//        $driver = new \Box\Mink\Driver\SeleniumDriver(
 //            'firefox', 'base_url', $client
 //        );
     }

@@ -2,7 +2,7 @@
 
 Namespace Controller ;
 
-class Behat extends Base {
+class Box extends Base {
 
     public function execute($pageVars) {
         $defaultExecution = $this->defaultExecution($pageVars) ;
