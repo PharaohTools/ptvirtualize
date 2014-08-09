@@ -13,11 +13,6 @@ class Base {
     protected $installUserName;
     protected $installUserHomeDir;
 
-    protected $registeredPreInstallFunctions;
-    protected $registeredPreUnInstallFunctions;
-    protected $registeredPostInstallFunctions;
-    protected $registeredPostUnInstallFunctions;
-
     protected $programNameMachine ;
     protected $programDataFolder;
     protected $startDirectory;
@@ -27,12 +22,17 @@ class Base {
     protected $extraBootStrap;
     protected $programExecutorFolder;
     protected $programExecutorTargetPath;
-    protected $extraCommandsArray;
     protected $tempDir;
+    protected $statusCommand;
+    protected $statusCommandExpects;
+    protected $versionInstalledCommand;
+    protected $versionRecommendedCommand;
+    protected $versionLatestCommand;
 
     public function __construct($params) {
-      $this->tempDir =  DIRECTORY_SEPARATOR.'tmp';
-      $this->setCmdLineParams($params);
+        $this->tempDir =  DIRECTORY_SEPARATOR.'tmp';
+        $this->autopilotDefiner = $this->getModuleName() ;
+        $this->setCmdLineParams($params);
     }
 
     protected function populateTitle() {
@@ -43,6 +43,14 @@ class Base {
 *******************************
 
 TITLE;
+    }
+
+    protected function populateTinyTitle() {
+        $this->titleData = "$this->programNameInstaller Starting\n";
+    }
+
+    protected function populateTinyCompletion() {
+        $this->completionData = "$this->programNameInstaller Complete\n";
     }
 
     protected function populateCompletion() {
@@ -82,9 +90,9 @@ COMPLETION;
     protected function executeAndOutput($command, $message=null) {
         $outputText = shell_exec($command);
         if ($message !== null) {
-          $outputText .= "$message\n"; }
+            $outputText .= "$message\n"; }
         print $outputText;
-        return true;
+        return $outputText;
     }
 
     protected function executeAndLoad($command) {
@@ -92,15 +100,25 @@ COMPLETION;
         return $outputText;
     }
 
+    public static function executeAndGetReturnCode($command) {
+        $output = '';
+        $retVal = null;
+        exec($command, $output, $retVal);
+        return $retVal;
+    }
+
     protected function setCmdLineParams($params) {
-      $cmdParams = array();
-      foreach ($params as $param) {
-        if ( substr($param, 0, 2)=="--" && strpos($param, '=') != null ) {
-          $equalsPos = strpos($param, "=") ;
-          $paramKey = substr($param, 2, $equalsPos-2) ;
-          $paramValue = substr($param, $equalsPos+1, strlen($param)) ;
-          $cmdParams = array_merge($cmdParams, array($paramKey => $paramValue)); } }
-      $this->params = $cmdParams;
+        $cmdParams = array();
+        foreach ($params as $paramKey => $paramValue) {
+            if (substr($paramValue, 0, 2)=="--" && strpos($paramValue, '=') != null ) {
+                $equalsPos = strpos($paramValue, "=") ;
+                $paramKey = substr($paramValue, 2, $equalsPos-2) ;
+                $paramValue = substr($paramValue, $equalsPos+1, strlen($paramValue)) ; }
+            else if (substr($paramValue, 0, 2)=="--" && strpos($paramValue, '=') == false ) {
+                $paramKey = substr($paramValue, 2) ;
+                $paramValue = true ; }
+            $cmdParams = array_merge($cmdParams, array($paramKey => $paramValue)); }
+        $this->params = (is_array($this->params)) ? array_merge($this->params, $cmdParams) : $cmdParams;
     }
 
     protected function askYesOrNo($question) {
@@ -134,7 +152,7 @@ COMPLETION;
             $inputChar = fgetc($fp);
             if (in_array($inputChar, array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")) ) { $last_line = true; }
             else { echo "You must enter a single digit. Please try again\n"; continue; }
-        $i++; }
+            $i++; }
         return $inputChar;
     }
 
@@ -180,25 +198,43 @@ COMPLETION;
 
     protected function setInstallFlagStatus($bool) {
         if ($bool) {
-            AppConfig::setProjectVariable("installed-apps", $this->programNameMachine, true); }
+            AppConfig::setProjectVariable("installed-modules", $this->getModuleName(), true); }
         else {
-            AppConfig::deleteProjectVariable("installed-apps", "any", $this->programNameMachine); }
+            AppConfig::deleteProjectVariable("installed-modules", "any", $this->programNameMachine); }
     }
 
     public function askStatus() {
-        return $this->getInstallFlagStatus($this->programNameMachine) ;
+        // @todo also use install flag status from methods setInstallFlagStatus getInstallFlagStatus
+        if (isset($this->statusCommand) && !is_null($this->statusCommand) &&
+            isset($this->statusCommandExpects) && !is_null($this->statusCommandExpects)) {
+            $status = ($this->executeAndLoad("$this->statusCommand &") == $this->statusCommandExpects) ? true : false ; }
+        else if (isset($this->statusCommand) && !is_null($this->statusCommand)) {
+            $status = ($this->executeAndGetReturnCode("$this->statusCommand") == 0) ? true : false ; }
+        else {
+            $status = ($this->executeAndGetReturnCode("command -v $this->programNameMachine") == 0) ? true : false ; }
+        return $status ;
     }
 
+    protected function askStatusByArray($commsToCheck) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $passing = true ;
+        foreach ($commsToCheck as $commToCheck) {
+            $outs = $this->executeAndLoad("command -v $commToCheck") ;
+            if ( !strstr($outs, $commToCheck) ) {
+                $logging->log("No command '{$commToCheck}' found") ;
+                $passing = false ; }
+            else {
+                $logging->log("Command '{$commToCheck}' found") ; } }
+        return $passing ;
+    }
+
+    // @todo fix this to use the model factory
     protected function getInstallFlagStatus($programNameMachine) {
-        $installedApps = AppConfig::getProjectVariable("installed-apps");
+        $installedApps = AppConfig::getProjectVariable("installed-modules");
         if (is_array($installedApps) && in_array($programNameMachine, $installedApps)) {
             return true ; }
         return false ;
-    }
-
-    protected function extraCommands(){
-        self::swapCommandArrayPlaceHolders($this->extraCommandsArray);
-        self::executeAsShell($this->extraCommandsArray);
     }
 
     protected function swapCommandArrayPlaceHolders(&$commandArray) {
@@ -222,36 +258,95 @@ COMPLETION;
                     $this->installUserHomeDir, $comm); } }
     }
 
-    protected function executePreInstallFunctions($autoPilot){
-        if (isset($this->registeredPreInstallFunctions) &&
-            is_array($this->registeredPreInstallFunctions) &&
-            count($this->registeredPreInstallFunctions) >0) {
-            foreach ($this->registeredPreInstallFunctions as $func) {
-                $this->$func($autoPilot); } }
+    public function askAction($action) {
+        return $this->askWhetherToDoAction($action);
     }
 
-    protected function executePostInstallFunctions($autoPilot){
-        if (isset($this->registeredPostInstallFunctions) &&
-            is_array($this->registeredPostInstallFunctions) &&
-            count($this->registeredPostInstallFunctions) >0) {
-            foreach ($this->registeredPostInstallFunctions as $func) {
-                $this->$func($autoPilot); } }
+    protected function askWhetherToPerformActionToScreen($action){
+        $question = "Perform ".$this->programNameInstaller." $action?";
+        return self::askYesOrNo($question);
     }
 
-    protected function executePreUnInstallFunctions($autoPilot){
-        if (isset($this->registeredPreUnInstallFunctions) &&
-            is_array($this->registeredPreUnInstallFunctions) &&
-            count($this->registeredPreUnInstallFunctions) >0) {
-            foreach ($this->registeredPreUnInstallFunctions as $func) {
-                $this->$func($autoPilot); } }
+    protected function performAction($action) {
+        $doAction = (isset($this->params["yes"]) && $this->params["yes"]==true) ?
+            true : $this->askWhetherToPerformActionToScreen($action);
+        if (!$doAction) { return false; }
+        return $this->installAction($action);
     }
 
-    protected function executePostUnInstallFunctions($autoPilot){
-        if (isset($this->registeredPostUnInstallFunctions) &&
-            is_array($this->registeredPostUnInstallFunctions) &&
-            count($this->registeredPostUnInstallFunctions) >0) {
-            foreach ($this->registeredPostUnInstallFunctions as $func) {
-                $this->$func($autoPilot); } }
+    protected function askWhetherToDoAction($action) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        if ( isset($this->actionsToMethods)) {
+            if (isset($this->actionsToMethods[$action]) && method_exists($this, $this->actionsToMethods[$action])) {
+                $return = $this->{$this->actionsToMethods[$action]}() ;
+                return $return ; }
+            else {
+                $logging->log("No method {$this->actionsToMethods[$action]} in model ".get_class($this)) ;
+                return false; } }
+        else {
+            $logging->log('No property $actionsToMethods in model '.get_class($this)) ;
+            return false; }
+    }
+
+    public function getModuleName() {
+        $reflector = new \ReflectionClass(get_class($this));
+        $fileName = $reflector->getFileName();
+        $end = strpos($fileName, DIRECTORY_SEPARATOR.'Model'.DIRECTORY_SEPARATOR) ;
+        $beforeModel = substr($fileName, 0, $end) ;
+        $start = strrpos($beforeModel, DIRECTORY_SEPARATOR) ;
+        $moduleName = substr($beforeModel, $start+1) ;
+        return $moduleName ;
+    }
+
+    //@todo maybe this should be a helper
+    public function packageAdd($packager, $package, $version = null, $versionOperator = "+") {
+        $packageFactory = new PackageManager();
+        $packageManager = $packageFactory->getModel($this->params) ;
+        $packageManager->performPackageEnsure($packager, $package, $this, $version, $versionOperator);
+    }
+
+    //@todo maybe this should be a helper
+    public function packageRemove($packager, $package) {
+        $packageFactory = new PackageManager();
+        $packageManager = $packageFactory->getModel($this->params) ;
+        $packageManager->performPackageRemove($packager, $package, $this);
+    }
+
+    /*Versioning starts here*/
+    public function getVersion($type = "Installed") {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        if (in_array($type, array("Installed", "installed", "Recommended", "recommended", "Latest", "latest"))) {
+            if (in_array($type, array("Installed", "installed"))) {
+                if ($this->askStatus() != true) {
+                    \Core\BootStrap::setExitCode(1) ;
+                    $logging->log("This program is not installed, so cannot find version") ;
+                    return false; } }
+            $type = ucfirst($type) ;
+            $property = "version{$type}Command" ;
+            $trimmer = "{$property}Trimmer" ;
+            if (isset($this->$property) && method_exists($this, $trimmer)) {
+                $out = $this->executeAndLoad($this->$property);
+                return new \Model\SoftwareVersion($this->$trimmer($out)) ; }
+            else if (isset($this->$property)) {
+                $versionText = $this->executeAndLoad($this->$property);
+                $versionObject = new \Model\SoftwareVersion($versionText) ;
+                return $versionObject ; }
+            else {
+                $logging->log("Cannot find version") ;
+                return false; } }
+        else {
+            return false; }
+    }
+
+    public function getVersionsAvailable() {
+        if (isset($this->versionsAvailable)) {
+            return $this->versionsAvailable ; }
+        else if (method_exists($this, "versionsAvailable")) {
+            return $this->versionsAvailable() ; }
+        else {
+            return false; }
     }
 
 }
