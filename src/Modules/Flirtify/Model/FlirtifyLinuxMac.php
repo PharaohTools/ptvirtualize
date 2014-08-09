@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class GeneratorLinuxMac extends Base {
+class FlirtifyLinuxMac extends Base {
 
     // Compatibility
     public $os = array("Linux", "Darwin") ;

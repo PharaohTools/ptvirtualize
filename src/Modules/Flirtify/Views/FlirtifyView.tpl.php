@@ -3,4 +3,4 @@
    echo $pageVars["genCreateResult"] ;
 ?>
 
-In Autopilot Generator
+In Autopilot Flirtify

@@ -1,18 +1,17 @@
 <?php
 
-Namespace Core ;
+Namespace Model ;
 
-class AutoPilotConfigured extends AutoPilot {
+class Phlagrantfile extends PhlagrantfileBase {
 
-    public $steps ;
-    protected $myUser ;
+    public $config ;
 
     public function __construct() {
-        $this->setSteps();
+        $this->setConfig();
     }
 
     /* Steps */
-    private function setSteps() {
+    private function setConfig() {
 
         $this->steps =
             array(

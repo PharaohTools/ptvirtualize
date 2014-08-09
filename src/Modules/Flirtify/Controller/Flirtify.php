@@ -2,6 +2,6 @@
 
 Namespace Controller ;
 
-class Generator extends Base {
+class Flirtify extends Base {
 
 }
