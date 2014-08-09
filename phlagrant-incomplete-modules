@@ -20,6 +20,7 @@ halt         stops the vagrant machine
  - api control->stop(machine)
  - 1 day
 
+DONE
 help         shows the help for a subcommand
  - already in pyramid
  - 1 day/none if built in
