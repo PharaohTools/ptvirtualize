@@ -9,7 +9,7 @@ class FlirtifyUbuntu extends Base {
     public $os = array("Linux") ;
     public $linuxType = array("Debian") ;
     public $distros = array("Ubuntu") ;
-    public $versions = array("12.04", "12.10") ;
+    public $versions = array("12.04", "12.10", "13.04", "13.10", "14.04") ;
     public $architectures = array("32", "64") ;
 
     // Model Group
@@ -24,8 +24,6 @@ class FlirtifyUbuntu extends Base {
 
     public function askWhetherToFlirtify() {
         if ($this->askToScreenWhetherToFlirtify() != true) { return false; }
-        $this->setEnvironmentReplacements() ;
-        $this->getEnvironments() ;
         $this->doFlirtify() ;
         return true;
     }
@@ -34,31 +32,6 @@ class FlirtifyUbuntu extends Base {
         if (isset($this->params["yes"]) && $this->params["yes"]==true) { return true ; }
         $question = 'Flirtify This?';
         return self::askYesOrNo($question, true);
-    }
-
-    public function setEnvironmentReplacements() {
-        $this->environmentReplacements =
-            array( "flirtify" => array(
-               // array("var"=>"dap_proj_cont_dir", "friendly_text"=>"Project Container directory, (inc slash)"),
-            ) );
-    }
-
-    public function getEnvironments() {
-        $environmentConfigModelFactory = new EnvironmentConfig();
-        $environmentConfigModel = $environmentConfigModelFactory->getModel($this->params);
-        $environmentConfigModel->askWhetherToEnvironmentConfig($this->environmentReplacements) ;
-        $this->environments = $environmentConfigModel->environments ;
-    }
-
-    public function getServerArrayText($serversArray) {
-        $serversText = "";
-        foreach($serversArray as $serverArray) {
-            $serversText .= 'array(';
-            $serversText .= '"target" => "'.$serverArray["target"].'", ';
-            $serversText .= '"user" => "'.$serverArray["user"].'", ';
-            $serversText .= '"pword" => "'.$serverArray["password"].'", ';
-            $serversText .= '),'."\n"; }
-        return $serversText;
     }
 
     private function doFlirtify() {
