@@ -13,22 +13,22 @@ class FlirtifyInfo extends Base {
     }
 
     public function routesAvailable() {
-      return array( "Flirtify" =>  array_merge(parent::routesAvailable(), array("create") ) );
+      return array( "Flirtify" =>  array_merge(parent::routesAvailable(), array("now") ) );
     }
 
     public function routeAliases() {
-      return array("flirt"=>"Flirtify", "phlirt"=>"Flirtify", "phlirtify"=>"Flirtify");
+      return array("flirt"=>"Flirtify", "flirtify"=>"Flirtify", "phlirt"=>"Flirtify", "phlirtify"=>"Flirtify");
     }
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
   With Flirtify you can create Phlagrant files for your project from predefined templates.
 
-  Flirtify, flirt, phlirt, phlirtify
+  Flirtify, flirt, flirtify, phlirt, phlirtify
 
-        - create
-        Create Phlagrantfiles
-        example: phlagrant flirt create
+        - now, create
+        Create a Phlagrantfile for your project
+        example: phlagrant flirt now
 
 HELPDATA;
       return $help ;
