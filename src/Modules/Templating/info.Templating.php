@@ -20,20 +20,6 @@ class TemplatingInfo extends Base {
       return array("templating"=>"Templating", "template"=>"Templating");
     }
 
-    public function autoPilotVariables() {
-      return array(
-        "Templating" => array(
-          "Templating" => array(
-            "programDataFolder" => "/opt/Templating", // command and app dir name
-            "programNameMachine" => "templating", // command and app dir name
-            "programNameFriendly" => "Templating", // 12 chars
-            "programNameInstaller" => "Sudo capability with No Password for a user",
-            "installUserName" => "string"
-          ),
-        )
-      );
-    }
-
     public function helpDefinition() {
       $help = <<<"HELPDATA"
   This command allows you to apply a templated file within the file system.
@@ -43,7 +29,7 @@ class TemplatingInfo extends Base {
 
         - install
         Installs a template
-        example: testingkamen template install
+        example: phlagrant template install
 
 HELPDATA;
       return $help ;
