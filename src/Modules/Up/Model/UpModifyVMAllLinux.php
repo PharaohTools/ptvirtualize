@@ -27,17 +27,35 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} by changing $configKey to $configValue") ;
                 $command = "vboxmanage modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
                 $this->executeAndOutput($command); } }
+        $this->setSharedFolders();
     }
 
     protected function setAvailableModifications() {
         $this->availableModifications = array(
-            "memory"
+            "memory", "cpus"
         ) ;
+    }
+
+    protected function setSharedFolders() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->phlagrantfile->config["shared_folders"]) && count($this->phlagrantfile->config["shared_folders"])>0 ) {
+        foreach ($this->phlagrantfile->config["shared_folders"] as $sharedFolder) {
+            if (in_array($sharedFolder, $this->availableModifications)) {
+                $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["path_host"]}") ;
+                $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
+                $command .= " --hostpath {$sharedFolder["path_host"]}" ;
+                $flags = srray("transient", "readonly", "automount") ;
+                foreach ($flags as $flag) {
+                    if (isset($sharedFolder[$flag])) {
+                        $command .= " --$flag" ; } }
+                $this->executeAndOutput($command); } } }
     }
 
     /*
      * @todo
-     *   sharedfolder              add <uuid|vmname>
+     *   sharedfolder
+                            add <uuid|vmname>
                             --name <name> --hostpath <hostpath>
                             [--transient] [--readonly] [--automount]
 
@@ -49,7 +67,6 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             [--groups <group>, ...]
                             [--ostype <ostype>]
                             [--iconfile <filename>]
-                            [--memory <memorysize in MB>]
                             [--pagefusion on|off]
                             [--vram <vramsize in MB>]
                             [--acpi on|off]
@@ -68,14 +85,11 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             [--cpuidremove <leaf>]
                             [--cpuidremoveall]
                             [--hardwareuuid <uuid>]
-                            [--cpus <number>]
                             [--cpuhotplug on|off]
                             [--plugcpu <id>]
                             [--unplugcpu <id>]
                             [--cpuexecutioncap <1-100>]
                             [--rtcuseutc on|off]
-                            [--graphicscontroller none|vboxvga]
-                            [--monitorcount <number>]
                             [--accelerate3d on|off]
                             [--firmware bios|efi|efi32|efi64]
                             [--chipset ich9|piix3]
@@ -86,9 +100,6 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             [--biosbootmenu disabled|menuonly|messageandmenu]
                             [--biossystemtimeoffset <msec>]
                             [--biospxedebug on|off]
-                            [--boot<1-4> none|floppy|dvd|disk|net>]
-                            [--nic<1-N> none|null|nat|bridged|intnet|
-                                        generic|natnetwork]
                             [--nictype<1-N> Am79C970A|Am79C973]
                             [--cableconnected<1-N> on|off]
                             [--nictrace<1-N> on|off]
@@ -135,7 +146,6 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             [--audiocontroller ac97|hda|sb16]
                             [--clipboard disabled|hosttoguest|guesttohost|
                                          bidirectional]
-                            [--draganddrop disabled|hosttoguest
                             [--vrde on|off]
                             [--vrdeextpack default|<name>
                             [--vrdeproperty <name=[value]>]
@@ -147,9 +157,6 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             [--vrdereusecon on|off]
                             [--vrdevideochannel on|off]
                             [--vrdevideochannelquality <percent>]
-                            [--usb on|off]
-                            [--usbehci on|off]
-                            [--snapshotfolder default|<path>]
                             [--teleporter on|off]
                             [--teleporterport <port>]
                             [--teleporteraddress <address|empty>
@@ -158,10 +165,29 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             [--tracing-enabled on|off]
                             [--tracing-config <config-string>]
                             [--tracing-allow-vm-access on|off]
-                            [--autostart-enabled on|off]
-                            [--autostart-delay <seconds>]
                             [--defaultfrontend default|<name>]
 
+                            // ones to do first
+
+                            [--cpuexecutioncap <1-100>]
+                            [--boot<1-4> none|floppy|dvd|disk|net>]
+                            [--nic<1-N> none|null|nat|bridged|intnet|
+                                        generic|natnetwork]
+                            [--graphicscontroller none|vboxvga]
+                            [--monitorcount <number>]
+                            [--draganddrop disabled|hosttoguest
+                            [--usb on|off]
+                            [--usbehci on|off]
+                            [--snapshotfolder default|<path>]
+                            [--autostart-enabled on|off]
+                            [--autostart-delay <seconds>]
+                            [--mouse ps2|usb|usbtablet|usbmultitouch]
+                            [--keyboard ps2|usb
+
+                            // done
+
+                            [--cpus <number>]
+                            [--memory <memorysize in MB>]
 
 
      */
