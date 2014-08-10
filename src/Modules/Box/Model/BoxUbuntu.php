@@ -45,11 +45,50 @@ class BoxUbuntu extends BaseLinuxApp {
         // - vbix module
         //  - untar it there
         //  - import it
-        return $this->setDefault();
+        $this->getOriginalBoxLocation();
+        $this->getTargetBoxLocation();
+        $this->setBoxNewName();
+        $this->extractMetadata();
+        $this->loadProvider();
+        $this->provider->addBox($originalLocation, $newLocation, $newName) ;
+            # vbox module
+        return true;
     }
 
-    public function setBoxRule() {
-        if (isset($this->params["box-rule"])) {
+    protected function getOriginalBoxLocation() {
+        if (isset($this->params["location"])) {
+            $boxRule = $this->params["box-rule"]; }
+        else {
+            $boxRule = self::askForInput("Enter Box Rule:", true); }
+        $this->boxRule = $boxRule ;
+    }
+
+    protected function getTargetBoxLocation() {
+        if (isset($this->params["location"])) {
+            $boxRule = $this->params["box-rule"]; }
+        else {
+            $boxRule = self::askForInput("Enter Box Rule:", true); }
+        $this->boxRule = $boxRule ;
+    }
+
+    protected function setBoxNewName() {
+        if (isset($this->params["location"])) {
+            $boxRule = $this->params["box-rule"]; }
+        else {
+            $boxRule = self::askForInput("Enter Box Rule:", true); }
+        $this->boxRule = $boxRule ;
+    }
+
+    protected function extractMetadata() {
+        if (isset($this->params["location"])) {
+            $boxRule = $this->params["box-rule"]; }
+        else {
+            $boxRule = self::askForInput("Enter Box Rule:", true); }
+        $this->boxRule = $boxRule ;
+    }
+
+    protected function loadProvider() {
+        if (isset($this->params["location"])) {
             $boxRule = $this->params["box-rule"]; }
         else {
             $boxRule = self::askForInput("Enter Box Rule:", true); }
@@ -66,16 +105,6 @@ class BoxUbuntu extends BaseLinuxApp {
         else {
             $defaultPolicy = self::askForArrayOption("Enter Policy:", $opts, true); }
         $this->defaultPolicy = $defaultPolicy ;
-    }
-
-    public function enable() {
-        $out = $this->executeAndOutput("sudo ufw --force enable");
-        if (strpos($out, "enabled") == false ) {
-            $loggingFactory = new \Model\Logging();
-            $logging = $loggingFactory->getModel($this->params);
-            $logging->log("Box Enable command did not execute correctly") ;
-            return false ; }
-        return true ;
     }
 
 }
