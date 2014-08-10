@@ -43,8 +43,8 @@ class FlirtifyUbuntu extends Base {
         $templator->template(
             file_get_contents($template),
             array(
-                "env_name" => $environment["any-app"]["gen_env_name"],
-                "first_server_target" => $environment["servers"][0]["target"],
+                //"env_name" => $environment["any-app"]["gen_env_name"],
+                //"first_server_target" => $environment["servers"][0]["target"],
             ),
             $targetLocation );
         echo $targetLocation."\n";
