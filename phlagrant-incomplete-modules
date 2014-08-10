@@ -10,6 +10,45 @@ box
  - hmmm lots of stuff
  - weeks, lots of resource
 
+provision    provisions the vagrant machine, install pharoah and execute pharoah autopilots
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - get config from Phlagrantfile
+ - api control->start(machine) (if not running)
+ - api control->provision(machine, config)
+ - 3 days
+
+
+package      packages a running vagrant environment into a box
+ - hmmm lots of stuff
+ - weeks, lots of resource
+
+reload       restarts vagrant machine, loads new Vagrantfile configuration
+ - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - api control->stop(machine)
+ - get config from Phlagrantfile
+ - api config->load(machine, config)
+ - api control->start(machine)
+ - 3 days
+
+ssh          connects to machine via SSH
+             invoke ssh using the ssh params configured during phlagrant up and put into local-papyrus
+ - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
+ - get id from name
+ - invokessh with these details
+ - 1/2 days
+
+ssh-config   outputs OpenSSH valid configuration to connect to the machine
+ - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
+ - display the details
+ - 1 day
+
+status       outputs status of the vagrant machine
+ - display the details
+ - 1 day
+
+DONE
 destroy      stops and deletes all traces of the vagrant machine
  - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
  - get id from name
@@ -32,53 +71,18 @@ init         initializes a new Vagrant environment by creating a Vagrantfile
  - already in pharoah, templating, phlagrant stylee
  - 1 day
 
-package      packages a running vagrant environment into a box
- - hmmm lots of stuff
- - weeks, lots of resource
 
+DONE - PHAROAH MODULES IMPLEMENTS THIS
 plugin       manages plugins: install, uninstall, update, etc.
  - already in, to be, dependencies, composering etc
  - 1 day/none if built in
 
-provision    provisions the vagrant machine, install pharoah and execute pharoah autopilots
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - get config from Phlagrantfile
- - api control->start(machine) (if not running)
- - api control->provision(machine, config)
- - 3 days
-
-reload       restarts vagrant machine, loads new Vagrantfile configuration
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - api control->stop(machine)
- - get config from Phlagrantfile
- - api config->load(machine, config)
- - api control->start(machine)
- - 3 days
-
+DONE
 resume       resume a suspended vagrant machine, resume the box described in local-papyrus
  - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
  - get id from name
  - api control->resume(machine)
  - 1/2 days
-
-ssh          connects to machine via SSH
-             invoke ssh using the ssh params configured during phlagrant up and put into local-papyrus
- - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - invokessh with these details
- - 1/2 days
-
-ssh-config   outputs OpenSSH valid configuration to connect to the machine
- - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
- - display the details
- - 1 day
-
-status       outputs status of the vagrant machine
- -
- - display the details
- - 1 day
 
 DONE -THIS IS NOW HALT SUSPEND/PAUSE
 suspend      suspends the machine
