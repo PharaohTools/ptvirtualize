@@ -43,6 +43,7 @@ class PhlagrantfileBase {
         // My own ones
         $config["vm"]["ostype"] = "Ubuntu_64" ;
         $config["vm"]["gui_mode"] = "headless" ;
+        $config["vm"]["cpus"] = 1 ;
 
 
 
