@@ -39,11 +39,12 @@ class BoxUbuntu extends BaseLinuxApp {
         // get the .pbox file (if remote)
         // get save location
         // copy it there
-        // untar it there
-        // import it
-
-
-        $this->setDefaultPolicyParam();
+        // untar the single metadata.json file out of it
+        // check the provider
+        // load the provider and invoke the add box method there
+        // - vbix module
+        //  - untar it there
+        //  - import it
         return $this->setDefault();
     }
 
