@@ -2,6 +2,6 @@
 
 Namespace Model;
 
-class Logging extends BaseModelFactory {
+class PhlagrantRequired extends BaseModelFactory {
 
 }
