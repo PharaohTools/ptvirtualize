@@ -14,89 +14,115 @@ class UpAllLinux extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    private $keygenBits;
-    private $keygenType;
-    private $keygenPath;
-    private $keygenComment;
+    protected $phlagrantfile;
+    protected $papyrus ;
 
     public function __construct($params) {
         parent::__construct($params);
-        $this->autopilotDefiner = "Up";
-        $this->installCommands = array(
-            array("method"=> array("object" => $this, "method" => "askForKeygenBits", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "askForKeygenType", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "askForKeygenPath", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "askForKeygenComment", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "createDirectoryStructure", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "doKeyGen", "params" => array()) ),
-        );
-        $this->uninstallCommands = array(
-            array("method"=> array("object" => $this, "method" => "askForKeygenPath", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "removeKey", "params" => array()) ),
-        );
-        $this->programDataFolder = "";
-        $this->programNameMachine = "sshkeygen"; // command and app dir name
-        $this->programNameFriendly = "sshkeygen!"; // 12 chars
-        $this->programNameInstaller = "SSH Key Generation";
         $this->initialize();
     }
 
-    public function askForKeygenBits() {
-        if (isset($this->params["ssh-keygen-bits"]) ) {
-            $this->keygenBits = $this->params["ssh-keygen-bits"] ; }
-        else {
-            $question = "Enter number of bits for SSH Key (multiple of 1024):";
-            $this->keygenBits = self::askForInput($question, true); }
-    }
-
-    public function askForKeygenType() {
-        if (isset($this->params["ssh-keygen-type"]) ) {
-            $this->keygenType = $this->params["ssh-keygen-type"] ; }
-        else {
-            $question = "Choose Key type (rsa/dsa)";
-            $this->keygenType = self::askForArrayOption($question, array("rsa", "dsa"),  true); }
-    }
-
-    public function askForKeygenPath() {
-        if (isset($this->params["ssh-keygen-path"]) ) {
-            $this->keygenPath = $this->params["ssh-keygen-path"] ; }
-        else {
-            $question = "Enter path to store private key (public key will be same with .pub):";
-            $this->keygenPath = self::askForInput($question, true) ; }
-        if (substr($this->keygenPath, 0, 1) != '/') { // relative, so make it full path
-            $this->keygenPath = getcwd().'/'.$this->keygenPath ; }
-    }
-
-    public function askForKeygenComment() {
-        if (isset($this->params["ssh-keygen-comment"]) ) {
-            $this->keygenComment = $this->params["ssh-keygen-comment"] ; }
-        else {
-            $question = "Plain text comment appended to public key. None is fine";
-            $keygenComment = self::askForInput($question);
-            $this->keygenComment = (isset($keygenComment) && strlen($keygenComment)>0) ? $keygenComment : "Pharaoh Tools" ; }
-    }
-
-    public function removeKey() {
+    public function doUp() {
+        $this->loadFiles();
         $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params);
-        if (file_exists($this->params["ssh-keygen-path"])) {
-            unlink($this->params["ssh-keygen-path"]) ;
-            $logging->log("Removing File at {$this->params["ssh-keygen-path"]} in SSH Keygen") ;
-            unlink($this->params["ssh-keygen-path"].".pub") ;
-            $logging->log("Removing File at {$this->params["ssh-keygen-path"]}.pub in SSH Keygen") ; }
+        $logging = $loggingFactory->getModel($this->params) ;
+        if ($this->isSavedInPapyrus()) {
+            if ($this->vmExistsInProvider()) {
+                if ($this->vmIsRunning()) {
+                     $logging->log("This VM is already up and running."); }
+                $logging->log("Phlagrant will start and optionally provision your existing VM.");
+                $this->startVm();
+                $this->provisionVm(true); }
+            $logging->log("This VM has been deleted outside of Phlagrant. Re-creating from scratch.");
+            $this->deleteFromPapyrus();
+            $this->completeBuildUp(); }
+        $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.");
+        $this->completeBuildUp();
     }
 
-    public function createDirectoryStructure() {
-        if (!file_exists(dirname($this->keygenPath))) {
-            mkdir(dirname($this->keygenPath), 0775, true) ; }
+    protected function loadFiles() {
+        $this->phlagrantfile = $this->loadPhlagrantFile();
+        $this->papyrus = $this->loadPapyrusLocal();
     }
 
-    public function doKeyGen() {
-        $cmd  = "ssh-keygen -b ".$this->keygenBits.' ' ;
-        $cmd .= '-t '.$this->keygenType.' ' ;
-        $cmd .= '-f '.$this->keygenPath.' ' ;
-        $cmd .= '-q -N "" -C"'.$this->keygenComment.'"' ;
-        $this->executeAndOutput($cmd) ;
+    protected function loadPhlagrantFile() {
+        $upFactory = new \Model\Up();
+        $phlagrantFileLoader = $upFactory->getModel($this->params, "PhlagrantFileLoader") ;
+        return $phlagrantFileLoader->load() ;
+    }
+
+    protected function loadPapyrusLocal() {
+        return \Model\AppConfig::getProjectVariable("phlagrant-box", true) ;
+    }
+
+    protected function completeBuildUp() {
+        $this->createVm();
+        $this->importBaseBox();
+        $this->modifyVm();
+        $this->startVm();
+        $this->provisionVm();
+    }
+
+    protected function isSavedInPapyrus() {
+        if ( count($this->papyrus)>1 ) { return true ; }
+        return false ;
+    }
+
+    protected function vmExistsInProvider() {
+        $out = $this->executeAndLoad("vboxmanage list vms");
+        if (strpos($out, $this->papyrus["name"] != false )) {
+            return true ; }
+        return false ;
+    }
+
+    protected function vmIsRunning() {
+        $out = $this->executeAndLoad("vboxmanage list runningvms");
+        if (strpos($out, $this->papyrus["name"] != false )) {
+            return true ; }
+        return false ;
+    }
+
+    protected function createVm() {
+        $comm  = "vboxmanage createvm --name {$this->phlagrantfile->config["vm"]["name"]} " ;
+        $comm .= "--ostype {$this->phlagrantfile->config["vm"]["ostype"]} --register" ;
+        $this->executeAndOutput($comm);
+        return true ;
+    }
+
+    protected function importBaseBox() {
+    }
+
+    protected function modifyVm() {
+        $upFactory = new \Model\Up();
+        $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
+        $modifyVM->papyrus = $this->papyrus ;
+        $modifyVM->phlagrantfile = $this->phlagrantfile ;
+        $modifyVM->performModifications() ;
+    }
+
+    protected function startVm() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->phlagrantfile->config["vm"]["gui_mode"])) {
+            $guiMode = $this->phlagrantfile->config["vm"]["gui_mode"] ; }
+        else {
+            if (isset($this->params["guess"])) {
+                $logging->log("No GUI mode explicitly set, Guess parameter set, defaulting to headless GUI mode...");
+                $guiMode = "headless" ; }
+            else {
+                $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...");
+                $guiMode = "headless" ; } }
+        $command = "vboxmanage startvm {$this->phlagrantfile->config["vm"]["name"]} --type $guiMode" ;
+        echo $command ;
+        $this->executeAndOutput($command);
+        return true ;
+    }
+
+    protected function provisionVm($onlyIfRequestedByParam = false) {
+    }
+
+    protected function deleteFromPapyrus() {
+        \Model\AppConfig::deleteProjectVariable("phlagrant-box", true) ;
     }
 
 }
