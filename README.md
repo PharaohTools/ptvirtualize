@@ -47,14 +47,14 @@ So, there are a few simple commands...
 
 First, you can just use
 
-cleopatra
+phlagrant
 
 ...This will give you a list of the available modules...
 
 
 Then you can use
 
-cleopatra *ModuleName* help
+phlagrant *ModuleName* help
 
 ...This will display the help for that module, and tell you a list of available alias for the module command, and the
 available actions too.
@@ -83,10 +83,8 @@ Fire up a virtual machine with a standard configuration of PHP.
 That's it! you can sit back while Phlagrant creates your virtual machine environment for you
 
 
-## Available Commands:
 
-Available Commands:
----------------------------------------
+## Available Commands:
 
 - Box - Box - Manage Base Boxes for Phlagrant
 - Destroy - Destroy - Stop a Phlagrant Box
