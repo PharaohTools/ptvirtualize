@@ -24,20 +24,8 @@ class DestroyAllLinux extends BaseLinuxApp {
 
     public function destroyNow() {
         $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
+        $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
         echo $command ;
-        $this->executeAndOutput($command);
-    }
-
-    public function destroyPause() {
-        $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} pause" ;
-        $this->executeAndOutput($command);
-    }
-
-    public function destroyHard() {
-        $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
         $this->executeAndOutput($command);
     }
 
