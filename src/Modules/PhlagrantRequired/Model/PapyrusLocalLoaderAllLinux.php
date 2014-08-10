@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class ResumePapyrusLocalLoaderAllLinux extends BaseLinuxApp {
+class PapyrusLocalLoaderAllLinux extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("Linux") ;

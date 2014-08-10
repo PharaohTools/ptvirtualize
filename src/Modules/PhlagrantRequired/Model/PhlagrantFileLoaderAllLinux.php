@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class ResumePhlagrantFileLoaderAllLinux extends BaseLinuxApp {
+class PhlagrantFileLoaderAllLinux extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("Linux") ;
