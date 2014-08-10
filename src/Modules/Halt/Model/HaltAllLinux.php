@@ -47,13 +47,15 @@ class HaltAllLinux extends BaseLinuxApp {
     }
 
     protected function loadPhlagrantFile() {
-        $upFactory = new \Model\Up();
-        $phlagrantFileLoader = $upFactory->getModel($this->params, "PhlagrantFileLoader") ;
+        $prFactory = new \Model\PhlagrantRequired();
+        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
         return $phlagrantFileLoader->load() ;
     }
 
     protected function loadPapyrusLocal() {
-        return \Model\AppConfig::getProjectVariable("phlagrant-box", true) ;
+        $prFactory = new \Model\PhlagrantRequired();
+        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
+        return $papyrusLocalLoader->load() ;
     }
 
 }
