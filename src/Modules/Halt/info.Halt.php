@@ -13,7 +13,7 @@ class HaltInfo extends CleopatraBase {
   }
 
   public function routesAvailable() {
-    return array( "Halt" =>  array_merge( array("now") ) );
+    return array( "Halt" =>  array_merge( array("now", "hard", "pause", "suspend") ) );
   }
 
   public function routeAliases() {
@@ -27,8 +27,17 @@ class HaltInfo extends CleopatraBase {
   Halt, halt
 
         - now
-        Halt a box now
+        Execute a "soft" power off to your Phlagrant VM
         example: phlagrant halt now
+
+        - hard
+        Force power off to your Phlagrant VM
+        example: phlagrant halt hard
+
+        - pause, suspend
+        Pause your running Phlagrant VM
+        example: phlagrant halt pause
+        example: phlagrant halt suspend
 
 HELPDATA;
     return $help ;

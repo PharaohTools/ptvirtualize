@@ -14,56 +14,46 @@ class HaltAllLinux extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    private $keygenBits;
+    protected $phlagrantfile;
+    protected $papyrus ;
 
     public function __construct($params) {
         parent::__construct($params);
-        $this->autopilotDefiner = "Halt";
-        $this->installCommands = array(
-            array("method"=> array("object" => $this, "method" => "askForKeygenBits", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "createDirectoryStructure", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "doKeyGen", "params" => array()) ),
-        );
-        $this->uninstallCommands = array(
-            array("method"=> array("object" => $this, "method" => "askForKeygenPath", "params" => array()) ),
-            array("method"=> array("object" => $this, "method" => "removeKey", "params" => array()) ),
-        );
-        $this->programDataFolder = "";
-        $this->programNameMachine = "sshkeygen"; // command and app dir name
-        $this->programNameFriendly = "sshkeygen!"; // 12 chars
-        $this->programNameInstaller = "SSH Key Generation";
         $this->initialize();
     }
 
-    public function askForKeygenBits() {
-        if (isset($this->params["ssh-keygen-bits"]) ) {
-            $this->keygenBits = $this->params["ssh-keygen-bits"] ; }
-        else {
-            $question = "Enter number of bits for SSH Key (multiple of 1024):";
-            $this->keygenBits = self::askForInput($question, true); }
+    public function haltNow() {
+        $this->loadFiles();
+        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
+        echo $command ;
+        $this->executeAndOutput($command);
     }
 
-    public function removeKey() {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params);
-        if (file_exists($this->params["ssh-keygen-path"])) {
-            unlink($this->params["ssh-keygen-path"]) ;
-            $logging->log("Removing File at {$this->params["ssh-keygen-path"]} in SSH Keygen") ;
-            unlink($this->params["ssh-keygen-path"].".pub") ;
-            $logging->log("Removing File at {$this->params["ssh-keygen-path"]}.pub in SSH Keygen") ; }
+    public function haltPause() {
+        $this->loadFiles();
+        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} pause" ;
+        $this->executeAndOutput($command);
     }
 
-    public function createDirectoryStructure() {
-        if (!file_exists(dirname($this->keygenPath))) {
-            mkdir(dirname($this->keygenPath), 0775, true) ; }
+    public function haltHard() {
+        $this->loadFiles();
+        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
+        $this->executeAndOutput($command);
     }
 
-    public function doKeyGen() {
-        $cmd  = "ssh-keygen -b ".$this->keygenBits.' ' ;
-        $cmd .= '-t '.$this->keygenType.' ' ;
-        $cmd .= '-f '.$this->keygenPath.' ' ;
-        $cmd .= '-q -N "" -C"'.$this->keygenComment.'"' ;
-        $this->executeAndOutput($cmd) ;
+    protected function loadFiles() {
+        $this->phlagrantfile = $this->loadPhlagrantFile();
+        $this->papyrus = $this->loadPapyrusLocal();
+    }
+
+    protected function loadPhlagrantFile() {
+        $upFactory = new \Model\Up();
+        $phlagrantFileLoader = $upFactory->getModel($this->params, "PhlagrantFileLoader") ;
+        return $phlagrantFileLoader->load() ;
+    }
+
+    protected function loadPapyrusLocal() {
+        return \Model\AppConfig::getProjectVariable("phlagrant-box", true) ;
     }
 
 }
