@@ -16,6 +16,7 @@ class ProvisionAllLinux extends BaseLinuxApp {
 
     protected $phlagrantfile;
     protected $papyrus ;
+    protected $osProvisioner ;
 
     public function __construct($params) {
         parent::__construct($params);
@@ -24,26 +25,13 @@ class ProvisionAllLinux extends BaseLinuxApp {
 
     public function provisionNow() {
         $this->loadFiles();
-        /*
-         *
-         * sftp module,sftp into the box
-         * source=dirname(dirname(__FILE__))."/Autopilots/Cleopatra/provision.php" # cleopatra cleofy workstation/phlagrant default
-         * target=$this->phlagrantfile->config["vm"]["default_tmp_dir"]."provision.php"
-         *
-         * ssh into the box
-         * ensure php5 and git are installed
-         * install cleopatra
-         * cleopatra auto x --af=$this->phlagrantfile->config["vm"]["default_tmp_dir"]."provision.php"
-         *
-         */
-        $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
-        echo $command ;
-        $this->executeAndOutput($command);
+        $this->osProvisioner->provision($this->phlagrantfile, $this->papyrus);
     }
 
     protected function loadFiles() {
         $this->phlagrantfile = $this->loadPhlagrantFile();
         $this->papyrus = $this->loadPapyrusLocal();
+        $this->osProvisioner = $this->loadOSProvisioner() ;
     }
 
     protected function loadPhlagrantFile() {
@@ -56,6 +44,15 @@ class ProvisionAllLinux extends BaseLinuxApp {
         $prFactory = new \Model\PhlagrantRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
         return $papyrusLocalLoader->load() ;
+    }
+
+    protected function loadOSProvisioner() {
+        $provFile = dirname(dirname(__FILE__))."/OSProvisioners/".$this->phlagrantfile->config["vm"]["ostype"] ;
+        if (file_exists($provFile)) {
+            require_once ($provFile) ;
+            return new \Model\OSProvisioner(); }
+        $logging->log("No suitable OS Provisioner found");
+        return null ;
     }
 
 }
