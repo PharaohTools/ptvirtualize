@@ -45,7 +45,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                 $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["path_host"]}") ;
                 $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
                 $command .= " --hostpath {$sharedFolder["path_host"]}" ;
-                $flags = srray("transient", "readonly", "automount") ;
+                $flags = array("transient", "readonly", "automount") ;
                 foreach ($flags as $flag) {
                     if (isset($sharedFolder[$flag])) {
                         $command .= " --$flag" ; } }
