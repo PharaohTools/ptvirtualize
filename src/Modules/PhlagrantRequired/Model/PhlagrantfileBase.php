@@ -6,11 +6,11 @@ class PhlagrantfileBase {
 
     public $config ;
 
-    public function __construct() {
-        $this->setDefaultConfig();
-    }
+    protected function setDefaultConfig($defaultConfigType = null) {
 
-    private function setDefaultConfig() {
+        // @todo I need to create an array, or includes or something of
+        // $defaultConfigType, to set different defaults
+
         $config = array() ;
 
         // Config VM
@@ -39,6 +39,12 @@ class PhlagrantfileBase {
         $config["vm"]["synced_folder"] = "/var/www" ;
         //config.vm.usable_port_range - A range of ports Vagrant can use for handling port collisions and such. Defaults to 2200..2250.
         $config["vm"]["usable_port_range"] = array("min" => "2200", "max" => "2250") ;
+
+        // My own ones
+        $config["vm"]["ostype"] = "Ubuntu_64" ;
+        $config["vm"]["gui_mode"] = "headless" ;
+
+
 
         // @todo waiting config vars
         //config.vm.box_check_update - If true, Vagrant will check for updates to the configured box on every vagrant up. If an update is found, Vagrant will tell the user. By default this is true. Updates will only be checked for boxes that properly support updates (boxes from Vagrant Cloud or some other versioned box).
