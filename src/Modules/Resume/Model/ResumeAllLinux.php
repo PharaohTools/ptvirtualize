@@ -24,20 +24,7 @@ class ResumeAllLinux extends BaseLinuxApp {
 
     public function resumeNow() {
         $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
-        echo $command ;
-        $this->executeAndOutput($command);
-    }
-
-    public function resumePause() {
-        $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} pause" ;
-        $this->executeAndOutput($command);
-    }
-
-    public function resumeHard() {
-        $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
+        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} resume" ;
         $this->executeAndOutput($command);
     }
 
