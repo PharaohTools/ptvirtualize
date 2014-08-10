@@ -16,6 +16,7 @@ destroy      stops and deletes all traces of the vagrant machine
  - api control->stop(machine)
  - 3 days
 
+DONE
 halt         stops the vagrant machine
  - api control->stop(machine)
  - 1 day
@@ -25,6 +26,8 @@ help         shows the help for a subcommand
  - already in pyramid
  - 1 day/none if built in
 
+DONE
+INIT IS FLIRTYIFY
 init         initializes a new Vagrant environment by creating a Vagrantfile
  - already in pharoah, templating, phlagrant stylee
  - 1 day
@@ -77,12 +80,14 @@ status       outputs status of the vagrant machine
  - display the details
  - 1 day
 
+DONE -THIS IS NOW HALT SUSPEND/PAUSE
 suspend      suspends the machine
  - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
  - get id from name
  - api control->suspend(machine)
  - 1/2 days
 
+MOSTLY DONE - PROVISION IS ANOTHER COMMAND
 up           starts, configs and provisions the vagrant environment
              (also add flirt (phlagrant flirt now))
  - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
