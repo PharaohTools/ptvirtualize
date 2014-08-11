@@ -88,6 +88,12 @@ class UpAllLinux extends BaseLinuxApp {
         $comm  = "vboxmanage createvm --name {$this->phlagrantfile->config["vm"]["name"]} " ;
         $comm .= "--ostype {$this->phlagrantfile->config["vm"]["ostype"]} --register" ;
         $this->executeAndOutput($comm);
+        $phlagrantBox = array() ;
+        $phlagrantBox["name"] = $this->phlagrantfile->config["vm"]["name"] ;
+        $phlagrantBox["username"] = $this->phlagrantfile->config["ssh"]["username"] ;
+        $phlagrantBox["password"] = $this->phlagrantfile->config["ssh"]["password"] ;
+        $phlagrantBox["target"] = $this->phlagrantfile->config["vm"]["name"] ;
+        $this->saveToPapyrus($phlagrantBox);
         return true ;
     }
 
@@ -106,6 +112,7 @@ class UpAllLinux extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->phlagrantfile->config["vm"]["gui_mode"])) {
+            $logging->log("Using {$this->phlagrantfile->config["vm"]["gui_mode"]} GUI mode specified in Phlagrantfile");
             $guiMode = $this->phlagrantfile->config["vm"]["gui_mode"] ; }
         else {
             if (isset($this->params["guess"])) {
@@ -120,6 +127,19 @@ class UpAllLinux extends BaseLinuxApp {
     }
 
     protected function provisionVm($onlyIfRequestedByParam = false) {
+        if ($onlyIfRequestedByParam == true) {
+            if (!isset($this->params["provision"]) || (isset($this->params["provision"]) && $this->params["provision"] != true) ) {
+                $loggingFactory = new \Model\Logging();
+                $logging = $loggingFactory->getModel($this->params) ;
+                $logging->log("No GUI mode explicitly set, Guess parameter set, defaulting to headless GUI mode..."); } }
+        $provisionFactory = new \Model\Provision();
+        $provision = $provisionFactory->getModel($this->params) ;
+        $provision->provisionNow();
+    }
+
+    protected function saveToPapyrus($vars) {
+        $phlagrantBox = array_merge($this->papyrus, $vars) ;
+        \Model\AppConfig::setProjectVariable("phlagrant-box", $phlagrantBox, null, null, true) ;
     }
 
     protected function deleteFromPapyrus() {
