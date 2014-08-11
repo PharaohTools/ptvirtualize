@@ -18,7 +18,7 @@ class PapyrusLocalLoaderAllLinux extends BaseLinuxApp {
         $pf = \Model\AppConfig::getProjectVariable("phlagrant-box", true) ;
         if (is_array($pf) && count($pf)>0) {
             return $pf ; }
-        return $pf ;
+        return array() ;
     }
 
 }
