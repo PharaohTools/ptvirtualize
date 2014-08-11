@@ -45,9 +45,9 @@ class BoxUbuntu extends BaseLinuxApp {
         // - vbix module
         //  - untar it there
         //  - import it
-        $this->getOriginalBoxLocation();
-        $this->getTargetBoxLocation();
-        $this->setBoxNewName();
+        $originalLocation = $this->getOriginalBoxLocation();
+        $newLocation = $this->getTargetBoxLocation();
+        $newName = $this->getBoxNewName();
         $this->extractMetadata();
         $this->loadProvider();
         $this->provider->addBox($originalLocation, $newLocation, $newName) ;
@@ -56,27 +56,26 @@ class BoxUbuntu extends BaseLinuxApp {
     }
 
     protected function getOriginalBoxLocation() {
-        if (isset($this->params["location"])) {
-            $boxRule = $this->params["box-rule"]; }
+        if (isset($this->params["source"])) { return $this->params["source"]; }
         else {
-            $boxRule = self::askForInput("Enter Box Rule:", true); }
-        $this->boxRule = $boxRule ;
+            $source = self::askForInput("Enter Box Source Path:", true);
+            return $source ; }
     }
 
     protected function getTargetBoxLocation() {
-        if (isset($this->params["location"])) {
-            $boxRule = $this->params["box-rule"]; }
-        else {
+        if (isset($this->params["target"])) { return $this->params["target"]; }
+        else if (isset($this->params["guess"])) {
             $boxRule = self::askForInput("Enter Box Rule:", true); }
-        $this->boxRule = $boxRule ;
+        else {
+            $source = self::askForInput("Enter Box Source Path:", true);
+            return $source ; }
     }
 
-    protected function setBoxNewName() {
-        if (isset($this->params["location"])) {
-            $boxRule = $this->params["box-rule"]; }
+    protected function getBoxNewName() {
+        if (isset($this->params["name"])) { return $this->params["name"]; }
         else {
-            $boxRule = self::askForInput("Enter Box Rule:", true); }
-        $this->boxRule = $boxRule ;
+            $name = self::askForInput("Enter Box Name:", true);
+            return $name ;}
     }
 
     protected function extractMetadata() {
