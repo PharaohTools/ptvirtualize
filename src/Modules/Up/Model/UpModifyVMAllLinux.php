@@ -32,7 +32,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
 
     protected function setAvailableModifications() {
         $this->availableModifications = array(
-            "memory", "cpus"
+            "memory", "vram", "cpus", "ostype", "name"
         ) ;
     }
 
@@ -63,12 +63,9 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                             --name <name> [--transient]
 
 
-                                [--name <name>]
                             [--groups <group>, ...]
-                            [--ostype <ostype>]
                             [--iconfile <filename>]
                             [--pagefusion on|off]
-                            [--vram <vramsize in MB>]
                             [--acpi on|off]
                             [--ioapic on|off]
                             [--hpet on|off]
@@ -188,6 +185,9 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
 
                             [--cpus <number>]
                             [--memory <memorysize in MB>]
+                            [--vram <vramsize in MB>] # Video Ram
+                                [--name <name>]
+                            [--ostype <ostype>]
 
 
      */
