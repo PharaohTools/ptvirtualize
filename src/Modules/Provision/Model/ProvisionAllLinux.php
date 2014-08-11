@@ -47,9 +47,13 @@ class ProvisionAllLinux extends BaseLinuxApp {
     }
 
     protected function loadOSProvisioner() {
-        $provFile = dirname(dirname(__FILE__))."/OSProvisioners/".$this->phlagrantfile->config["vm"]["ostype"] ;
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $provFile = dirname(dirname(__FILE__))."/OSProvisioners/".$this->phlagrantfile->config["vm"]["ostype"].".php" ;
+        echo $provFile ;
         if (file_exists($provFile)) {
             require_once ($provFile) ;
+            $logging->log("OS Provisioner found for {$this->phlagrantfile->config["vm"]["ostype"]}");
             return new \Model\OSProvisioner(); }
         $logging->log("No suitable OS Provisioner found");
         return null ;
