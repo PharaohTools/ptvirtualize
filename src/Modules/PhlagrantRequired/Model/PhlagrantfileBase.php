@@ -44,6 +44,7 @@ class PhlagrantfileBase {
         $config["vm"]["ostype"] = "Ubuntu_64" ;
         $config["vm"]["gui_mode"] = "headless" ;
         $config["vm"]["cpus"] = 1 ;
+        $config["vm"]["default_tmp_dir"] = '/tmp' ;
 
 
 
