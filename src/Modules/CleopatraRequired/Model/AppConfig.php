@@ -6,7 +6,7 @@ class AppConfig {
 
     private static function checkSettingsExistOrCreateIt($pfile = null) {
         $pfile = (isset($pfile)) ? $pfile : 'papyrusfile' ;
-        if (!file_exists($pfile)) { touch($pfile); }
+        if (!file_exists($pfile)) { touch($pfile) ; }
         return true;
     }
 
@@ -20,7 +20,7 @@ class AppConfig {
             else if ( $listAdd == true && $listAddKey!=null ) {
                 $appConfigArray[$variable][$listAddKey] = $value ; }
             else { $appConfigArray[$variable] = $value ; }
-            self::saveProjectFile( $appConfigArray, $isLocal ) ; }
+            self::saveProjectFile( $appConfigArray, null, $isLocal ) ; }
     }
 
     /*
@@ -43,12 +43,12 @@ class AppConfig {
                     unset($appConfigArray[$variable][$key]) ; } }
             else {
                 unset($appConfigArray[$variable]) ; }
-            self::saveProjectFile( $appConfigArray, $isLocal ) ; }
+            self::saveProjectFile( $appConfigArray, null, $isLocal ) ; }
     }
 
     public static function getProjectVariable($variable, $isLocal=false) {
         $value = null;
-        $pFile = ($isLocal) ? 'papyrusfilelocal' : 'papyrusfile' ;
+        $pFile = ($isLocal == true) ? 'papyrusfilelocal' : 'papyrusfile' ;
         if (self::checkSettingsExistOrCreateIt($pFile)) {
             $appConfigArray = self::loadProjectFile($isLocal);
             $value = (isset($appConfigArray[$variable])) ? $appConfigArray[$variable] : null ; }
@@ -57,7 +57,7 @@ class AppConfig {
 
     public static function loadProjectFile($pfile = null, $isLocal = false) {
         if ($isLocal == true) { $pfile = 'papyrusfilelocal' ; }
-        else {$pfile = (isset($pfile)) ? $pfile : 'papyrusfile' ; }
+        if (is_null($pfile)) {$pfile = 'papyrusfile' ; }
         if (file_exists($pfile)) {
             $appConfigArraySerialized = file_get_contents($pfile);
             $decoded = unserialize($appConfigArraySerialized);
@@ -67,7 +67,7 @@ class AppConfig {
 
     public static function saveProjectFile($appConfigArray, $pfile = null, $isLocal = false) {
         if ($isLocal == true) { $pfile = 'papyrusfilelocal' ; }
-        else {$pfile = (isset($pfile)) ? $pfile : 'papyrusfile' ; }
+        if (is_null($pfile)) {$pfile = 'papyrusfile' ; }
         $appConfigSerialized = serialize($appConfigArray);
         file_put_contents($pfile, $appConfigSerialized);
         // chmod($pfile, 0777);
