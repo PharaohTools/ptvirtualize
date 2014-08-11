@@ -9,15 +9,15 @@ class BoxInfo extends Base {
     public $name = "Box - Manage Base Boxes for Phlagrant";
 
     public function __construct() {
-      parent::__construct();
+        parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "Box" =>  array_merge(parent::routesAvailable(), array() ) );
+        return array( "Box" =>  array_merge(array("add", "remove", "list") ) );
     }
 
     public function routeAliases() {
-      return array("box"=>"Box");
+        return array("box"=>"Box");
     }
 
     public function helpDefinition() {
@@ -27,17 +27,16 @@ class BoxInfo extends Base {
   Box, box
 
         - add
-        Initialises the Box test suite of this project
-        example: phlagrant box init
-        example: phlagrant box initialize
+        Initialises the Box as usable by Phlagrant
+        example: phlagrant box add
 
         - remove
-        Executes the Box test suite of this project
-        example: phlagrant box execute
+        Removes the box as usable by Phlagrant
+        example: phlagrant box remove
 
         - list
-        Executes the Box test suite of this project
-        example: phlagrant box execute
+        List boxes installed in Phlagrant
+        example: phlagrant box list
 
 HELPDATA;
       return $help ;
