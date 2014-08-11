@@ -23,10 +23,8 @@ class Phlagrantfile extends PhlagrantfileBase {
         // Networking - maybe use array constants for defaults or something?
         // $this->config["vm"]["networks"][] = array("1024") ;
         // Provisioning
-        $this->config["vm"]["provision"][] = array(
-            "group" => "PharoahTools",
-            "Provisioner" => "cleopatra",
-            "script" => "/var/www/pharoah-tools/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php" ) ;
+        $this->config["vm"]["provision"] = array() ;
+        $this->config["vm"]["provision"][] = array( "group" => "PharoahTools", "Provisioner" => "cleopatra", "script" => "/var/www/pharoah-tools/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php" ) ;
     }
 
 }
