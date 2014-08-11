@@ -26,7 +26,7 @@ class Phlagrantfile extends PhlagrantfileBase {
         $this->config["vm"]["provision"][] = array(
             "group" => "PharoahTools",
             "Provisioner" => "cleopatra",
-            "script" => "/var/www/pharoah-tools/build/config/phlagrant/" ) ;
+            "script" => "/var/www/pharoah-tools/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php" ) ;
     }
 
 }
