@@ -18,14 +18,19 @@ class Box extends Base {
             return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
         if ($action=="add") {
-            $this->content["result"] = $thisModel->askInstall();
+            $this->content["result"] = $thisModel->performBoxAdd();
             $this->content["appName"] = $thisModel->programNameInstaller ;
-            return array ("type"=>"view", "view"=>"firewall", "pageVars"=>$this->content); }
+            return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
 
         if ($action=="remove") {
             $this->content["result"] = $thisModel->askInstall();
             $this->content["appName"] = $thisModel->programNameInstaller;
-            return array ("type"=>"view", "view"=>"appStatus", "pageVars"=>$this->content); }
+            return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
+
+        if ($action=="list") {
+            $this->content["result"] = $thisModel->askInstall();
+            $this->content["appName"] = $thisModel->programNameInstaller;
+            return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
 
         $this->content["messages"][] = "Invalid Box Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
