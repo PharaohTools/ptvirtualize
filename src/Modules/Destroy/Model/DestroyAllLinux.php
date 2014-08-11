@@ -25,7 +25,6 @@ class DestroyAllLinux extends BaseLinuxApp {
     public function destroyNow() {
         $this->loadFiles();
         $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
-        echo $command ;
         $this->executeAndOutput($command);
     }
 

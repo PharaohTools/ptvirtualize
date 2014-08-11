@@ -115,7 +115,6 @@ class UpAllLinux extends BaseLinuxApp {
                 $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...");
                 $guiMode = "headless" ; } }
         $command = "vboxmanage startvm {$this->phlagrantfile->config["vm"]["name"]} --type $guiMode" ;
-        echo $command ;
         $this->executeAndOutput($command);
         return true ;
     }

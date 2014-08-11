@@ -25,7 +25,6 @@ class HaltAllLinux extends BaseLinuxApp {
     public function haltNow() {
         $this->loadFiles();
         $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
-        echo $command ;
         $this->executeAndOutput($command);
     }
 
