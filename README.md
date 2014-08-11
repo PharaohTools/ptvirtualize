@@ -63,7 +63,6 @@ You'll be able to automate any action from any available module into an autopilo
 working on a web front end, but you can also use JSON output and the PostInput module to use any module from an API.
 
 
-
 ## A quick example
 
 Fire up a virtual machine with a standard configuration of PHP.
@@ -81,7 +80,6 @@ Fire up a virtual machine with a standard configuration of PHP.
  phlagrant up now
 
 That's it! you can sit back while Phlagrant creates your virtual machine environment for you
-
 
 
 ## Available Commands:
