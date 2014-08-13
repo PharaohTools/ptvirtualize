@@ -47,6 +47,7 @@ class PhlagrantfileBase {
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp' ;
+        $config["network"]["nic1"] = "nat" ;
 
 
 
