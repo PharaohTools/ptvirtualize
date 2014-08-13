@@ -50,7 +50,7 @@ class AppConfig {
         $value = null;
         $pFile = ($isLocal == true) ? 'papyrusfilelocal' : 'papyrusfile' ;
         if (self::checkSettingsExistOrCreateIt($pFile)) {
-            $appConfigArray = self::loadProjectFile($isLocal);
+            $appConfigArray = self::loadProjectFile($pFile, $isLocal);
             $value = (isset($appConfigArray[$variable])) ? $appConfigArray[$variable] : null ; }
         return $value;
     }
