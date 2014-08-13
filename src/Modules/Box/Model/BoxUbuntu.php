@@ -12,8 +12,14 @@ class BoxUbuntu extends BaseLinuxApp {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("BoxAdd") ;
+    public $modelGroup = array("Default", "BoxAdd") ;
     protected $actionsToMethods ;
+
+    protected $source ;
+    protected $target ;
+    protected $name ;
+    protected $provider ;
+    protected $metadata ;
 
     public function __construct($params) {
         parent::__construct($params);
@@ -34,24 +40,33 @@ class BoxUbuntu extends BaseLinuxApp {
         ) ;
     }
 
-    protected function performBoxAdd() {
+    public function performBoxAdd() {
         // box add
-        // get the .pbox file (if remote)
-        // get save location
-        // copy it there
+        // get the .pbox file (if remote) --
+        // get save location --
         // untar the single metadata.json file out of it
         // check the provider
         // load the provider and invoke the add box method there
         // - vbix module
         //  - untar it there
         //  - import it
-        $originalLocation = $this->getOriginalBoxLocation();
-        $newLocation = $this->getTargetBoxLocation();
-        $newName = $this->getBoxNewName();
-        $this->extractMetadata();
-        $this->loadProvider();
-        $this->provider->addBox($originalLocation, $newLocation, $newName) ;
-            # vbox module
+        $this->source = $this->getOriginalBoxLocation();
+        $this->target = $this->getTargetBoxLocation();
+        $this->name = $this->getBoxNewName();
+        $this->metadata = $this->extractMetadata();
+        $this->findProvider() ;
+        $this->attemptBoxAdd() ;
+        # vbox module
+        return true;
+    }
+
+    public function performBoxRemove() {
+        $this->target = $this->getTargetBoxLocation();
+        $this->name = $this->getBoxNewName();
+        $this->metadata = $this->getMetadataFromFS();
+        $this->findProvider("BoxRemove") ;
+        $this->attemptBoxRemove() ;
+        # vbox module
         return true;
     }
 
@@ -63,12 +78,15 @@ class BoxUbuntu extends BaseLinuxApp {
     }
 
     protected function getTargetBoxLocation() {
+        // @todo dont hardcode the /opt/phlagrant/
         if (isset($this->params["target"])) { return $this->params["target"]; }
         else if (isset($this->params["guess"])) {
-            $boxRule = self::askForInput("Enter Box Rule:", true); }
+            $target = '/opt/phlagrant/boxes' ;
+            if (!file_exists($target)) { mkdir($target, true) ; }
+            return $target ; }
         else {
-            $source = self::askForInput("Enter Box Source Path:", true);
-            return $source ; }
+            $target = self::askForInput("Enter Box Target Path:", true);
+            return $target ; }
     }
 
     protected function getBoxNewName() {
@@ -79,31 +97,69 @@ class BoxUbuntu extends BaseLinuxApp {
     }
 
     protected function extractMetadata() {
-        if (isset($this->params["location"])) {
-            $boxRule = $this->params["box-rule"]; }
-        else {
-            $boxRule = self::askForInput("Enter Box Rule:", true); }
-        $this->boxRule = $boxRule ;
+        $boxFile = $this->source ;
+        $command = "tar --extract --file=$boxFile -C /tmp ./metadata.json" ;
+        self::executeAndOutput($command);
+        $fData = file_get_contents("/tmp/metadata.json") ;
+        $command = "rm /tmp/metadata.json" ;
+        self::executeAndOutput($command);
+        $fdo = json_decode($fData) ;
+        return $fdo ;
     }
 
-    protected function loadProvider() {
-        if (isset($this->params["location"])) {
-            $boxRule = $this->params["box-rule"]; }
-        else {
-            $boxRule = self::askForInput("Enter Box Rule:", true); }
-        $this->boxRule = $boxRule ;
+    protected function getMetadataFromFS() {
+        $file = "{$this->target}/{$this->name}/metadata.json" ;
+        $string = file_get_contents($file) ;
+        $fdo = json_decode($string) ;
+        return $fdo ;
     }
 
-    public function setDefaultPolicyParam() {
-        $opts =  array("allow", "deny", "reject") ;
-        if (isset($this->params["policy"]) && in_array($this->params["policy"], $opts)) {
-            $loggingFactory = new \Model\Logging();
-            $logging = $loggingFactory->getModel($this->params);
-            $logging->log("Policy param for set default must be allow, deny or reject") ;
-            $defaultPolicy = $this->params["policy"]; }
+    protected function findProvider($modGroup = "BoxAdd") {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->metadata)) {
+            if (isset($this->metadata->provider)) {
+                $logging->log("Provider {$this->metadata->provider} found in metadata.json") ;
+                $this->provider = $this->getProvider($this->metadata->provider, $modGroup) ; }
+            else {
+                $logging->log("No Provider configured in Metadata object."); } }
         else {
-            $defaultPolicy = self::askForArrayOption("Enter Policy:", $opts, true); }
-        $this->defaultPolicy = $defaultPolicy ;
+            $logging->log("No Metadata object found."); }
+    }
+
+    protected function getProvider($provider, $modGroup = "BoxAdd") {
+        $infoObjects = \Core\AutoLoader::getInfoObjects();
+        $allProviders = array();
+        foreach($infoObjects as $infoObject) {
+            if ( method_exists($infoObject, "vmProviderName") ) {
+                $allProviders[] = $infoObject->vmProviderName(); } }
+        foreach($allProviders as $oneProvider) {
+            if ( $provider == $oneProvider ) {
+                $className = '\Model\\'.ucfirst($oneProvider) ;
+                $providerFactory = new $className();
+                $provider = $providerFactory->getModel($this->params, $modGroup);
+                return $provider ; } }
+        return false ;
+    }
+
+    protected function attemptBoxAdd() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (is_object($this->provider)) {
+            $logging->log("Attempting to add box via provider {$this->metadata->provider}...");
+            $this->provider->addBox($this->source, $this->target, $this->name) ; }
+        else {
+            $logging->log("No Provider available, will not attempt to add box."); }
+    }
+
+    protected function attemptBoxRemove() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (is_object($this->provider)) {
+            $logging->log("Attempting to remove box via provider {$this->metadata->provider}...");
+            $this->provider->removeBox($this->target, $this->name) ; }
+        else {
+            $logging->log("No Provider available, will not attempt to remove box."); }
     }
 
 }
