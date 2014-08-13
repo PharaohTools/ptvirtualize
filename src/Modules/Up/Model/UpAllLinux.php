@@ -29,13 +29,17 @@ class UpAllLinux extends BaseLinuxApp {
         if ($this->isSavedInPapyrus()) {
             if ($this->vmExistsInProvider()) {
                 if ($this->vmIsRunning()) {
-                     $logging->log("This VM is already up and running."); }
+                     $logging->log("This VM is already up and running.");
+                    return; }
                 $logging->log("Phlagrant will start and optionally provision your existing VM.");
+                $this->modifyVm(true);
                 $this->startVm();
-                $this->provisionVm(true); }
+                $this->provisionVm(true);
+                return ;}
             $logging->log("This VM has been deleted outside of Phlagrant. Re-creating from scratch.");
             $this->deleteFromPapyrus();
-            $this->completeBuildUp(); }
+            $this->completeBuildUp();
+            return ; }
         $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.");
         $this->completeBuildUp();
     }
@@ -58,8 +62,8 @@ class UpAllLinux extends BaseLinuxApp {
     }
 
     protected function completeBuildUp() {
-        $this->createVm();
         $this->importBaseBox();
+        $this->storeInPapyrus();
         $this->modifyVm();
         $this->startVm();
         $this->provisionVm();
@@ -72,22 +76,27 @@ class UpAllLinux extends BaseLinuxApp {
 
     protected function vmExistsInProvider() {
         $out = $this->executeAndLoad("vboxmanage list vms");
-        if (strpos($out, $this->papyrus["name"] != false )) {
+        if (strpos($out, $this->phlagrantfile->config["vm"]["name"])!= false) {
             return true ; }
         return false ;
     }
 
     protected function vmIsRunning() {
         $out = $this->executeAndLoad("vboxmanage list runningvms");
-        if (strpos($out, $this->papyrus["name"] != false )) {
+        if (strpos($out, $this->phlagrantfile->config["vm"]["name"] ) != false ) {
             return true ; }
         return false ;
     }
 
-    protected function createVm() {
-        $comm  = "vboxmanage createvm --name {$this->phlagrantfile->config["vm"]["name"]} " ;
-        $comm .= "--ostype {$this->phlagrantfile->config["vm"]["ostype"]} --register" ;
-        $this->executeAndOutput($comm);
+    protected function importBaseBox() {
+        $upFactory = new \Model\Up();
+        $importBox = $upFactory->getModel($this->params, "ImportBaseBox") ;
+        $importBox->papyrus = $this->papyrus ;
+        $importBox->phlagrantfile = $this->phlagrantfile ;
+        $importBox->performImport() ;
+    }
+
+    protected function storeInPapyrus() {
         $phlagrantBox = array() ;
         $phlagrantBox["name"] = $this->phlagrantfile->config["vm"]["name"] ;
         $phlagrantBox["username"] = $this->phlagrantfile->config["ssh"]["username"] ;
@@ -97,10 +106,13 @@ class UpAllLinux extends BaseLinuxApp {
         return true ;
     }
 
-    protected function importBaseBox() {
-    }
-
-    protected function modifyVm() {
+    protected function modifyVm($onlyIfRequestedByParam = false) {
+        if ($onlyIfRequestedByParam == true) {
+            if (!isset($this->params["modify"]) || (isset($this->params["modify"]) && $this->params["modify"] != true) ) {
+                $loggingFactory = new \Model\Logging();
+                $logging = $loggingFactory->getModel($this->params) ;
+                $logging->log("Not modifying as modify parameter not set");
+                return ; } }
         $upFactory = new \Model\Up();
         $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
         $modifyVM->papyrus = $this->papyrus ;
@@ -131,7 +143,8 @@ class UpAllLinux extends BaseLinuxApp {
             if (!isset($this->params["provision"]) || (isset($this->params["provision"]) && $this->params["provision"] != true) ) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
-                $logging->log("No GUI mode explicitly set, Guess parameter set, defaulting to headless GUI mode..."); } }
+                $logging->log("Not provisioning as provision parameter not set");
+                return ; } }
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $provision->provisionNow();
