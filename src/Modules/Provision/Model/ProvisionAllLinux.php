@@ -53,7 +53,7 @@ class ProvisionAllLinux extends BaseLinuxApp {
         if (file_exists($provFile)) {
             require_once ($provFile) ;
             $logging->log("OS Provisioner found for {$this->phlagrantfile->config["vm"]["ostype"]}") ;
-            $osp = new \Model\OSProvisioner() ;
+            $osp = new \Model\OSProvisioner($this->params) ;
             $osp->phlagrantfile = $this->phlagrantfile;
             $osp->papyrus = $this->papyrus;
             return $osp ; }
