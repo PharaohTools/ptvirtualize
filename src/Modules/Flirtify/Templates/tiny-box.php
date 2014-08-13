@@ -14,7 +14,7 @@ class Phlagrantfile extends PhlagrantfileBase {
         $this->setDefaultConfig();
         $this->config["vm"]["ostype"] = "Ubuntu_64" ;
         $this->config["vm"]["name"] = "phlagrant-box" ;
-        $this->config["vm"]["box"] = "VanillaUbuntu_14.04" ;
+        $this->config["vm"]["box"] = "vanillabuntu" ;
         $this->config["vm"]["memory"] = "1024" ;
         $this->config["ssh"]["username"] = "phlagrant" ;
         $this->config["ssh"]["password"] = "phlagrant" ;
