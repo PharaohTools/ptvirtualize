@@ -28,7 +28,7 @@ class PhlagrantfileBase {
         //config.vm.hostname - The hostname the machine should have. Defaults to nil. If nil, Vagrant won't manage the hostname. If set to a string, the hostname will be set on boot.
         $config["vm"]["hostname"] = "PhlagrantHost" ;
         //config.vm.network - Configures networks on the machine. Please see the networking page for more information.
-        $config["vm"]["network"] = "Bridged" ;
+         // $config["vm"]["network"] = "Bridged" ;
         //config.vm.post_up_message - A message to show after vagrant up. This will be shown to the user and is useful for containing instructions such as how to access various components of the development environment.
         $config["vm"]["post_up_message"] = "Phlagrant has brought your machine up successfully" ;
         //config.vm.provider - Configures provider-specific configuration, which is used to modify settings which are specific to a certain provider. If the provider you're configuring doesn't exist or is not setup on the system of the person who runs vagrant up, Vagrant will ignore this configuration block. This allows a Vagrantfile that is configured for many providers to be shared among a group of people who may not have all the same providers installed.
@@ -47,7 +47,6 @@ class PhlagrantfileBase {
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp' ;
-        $config["network"]["nic1"] = "nat" ;
 
 
 
