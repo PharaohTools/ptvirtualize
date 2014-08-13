@@ -17,6 +17,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
     public $papyrus;
     public $phlagrantfile;
     protected $availableModifications;
+    protected $availableNetworkModifications;
 
     public function performModifications() {
         $loggingFactory = new \Model\Logging();
@@ -24,7 +25,13 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         $this->setAvailableModifications();
         foreach ($this->phlagrantfile->config["vm"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableModifications)) {
-                $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} by changing $configKey to $configValue") ;
+                $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
+                $command = "vboxmanage modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
+                $this->executeAndOutput($command); } }
+        $this->setAvailableNetworkModifications();
+        foreach ($this->phlagrantfile->config["network"] as $configKey => $configValue) {
+            if (in_array($configKey, $this->availableNetworkModifications)) {
+                $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
                 $command = "vboxmanage modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
                 $this->executeAndOutput($command); } }
         $this->setSharedFolders();
@@ -32,8 +39,24 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
 
     protected function setAvailableModifications() {
         $this->availableModifications = array(
-            "memory", "vram", "cpus", "ostype", "name"
+            "name", "ostype", "memory", "vram", "cpus",
         ) ;
+    }
+
+    protected function setAvailableNetworkModifications() {
+
+        for ($i = 0; $i<10; $i++) {
+            $this->availableNetworkModifications[] = "nic$i" ;
+            $this->availableNetworkModifications[] = "nictype$i" ;
+            $this->availableNetworkModifications[] = "cableconnected$i" ;
+            $this->availableNetworkModifications[] = "nictrace$i" ;
+            $this->availableNetworkModifications[] = "nictracefile$i" ;
+            $this->availableNetworkModifications[] = "bridgeadapter$i" ;
+            $this->availableNetworkModifications[] = "hostonlyadapter$i" ;
+            $this->availableNetworkModifications[] = "intnet$i" ;
+            $this->availableNetworkModifications[] = "macaddress$i" ;
+        }
+
     }
 
     protected function setSharedFolders() {
