@@ -55,6 +55,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
             $this->availableNetworkModifications[] = "hostonlyadapter$i" ;
             $this->availableNetworkModifications[] = "intnet$i" ;
             $this->availableNetworkModifications[] = "macaddress$i" ;
+            $this->availableNetworkModifications[] = "natpf$i" ;
         }
 
     }
