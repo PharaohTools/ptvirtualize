@@ -23,7 +23,7 @@ class Box extends Base {
             return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
 
         if ($action=="remove") {
-            $this->content["result"] = $thisModel->askInstall();
+            $this->content["result"] = $thisModel->performBoxRemove();
             $this->content["appName"] = $thisModel->programNameInstaller;
             return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
 
