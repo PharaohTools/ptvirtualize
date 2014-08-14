@@ -25,7 +25,7 @@ class Phlagrantfile extends PhlagrantfileBase {
             array(
                 "provisioner" => "PharoahTools",
                 "tool" => "cleopatra",
-                "script" => __DIR__."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php"
+                "script" => getcwd()."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php"
             ) ;
     }
 
