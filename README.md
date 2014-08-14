@@ -70,16 +70,20 @@ Fire up a virtual machine with a standard configuration of PHP.
  # create a directory, or use a current web project as your new Pharaoh project
  mkdir /var/www/my-test-project && cd /var/www/my-test-project
 
- # install virtualbox if you don't already have it
- sudo cleopatra virtualbox install --yes --guess
+ # install virtualbox if you don't already have it (ideally with the guest additions iso)
+ sudo cleopatra virtualbox install --yes --guess --with-guest-additions
+
+ # add a default Cleopatra Configuration Management Autopilot file for
+ sudo cleopatra cleofy install-generic-autopilots --yes --guess --template-group=phlagrant
 
  # flirtify
- phlagrant flirt now --template-type=tiny-php
+ phlagrant flirt now --template-group=default-php
 
  # install, configure and start the virtual machine
  phlagrant up now
 
-That's it! you can sit back while Phlagrant creates your virtual machine environment for you
+That's it! you can sit back while Phlagrant creates your virtual machine environment for you. All of your system,
+network and shared directory configuration for the Virtual Machine.
 
 
 ## Available Commands:
