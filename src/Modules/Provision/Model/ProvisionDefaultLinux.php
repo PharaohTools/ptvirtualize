@@ -7,7 +7,21 @@ class ProvisionDefaultLinux extends Base {
     public $phlagrantfile;
     public $papyrus ;
 
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
     public function provision() {
+        $pharoahSpellings = array("Pharaoh", "pharaoh", "PharaohTools", "pharaohTools", "Pharoah", "pharoah",
+            "PharoahTools", "pharoahTools") ;
+        foreach ($this->phlagrantfile->config["vm"]["provision"] as $provisioner) {
+            if (in_array($provisioner[""], $pharoahSpellings)) {
+
+                $this->pharoahProvision($provisioner) ;
+            }
+        }
+
+    }
+
+    protected function pharoahProvision($provisioner) {
+
         // @todo this should support other provisioners than pharoah
         $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."/provision.php" ;
         $loggingFactory = new \Model\Logging();
@@ -25,9 +39,9 @@ class ProvisionDefaultLinux extends Base {
             $ipstring = implode(", " , $ips) ;
             $logging->log("... Found $ipstring") ; }
         else {
-            $gdi = $this->getDefaultIp() ;
-            $ips[] = $gdi ;
-            $logging->log("Using default ip of $gdi") ;  }
+            $gdi = $this->getDefaultIpList() ;
+            $ips = array_merge($ips, $gdi) ;
+            $logging->log("Using default ip list of $gdi") ;  }
 
         if (isset($this->phlagrantfile->config["ssh"]["port"])) {
             $thisPort = $this->phlagrantfile->config["ssh"]["port"] ; }
@@ -45,6 +59,20 @@ class ProvisionDefaultLinux extends Base {
             "target" => "$chosenIp"
         ))) ;
 
+
+    }
+
+    protected function cleopatraProvision() {
+
+    }
+
+    protected function dapperstranoProvision() {
+
+    }
+
+    protected function sftpProvision() {
+
+
         $sftpParams = $this->params ;
         $sftpParams["yes"] = true ;
         $sftpParams["guess"] = true ;
@@ -59,6 +87,9 @@ class ProvisionDefaultLinux extends Base {
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
         $sftp->performSFTPPut();
+    }
+
+    protected function sshProvision() {
 
         $sshParams = $this->params ;
         $sshParams["ssh-data"] = $this->setSSHData($provisionFile);
@@ -76,7 +107,8 @@ class ProvisionDefaultLinux extends Base {
     }
 
     protected function waitUntilGetIP() {
-        $totalTime = 90;
+        $totalTime = (isset($this->phlagrantfile->config["vm"]["ip_find_timeout"]))
+            ? $this->phlagrantfile->config["ssh"]["ip_find_timeout"] : 180 ;
         $ips = array() ;
         //while ($t < $totalTime) {
         $loggingFactory = new \Model\Logging();
@@ -103,8 +135,10 @@ class ProvisionDefaultLinux extends Base {
         return $ips ;
     }
 
-    protected function waitForSsh($ip, $thisPort, $totalTime) {
+    protected function waitForSsh($ip, $thisPort) {
         $t = 0;
+        $totalTime = (isset($this->phlagrantfile->config["vm"]["ssh_find_timeout"]))
+            ? $this->phlagrantfile->config["ssh"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...") ;
@@ -121,9 +155,10 @@ class ProvisionDefaultLinux extends Base {
     }
 
     protected function getDefaultIp() {
-        return "10.0.2.15" ;
+        return array("10.0.2.15", "192.168.56.1" ) ;
     }
 
+    // @todo ahem
     protected function checkForGuestAdditions() {
         return true ;
     }
