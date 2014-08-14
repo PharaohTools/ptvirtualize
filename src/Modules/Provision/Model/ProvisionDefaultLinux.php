@@ -8,29 +8,43 @@ class ProvisionDefaultLinux extends Base {
     public $papyrus ;
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    // @todo this should support other provisioners than pharoah, provide some override here to allow
+    // @todo chef solo, puppet agent, salt or ansible to get invoked
     public function provision() {
         $pharoahSpellings = array("Pharaoh", "pharaoh", "PharaohTools", "pharaohTools", "Pharoah", "pharoah",
             "PharoahTools", "pharoahTools") ;
         foreach ($this->phlagrantfile->config["vm"]["provision"] as $provisioner) {
-            if (in_array($provisioner[""], $pharoahSpellings)) {
-
-                $this->pharoahProvision($provisioner) ;
-            }
-        }
-
+            if (in_array($provisioner["provisioner"], $pharoahSpellings)) {
+                return $this->pharoahProvision($provisioner) ; } }
     }
 
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function pharoahProvision($provisioner) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $cleoSpellings = array("Cleopatra", "cleopatra", "Cleo", "cleo") ;
+        $dapperSpellings = array("Dapperstrano", "dapperstrano", "dapper", "Dapper" ) ;
+        if (in_array($provisioner["tool"], $cleoSpellings)) {
+            $init = $this->initialisePharaohProvision($provisioner) ;
+            return $this->cleopatraProvision($provisioner, $init) ; }
+        else if (in_array($provisioner["tool"], $dapperSpellings)) {
+            $init = $this->initialisePharaohProvision($provisioner) ;
+            return $this->dapperstranoProvision($provisioner, $init) ; }
+        else {
+            $logging->log("Unrecognised Pharoah Provisioning Tool {$provisioner["tool"]} specified") ;
+            return null ; }
+    }
 
-        // @todo this should support other provisioners than pharoah
-        $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."/provision.php" ;
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    protected function initialisePharaohProvision($provisioner) {
+
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         // get target ip from phlagrantfile if its there
         // if not check for guest additions installed
         $ips = array() ;
         if (isset($this->phlagrantfile->config["ssh"]["target"])) {
-            $logging->log("Using Phlagrantfile defined ssh target of {$this->phlagrantfile->config["ssh"]["target"]}: ") ;
+            $logging->log("Using Phlagrantfile defined ssh target of {$this->phlagrantfile->config["ssh"]["target"]}... ") ;
             $ips[] = $this->phlagrantfile->config["ssh"]["target"] ; }
         else if ($this->checkForGuestAdditions()==true) {
             $logging->log("Guest additions found on VM, finding target from it...") ;
@@ -59,26 +73,48 @@ class ProvisionDefaultLinux extends Base {
             "target" => "$chosenIp"
         ))) ;
 
+        $this->saveSSHToPapyrus() ;
+
+        $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."/provision.php" ;
+
+        return array(
+            "target_provision_file" => $provisionFile,
+            "encoded_box" => $encodedBox,
+            "provision" => $provisionFile,
+        );
 
     }
 
-    protected function cleopatraProvision() {
-
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    protected function cleopatraProvision($provisioner, $init) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Initialising Provisioning of VM with Cleopatra...") ;
+        $this->initialisePharaohProvision($provisioner);
+        $this->sftpProvision($provisioner, $init["encoded_box"], $init["provision_file"]);
+        $this->sshProvision($provisioner, $init["encoded_box"], $init["provision_file"]);
+        return true ;
     }
 
-    protected function dapperstranoProvision() {
-
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    protected function dapperstranoProvision($provisioner, $init) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Initialising Provisioning of VM with Dapperstrano...") ;
+        $this->initialisePharaohProvision($provisioner);
+        $this->sftpProvision($provisioner, $init);
+        $this->sshProvision($provisioner, $init);
+        return true ;
     }
 
-    protected function sftpProvision() {
-
-
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    protected function sftpProvision($provisioner, $init) {
         $sftpParams = $this->params ;
         $sftpParams["yes"] = true ;
         $sftpParams["guess"] = true ;
-        $sftpParams["servers"] = $encodedBox ;
-        $sftpParams["source"] = getcwd()."/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php" ;
-        $sftpParams["target"] = $provisionFile ;
+        $sftpParams["servers"] = $init["encoded_box"] ;
+        $sftpParams["source"] = $provisioner["script"] ;
+        $sftpParams["target"] = $init["provision_file"] ;
         if (isset($this->phlagrantfile->config["ssh"]["port"])) {
             $sftpParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
         if (isset($this->phlagrantfile->config["ssh"]["timeout"])) {
@@ -89,13 +125,13 @@ class ProvisionDefaultLinux extends Base {
         $sftp->performSFTPPut();
     }
 
-    protected function sshProvision() {
-
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    protected function sshProvision($provisioner, $init) {
         $sshParams = $this->params ;
-        $sshParams["ssh-data"] = $this->setSSHData($provisionFile);
+        $sshParams["ssh-data"] = $this->setSSHData($init["provision_file"]);
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
-        $sshParams["servers"] = $encodedBox ;
+        $sshParams["servers"] = $init["encoded_box"] ;
         if (isset($this->phlagrantfile->config["ssh"]["port"])) {
             $sshParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
         if (isset($this->phlagrantfile->config["ssh"]["timeout"])) {
@@ -106,6 +142,7 @@ class ProvisionDefaultLinux extends Base {
         $ssh->performInvokeSSHData() ;
     }
 
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function waitUntilGetIP() {
         $totalTime = (isset($this->phlagrantfile->config["vm"]["ip_find_timeout"]))
             ? $this->phlagrantfile->config["ssh"]["ip_find_timeout"] : 180 ;
@@ -135,6 +172,7 @@ class ProvisionDefaultLinux extends Base {
         return $ips ;
     }
 
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function waitForSsh($ip, $thisPort) {
         $t = 0;
         $totalTime = (isset($this->phlagrantfile->config["vm"]["ssh_find_timeout"]))
@@ -154,11 +192,13 @@ class ProvisionDefaultLinux extends Base {
         return null ;
     }
 
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function getDefaultIp() {
         return array("10.0.2.15", "192.168.56.1" ) ;
     }
 
     // @todo ahem
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function checkForGuestAdditions() {
         return true ;
     }
