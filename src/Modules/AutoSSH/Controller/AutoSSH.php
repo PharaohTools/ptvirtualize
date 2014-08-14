@@ -17,13 +17,9 @@ class AutoSSH extends Base {
             $this->content["helpData"] = $helpModel->getHelpData($pageVars["route"]["control"]);
             return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
-        if ($action=="show") {
-            $this->content["result"] = $thisModel->statusShow();
-            return array ("type"=>"view", "view"=>"status", "pageVars"=>$this->content); }
-
-        if ($action=="full") {
-            $this->content["result"] = $thisModel->statusFull();
-            return array ("type"=>"view", "view"=>"status", "pageVars"=>$this->content); }
+        if ($action=="cli") {
+            $this->content["result"] = $thisModel->autoSSHCli();
+            return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
 
         $this->content["messages"][] = "Invalid AutoSSH Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
