@@ -6,33 +6,29 @@ class AutoSSHInfo extends CleopatraBase {
 
   public $hidden = false;
 
-  public $name = "AutoSSH - Stop a Phlagrant Box";
+  public $name = "AutoSSH - Use your Papyrus details to SSH into your Phlagrant box";
 
   public function __construct() {
     parent::__construct();
   }
 
   public function routesAvailable() {
-    return array( "AutoSSH" =>   array("show", "full", "help") );
+    return array( "AutoSSH" =>   array("cli", "help") );
   }
 
   public function routeAliases() {
-    return array("status"=>"AutoSSH");
+    return array("auto-ssh"=>"AutoSSH", "autossh"=>"AutoSSH", "ssh"=>"AutoSSH", "SSH"=>"AutoSSH");
   }
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to status a phlagrant box
+  This command allows you to autoSSH a phlagrant box
 
-  AutoSSH, status
+  AutoSSH, auto-ssh, autossh, ssh, SSH
 
-        - show
-        Show execution status information of your Phlagrant VM
-        example: phlagrant status show
-
-        - full
-        Show full status information of your Phlagrant VM
-        example: phlagrant status full
+        - cli
+        Open an SSH Cli to your Phlagrant Box
+        example: phlagrant auto-ssh cli
 
 HELPDATA;
     return $help ;
