@@ -21,6 +21,10 @@ class Up extends Base {
             $this->content["result"] = $thisModel->doUp();
             return array ("type"=>"view", "view"=>"up", "pageVars"=>$this->content); }
 
+        if ($action=="reload") {
+            $this->content["result"] = $thisModel->doReload();
+            return array ("type"=>"view", "view"=>"up", "pageVars"=>$this->content); }
+
         $this->content["messages"][] = "Invalid Up Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 
