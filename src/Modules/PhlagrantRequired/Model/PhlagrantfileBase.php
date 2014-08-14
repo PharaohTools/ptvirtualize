@@ -23,7 +23,7 @@ class PhlagrantfileBase {
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp/' ;
-        $config["vm"]["post_up_message"] = "Your default Phlagrant post_up_message" ; # A message to show after Phlagrant Up/Reload.
+        $config["vm"]["post_up_message"] = "Your default Phlagrant post_up_message..." ; # A message to show after Phlagrant Up/Reload.
         # Default SSH Settings
         $config["ssh"]["user"] = "phlagrant" ;
         $config["ssh"]["password"] = "phlagrant" ;
