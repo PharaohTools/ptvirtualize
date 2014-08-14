@@ -4,34 +4,6 @@ Phlagrant Modules to be created
 phlagrant command list
 -------------------------
 
-box
- - manages boxes: installation, removal, etc.
- - download/install/remove a base box
- - hmmm lots of stuff
- - weeks, lots of resource
-
-provision    provisions the vagrant machine, install pharoah and execute pharoah autopilots
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - get config from Phlagrantfile
- - api control->start(machine) (if not running)
- - api control->provision(machine, config)
- - 3 days
-
-
-package      packages a running vagrant environment into a box
- - hmmm lots of stuff
- - weeks, lots of resource
-
-reload       restarts vagrant machine, loads new Vagrantfile configuration
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - api control->stop(machine)
- - get config from Phlagrantfile
- - api config->load(machine, config)
- - api control->start(machine)
- - 3 days
-
 ssh          connects to machine via SSH
              invoke ssh using the ssh params configured during phlagrant up and put into local-papyrus
  - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
@@ -44,64 +16,44 @@ ssh-config   outputs OpenSSH valid configuration to connect to the machine
  - display the details
  - 1 day
 
-status       outputs status of the vagrant machine
- - display the details
- - 1 day
+package      packages a running vagrant environment into a box
+THIS WILL BECOME BOX PACKAGE
 
-DONE
-destroy      stops and deletes all traces of the vagrant machine
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - api control->stop(machine)
- - 3 days
+box DONE box add, box remove
+    add - manages boxes: installation, removal, etc. download/install/remove a base box
 
-DONE
-halt         stops the vagrant machine
- - api control->stop(machine)
- - 1 day
+provision DONE phlagrant provision now
+    now -provisions the vagrant machine, install pharoah and execute pharoah autopilots
+reload  DONE phlagrant up reload
+    restarts vagrant machine, loads new Vagrantfile configuration
 
-DONE
-help         shows the help for a subcommand
- - already in pyramid
- - 1 day/none if built in
+status  DONE phlagrant status full, show
+    phlagrant status full     outputs status of the vagrant machine
+    phlagrant status show     outputs status of the vagrant machine
 
-DONE
-INIT IS FLIRTYIFY
-init         initializes a new Vagrant environment by creating a Vagrantfile
- - already in pharoah, templating, phlagrant stylee
- - 1 day
+destroy DONE phlagrant destroy now
+    phlagrant destroy now, stops and deletes all traces of the vagrant machine
 
+halt DONE stops the vagrant machine
+    phlagrant halt hard, stops with hard power button
+    phlagrant halt now, stops with ssh shutdown, then soft power button, then hard power button
 
-DONE - PHAROAH MODULES IMPLEMENTS THIS
-plugin       manages plugins: install, uninstall, update, etc.
- - already in, to be, dependencies, composering etc
- - 1 day/none if built in
+help DONE shows the help for a subcommand
+    phlagrant *MODULE* help
 
-DONE
-resume       resume a suspended vagrant machine, resume the box described in local-papyrus
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - api control->resume(machine)
- - 1/2 days
+init DONE is flirt (or init works too, if you must)
+    phlagrant flirt now  initializes a new Vagrant environment by creating a Vagrantfile
 
-DONE -THIS IS NOW HALT SUSPEND/PAUSE
-suspend      suspends the machine
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - api control->suspend(machine)
- - 1/2 days
+resume DONE phlagrant resume now
+    phlagrant resume now, resume a suspended vagrant machine, resume the box described in papyruslocal
 
-MOSTLY DONE - PROVISION IS ANOTHER COMMAND
-up           starts, configs and provisions the vagrant environment
-             (also add flirt (phlagrant flirt now))
- - get machine name from papyrus-local (papyrus commit/push papyrus-local dont)
- - get id from name
- - api control->stop(machine)
- - get config from Phlagrantfile
- - api config->load(machine, config)
- - api control->start(machine)
- - api control->provision(machine, config)
- - 3 days
+suspend DONE - THIS IS NOW HALT SUSPEND/PAUSE
+   phlagrant halt suspend, suspends the machine
+   phlagrant halt pause, suspends the machine
+
+up     DONE -
+   phlagrant up now --modify --provision, starts, modifies hardware of and provisions the vagrant environment
+
 
 
 ------------------------------------------------------------------------------
@@ -109,7 +61,9 @@ up           starts, configs and provisions the vagrant environment
 Concepts
 
 Phlagrantfile
-  - This is an autopilot file
+    This file describes how Phlagrant will set up your Virtual Machine. Phlagrantfiles all extend the base
+    PhlagrantfileBase Model, in the PhlagrantRequired Module complete. This base model provides groups of
+    default settings for your Virtual Machines. You
 
 Networking
     Basic Usage
@@ -120,22 +74,37 @@ Networking
 Synced Folders
 
 Providers
-    VirtualBox - This comes with using the Virtualbox SDK Library I guess
-    VMware - Contact VMWare and ask them to write their own one
+    I've *mostly* built in readiness for other providers, need to put vboxmange commands through a wrapper class of
+    of methods.Make all calls to vboxmange shell commands into calls to a wrapper, so that we can use other providers.
+    VirtualBox - This comes with using the vboxmanage wrapper commands already used.
+    VMware - Contact VMWare and ask them to write their own one? After above wrapper is made
 
 Plugins
     The software is built on the Pyramid framework as are all Pharoah tools, and extensions are written and provided
-    through modules and composer
+    through Pyramid modules. Click here for more information on Pyramid module development in general.
 
 Command-Line Interface
 
-Almost all interaction with Vagrant is done through the command-line interface.
-The interface is available using the vagrant command, and comes installed with Vagrant automatically. The vagrant
-command in turn has many subcommands, such as vagrant up, vagrant destroy, etc. If you run vagrant by itself, help
-will be displayed showing all available subcommands. In addition to this, you can run any Vagrant command with the -h
-flag to output help about that specific command. For example, try running vagrant init -h. The help will output a one
+------------------------------------------------------------------------------
+
+Phlagrant is (believe it or not) based heavily on ideas made famous in the Ruby tool Vagrant.
+
+Phlagrant is primarily a command line tool, is done through the command-line interface.
+The interface is available using the phlagrant command, and comes installed with Vagrant automatically. The phlagrant
+command in turn has many subcommands, such as phlagrant up, phlagrant destroy, etc.
+
+As with all Pharoah Tools, running the command with no modules, parameters or actions will display a list, help
+will be displayed showing all available subcommands.
+
+Further, you can run any Phlagrant module with the help action to output help about that module. For example,
+try running phlagrant init -h. The help will output a one
 sentence synopsis of what the command does as well as a list of all the flags the command accepts. In depth
 documentation and use cases of various Vagrant commands is available by reading the appropriate sub-section available
 in the left navigational area of this site.
+
+Prerequisites:
+We must have an SSH Client installed on the Original Box.
+We must have at least one user with sudo capability (root if you absolutely must) on the Original Box.
+Currently we need to have Virtualbox Guest Additions installed on the Image
 
 ------------------------------------------------------------------------------
