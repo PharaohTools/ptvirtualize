@@ -29,9 +29,9 @@ class UpAllLinux extends BaseLinuxApp {
         if ($this->isSavedInPapyrus()) {
             if ($this->vmExistsInProvider()) {
                 if ($this->vmIsRunning()) {
-                     $logging->log("This VM is already up and running.");
+                    $logging->log("This VM is already up and running.");
                     return; }
-                $logging->log("Phlagrant will start and optionally provision your existing VM.");
+                $logging->log("Phlagrant will start and optionally modify and provision your existing VM.");
                 $this->modifyVm(true);
                 $this->startVm();
                 $this->provisionVm(true);
@@ -42,6 +42,18 @@ class UpAllLinux extends BaseLinuxApp {
             return ; }
         $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.");
         $this->completeBuildUp();
+    }
+
+    public function doReload() {
+        $this->loadFiles();
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Halting Machine...");
+        $haltFactory = new \Model\Halt() ;
+        $halt = $haltFactory->getModel($this->params) ;
+        $halt->haltNow();
+        $logging->log("Bringing Machine up with Modifications and Provisioning...");
+        $this->doUp();
     }
 
     protected function loadFiles() {
