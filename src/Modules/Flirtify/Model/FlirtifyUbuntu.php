@@ -36,7 +36,7 @@ class FlirtifyUbuntu extends Base {
 
     private function doFlirtify() {
         $templatesDir = str_replace("Model", "Templates", dirname(__FILE__) ) ;
-        $template = $templatesDir . "/tiny-box.php";
+        $template = $templatesDir . "/default-php.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
         $targetLocation = "Phlagrantfile" ;
