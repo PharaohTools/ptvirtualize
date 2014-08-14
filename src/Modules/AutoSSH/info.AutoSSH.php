@@ -2,29 +2,29 @@
 
 Namespace Info;
 
-class StatusInfo extends CleopatraBase {
+class AutoSSHInfo extends CleopatraBase {
 
   public $hidden = false;
 
-  public $name = "Status - Stop a Phlagrant Box";
+  public $name = "AutoSSH - Stop a Phlagrant Box";
 
   public function __construct() {
     parent::__construct();
   }
 
   public function routesAvailable() {
-    return array( "Status" =>   array("show", "full", "help") );
+    return array( "AutoSSH" =>   array("show", "full", "help") );
   }
 
   public function routeAliases() {
-    return array("status"=>"Status");
+    return array("status"=>"AutoSSH");
   }
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
   This command allows you to status a phlagrant box
 
-  Status, status
+  AutoSSH, status
 
         - show
         Show execution status information of your Phlagrant VM

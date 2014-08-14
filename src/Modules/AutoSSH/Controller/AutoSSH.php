@@ -2,7 +2,7 @@
 
 Namespace Controller ;
 
-class Status extends Base {
+class AutoSSH extends Base {
 
     public function execute($pageVars) {
 
@@ -25,7 +25,7 @@ class Status extends Base {
             $this->content["result"] = $thisModel->statusFull();
             return array ("type"=>"view", "view"=>"status", "pageVars"=>$this->content); }
 
-        $this->content["messages"][] = "Invalid Status Action";
+        $this->content["messages"][] = "Invalid AutoSSH Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 
     }

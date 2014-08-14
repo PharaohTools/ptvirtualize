@@ -2,6 +2,6 @@
 
 Namespace Model;
 
-class Halt extends BaseModelFactory {
+class Status extends BaseModelFactory {
 
 }

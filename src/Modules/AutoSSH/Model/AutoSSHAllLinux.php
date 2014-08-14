@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class StatusAllLinux extends BaseLinuxApp {
+class AutoSSHAllLinux extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("Linux") ;
