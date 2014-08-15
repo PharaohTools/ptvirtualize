@@ -27,6 +27,11 @@ class Box extends Base {
             $this->content["appName"] = $thisModel->programNameInstaller;
             return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
 
+        if ($action=="package") {
+            $this->content["result"] = $thisModel->performBoxPackage();
+            $this->content["appName"] = $thisModel->programNameInstaller;
+            return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
+
         if ($action=="list") {
             $this->content["result"] = $thisModel->askInstall();
             $this->content["appName"] = $thisModel->programNameInstaller;
