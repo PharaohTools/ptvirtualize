@@ -62,10 +62,9 @@ class ProvisionDefaultLinux extends Base {
         else {
             $thisPort = 22 ; }
 
-        foreach ($ips as $ip) {
-            $res = $this->waitForSsh($ip, $thisPort, 2) ;
-            if ($res == true) {
-                $chosenIp = $ip ; } }
+        $ip = $this->waitForSsh($ips, $thisPort, 2) ;
+            if ($ip != null) {
+                $chosenIp = $ip ; }
 
         $encodedBox = serialize(array(array(
             "user" => "{$this->phlagrantfile->config["ssh"]["user"]}",
@@ -73,7 +72,7 @@ class ProvisionDefaultLinux extends Base {
             "target" => "$chosenIp"
         ))) ;
 
-        $this->saveSSHToPapyrus() ;
+        $this->storeInPapyrus($this->phlagrantfile->config["ssh"]["user"], $this->phlagrantfile->config["ssh"]["password"], $chosenIp) ;
 
         $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."/provision.php" ;
 
@@ -145,12 +144,13 @@ class ProvisionDefaultLinux extends Base {
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function waitUntilGetIP() {
         $totalTime = (isset($this->phlagrantfile->config["vm"]["ip_find_timeout"]))
-            ? $this->phlagrantfile->config["ssh"]["ip_find_timeout"] : 180 ;
+            ? $this->phlagrantfile->config["vm"]["ip_find_timeout"] : 180 ;
         $ips = array() ;
         //while ($t < $totalTime) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $command = "vboxmanage guestproperty enumerate {$this->phlagrantfile->config["vm"]["name"]} | grep \"V4/IP\" " ;
+        $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
             $vmInfo = self::executeAndLoad($command) ;
             // var_dump("secs", $secs, "vmi", $vmInfo) ;
@@ -166,30 +166,56 @@ class ProvisionDefaultLinux extends Base {
                     // var_dump("ip", $ip);
                     if (!in_array($ip, $ips)) {
                         $ips[] = $ip ;
-                        $logging->log("Found $ip...") ;} }}
+                        $logging->log("Found $ip...") ;
+                        if ($cards==count($ips)) { return $ips ; }
+                    } }}
             echo "." ;
             sleep(1) ; }
         return $ips ;
     }
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
-    protected function waitForSsh($ip, $thisPort) {
+    protected function waitForSsh($ips, $thisPort) {
         $t = 0;
+        $ipsBack = array() ;
         $totalTime = (isset($this->phlagrantfile->config["vm"]["ssh_find_timeout"]))
-            ? $this->phlagrantfile->config["ssh"]["ssh_find_timeout"] : 300 ;
+            ? $this->phlagrantfile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...") ;
         while ($t < $totalTime) {
-            $command = "cleopatra port is-responding --ip=$ip --port-number=$thisPort" ;
-            $vmInfo = self::executeAndLoad($command) ;
-            if (strpos($vmInfo, "Port: Success") != false) {
-                $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
-                return true; }
-            echo "." ;
-            $t = $t+1;
+            foreach ($ips as $ip) {
+                $command = "cleopatra port is-responding --ip=$ip --port-number=$thisPort" ;
+                $vmInfo = self::executeAndLoad($command) ;
+                if (strpos($vmInfo, "Port: Success") != false) {
+                    $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
+                    $ipsBack[] = $ip ;
+                    if (count($ipsBack) == count($ips)) {
+                        return $ipsBack ; } }
+                echo "." ;
+                $t = $t+1; }
             sleep(1) ; }
         return null ;
+    }
+
+    protected function storeInPapyrus($user, $pass, $target) {
+        $phlagrantBox = array() ;
+        $phlagrantBox["name"] = $this->phlagrantfile->config["vm"]["name"] ;
+        $phlagrantBox["username"] = $user ;
+        $phlagrantBox["password"] = $pass ;
+        $phlagrantBox["target"] = $target ;
+        $phlagrantBox = array_merge($this->papyrus, $phlagrantBox) ;
+        \Model\AppConfig::setProjectVariable($this->phlagrantfile->config["vm"]["name"], $phlagrantBox, null, null, true) ;
+    }
+
+    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    // @todo double check this
+    protected function countNICs() {
+        $count = 0;
+        for ($i=0; $i<100; $i++) {
+            if (isset($this->phlagrantfile->config["network"]["nic$i"])) {
+                $count++ ; } }
+        return $count ;
     }
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
