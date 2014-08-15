@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
+class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
 
     // Compatibility
     public $os = array("any") ;
@@ -12,110 +12,83 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("BoxAdd") ;
+    public $modelGroup = array("BoxPackage") ;
 
-    public function addBox($source, $target, $name) {
-        // add the box here
+    public function packageBox($target, $vmName, $packageName, $metadata) {
+        // package the box here
         // create the directory for the box
-        $boxDir = $this->createBoxDirectory($target, $name) ;
+        $boxDir = $this->createTempDirectory($packageName) ;
         if (!is_null($boxDir)) {
-            // put the metadata file in the new box directory
-            // find the name of the ova file in the tar
-            // extract the ova file in the tar to the box directory
-            // change the name of the ova file
-            $this->extractMetadata($source, $boxDir) ;
-            $ovaFile = $this->findOVA($source) ;
-            $this->extractOVA($source, $boxDir, $ovaFile) ;
-            $this->changeOVAName($boxDir, $ovaFile) ;
+            // put the metadata file in the temp box directory
+            $this->saveMetadataToFS($packageName, $metadata) ;
+            // export the ova there too
+            $this->exportOVA($vmName, $packageName) ;
+            // tar both to the target directory
+            $this->createPackage($target, $packageName) ;
             $this->completion() ;
         }
     }
 
-    protected function askForBoxAddExecute() {
+    protected function askForBoxPackageExecute() {
         if (isset($this->params["yes"]) && $this->params["yes"]==true) { return true ; }
-        $question = 'Add Virtualbox Server Boxes?';
+        $question = 'Package Virtualbox Server Boxes?';
         return self::askYesOrNo($question);
     }
 
-    protected function createBoxDirectory($target, $name) {
-        $boxdir = $target . '/' . $name ;
+    protected function saveMetadataToFS($name, $metadata) {
+        $file = "/tmp/phlagrant/{$name}/metadata.json" ;
+        $string = json_encode($metadata) ;
+        file_put_contents($file, $string) ;
+    }
+
+    protected function createTempDirectory($name) {
+        $boxdir = '/tmp/phlagrant/' . $name ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $command = "whoami" ;
-        $whoami = self::executeAndLoad($command);
-        $whoami = str_replace("\n", "", $whoami);
-        $whoami = str_replace("\r", "", $whoami);
+        if (file_exists($boxdir) && !is_writable($boxdir)) {
+            $logging->log("Directory $boxdir exists and is not writable. Removing.");
+            $command = "sudo rm -rf $boxdir" ;
+            self::executeAndOutput($command);
+            $command = "mkdir -p $boxdir" ;
+            self::executeAndOutput($command);
+            return $boxdir; }
         if (file_exists($boxdir)) {
-            $logging->log("Files already exist at $boxdir. Cannot create directory to add box.");
-            return null; }
-        if (!file_exists($target)) {
-            $logging->log("Adding parent box directory $target.");
-            $command = "sudo mkdir -p $boxdir" ;
-            self::executeAndOutput($command);}
-        $logging->log("Changing owner of parent box directory $target to $whoami.");
-        $command = "sudo chown $whoami $target" ;
-        self::executeAndOutput($command);
-        $logging->log("Changing user write permissions of parent box directory $target to 755.");
-        $command = "sudo chmod -R 755 $target" ;
-        self::executeAndOutput($command);
-        $logging->log("Adding box directory $boxdir.");
-        $command = "sudo mkdir -p $boxdir" ;
-        self::executeAndOutput($command);
-        $logging->log("Changing owner of box directory $boxdir to $whoami.");
-        $command = "sudo chown $whoami $boxdir" ;
-        self::executeAndOutput($command);
-        $logging->log("Changing user write permissions of box directory $boxdir to 755.");
-        $command = "sudo chown -R $whoami $boxdir" ;
-        self::executeAndOutput($command);
-        return $boxdir ;
+            $logging->log("Files already exist at $boxdir. Removing.");
+            $command = "sudo rm -rf $boxdir" ;
+            self::executeAndOutput($command);
+            $command = "mkdir -p $boxdir" ;
+            self::executeAndOutput($command);
+            return $boxdir; }
+        else {
+            $logging->log("Creating $boxdir");
+            $command = "mkdir -p $boxdir" ;
+            self::executeAndOutput($command);
+            return $boxdir ; }
     }
 
-    protected function extractMetadata($source, $boxDir) {
+    protected function exportOVA($vmName, $packageName) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting metadata.json from pbox file...");
-        $command = "tar --extract --file=$source -C $boxDir ./metadata.json" ;
+        $logging->log("Exporting ova file box,ova from Virtual Machine $vmName...");
+        $command = "vboxmanage export {$vmName} --output=/tmp/phlagrant/{$packageName}/box.ova" ;
         self::executeAndOutput($command);
+        $logging->log("Export complete...");
     }
 
-    protected function findOVA($source) {
+    protected function createPackage($target, $packageName) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Finding ova file name from pbox file...");
-        $command = "tar -tvf $source" ;
-        $allFilesString = self::executeAndLoad($command);
-        $eachFile = explode("\n", $allFilesString) ;
-        foreach ($eachFile as $oneFile) {
-            $fileExt = substr($oneFile, -4) ;
-            if ($fileExt == ".ova" || $fileExt ==".ovf") {
-                $rp = strrpos($oneFile, "./") ;
-                $stripped = substr($oneFile, ($rp+2)) ;
-                $logging->log("Found ova file $stripped from pbox file...");
-                return $stripped ; } }
-        return null ;
-    }
-
-    protected function extractOVA($source, $boxDir, $ovaFile) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting ova file $ovaFile from pbox file...");
-        $command = "tar --extract --file=$source -C $boxDir ./$ovaFile" ;
+        $logging->log("Creating box file from ova file and json file...");
+        $command = "tar -cvf $target/$packageName.box -C /tmp/phlagrant/{$packageName} . " ;
         self::executeAndOutput($command);
-        $logging->log("Extraction complete...");
-    }
-
-    protected function changeOVAName($boxDir, $ovaFile) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Changing ova file name from $ovaFile to box.ova...");
-        $command = "mv $boxDir/$ovaFile $boxDir/box.ova" ;
-        self::executeAndOutput($command);
+        $logging->log("Created box file $target/$packageName.box...");
+        return true ;
     }
 
     protected function completion() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Completed Adding Box...");
+        $logging->log("Completed Packaging Box...");
     }
 
 }
