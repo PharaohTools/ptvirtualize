@@ -13,7 +13,7 @@ class BoxInfo extends Base {
     }
 
     public function routesAvailable() {
-        return array( "Box" =>  array_merge(array("add", "remove", "list") ) );
+        return array( "Box" =>  array_merge(array("add", "remove", "package", "list") ) );
     }
 
     public function routeAliases() {
