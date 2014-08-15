@@ -163,8 +163,7 @@ class ProvisionDefaultLinux extends Base {
                     if (!in_array($ip, $ips)) {
                         $ips[] = $ip ;
                         $logging->log("Found $ip...") ;
-                        if ($cards==count($ips)) { return $ips ; }
-                    } }}
+                        if ($cards==count($ips)) { return $ips ; } } } }
             echo "." ;
             sleep(1) ; }
         return $ips ;
