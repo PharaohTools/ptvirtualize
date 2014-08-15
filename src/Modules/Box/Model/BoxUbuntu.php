@@ -18,6 +18,7 @@ class BoxUbuntu extends BaseLinuxApp {
     protected $source ;
     protected $target ;
     protected $name ;
+    protected $vmname ;
     protected $provider ;
     protected $metadata ;
 
@@ -70,6 +71,25 @@ class BoxUbuntu extends BaseLinuxApp {
         return true;
     }
 
+    public function performBoxPackage() {
+        $providerName = $this->askForProvider();
+        $this->metadata = new \StdClass() ;
+        $this->metadata->provider = $providerName ;
+        $this->target = $this->getTargetBoxLocation();
+        $this->name = $this->getBoxNewName();
+        $this->vmname = $this->getVmName();
+        $this->findProvider("BoxPackage") ;
+        $this->attemptBoxPackage() ;
+        return true;
+    }
+
+    protected function askForProvider() {
+        if (isset($this->params["provider"])) { return $this->params["provider"]; }
+        else {
+            $source = self::askForInput("Enter Provider Name:", true);
+            return $source ; }
+    }
+
     protected function getOriginalBoxLocation() {
         if (isset($this->params["source"])) { return $this->params["source"]; }
         else {
@@ -93,6 +113,13 @@ class BoxUbuntu extends BaseLinuxApp {
         if (isset($this->params["name"])) { return $this->params["name"]; }
         else {
             $name = self::askForInput("Enter Box Name:", true);
+            return $name ;}
+    }
+
+    protected function getVmName() {
+        if (isset($this->params["vmname"])) { return $this->params["vmname"]; }
+        else {
+            $name = self::askForInput("Enter VM Name to Export:", true);
             return $name ;}
     }
 
@@ -160,6 +187,16 @@ class BoxUbuntu extends BaseLinuxApp {
             $this->provider->removeBox($this->target, $this->name) ; }
         else {
             $logging->log("No Provider available, will not attempt to remove box."); }
+    }
+
+    protected function attemptBoxPackage() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (is_object($this->provider)) {
+            $logging->log("Attempting to package box via provider {$this->metadata->provider}...");
+            $this->provider->packageBox($this->target, $this->vmname, $this->name, $this->metadata) ; }
+        else {
+            $logging->log("No Provider available, will not attempt to package box."); }
     }
 
 }
