@@ -25,9 +25,11 @@ class ProvisionDefaultLinux extends Base {
         $cleoSpellings = array("Cleopatra", "cleopatra", "Cleo", "cleo") ;
         $dapperSpellings = array("Dapperstrano", "dapperstrano", "dapper", "Dapper" ) ;
         if (in_array($provisioner["tool"], $cleoSpellings)) {
+            $logging->log("Initialising Pharaoh Cleopatra Provision... ") ;
             $init = $this->initialisePharaohProvision($provisioner) ;
             return $this->cleopatraProvision($provisioner, $init) ; }
         else if (in_array($provisioner["tool"], $dapperSpellings)) {
+            $logging->log("Initialising Pharaoh Dapperstrano Provision... ") ;
             $init = $this->initialisePharaohProvision($provisioner) ;
             return $this->dapperstranoProvision($provisioner, $init) ; }
         else {
@@ -74,13 +76,13 @@ class ProvisionDefaultLinux extends Base {
 
         $this->storeInPapyrus($this->phlagrantfile->config["ssh"]["user"], $this->phlagrantfile->config["ssh"]["password"], $chosenIp) ;
 
-        $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."/provision.php" ;
+        $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."provision.php" ;
 
-        return array(
-            "target_provision_file" => $provisionFile,
-            "encoded_box" => $encodedBox,
-            "provision" => $provisionFile,
-        );
+        $ray = array() ;
+        $ray["provision_file"] = $provisionFile ;
+        $ray["encoded_box"] = $encodedBox ;
+        $ray["provision"] = $provisionFile ;
+        return $ray ;
 
     }
 
@@ -88,10 +90,10 @@ class ProvisionDefaultLinux extends Base {
     protected function cleopatraProvision($provisioner, $init) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Initialising Provisioning of VM with Cleopatra...") ;
-        $this->initialisePharaohProvision($provisioner);
-        $this->sftpProvision($provisioner, $init["encoded_box"], $init["provision_file"]);
-        $this->sshProvision($provisioner, $init["encoded_box"], $init["provision_file"]);
+        $logging->log("SFTP Configuration Management Autopilot for Cleopatra...") ;
+        $this->sftpProvision($provisioner, $init);
+        $logging->log("Provisioning VM with Cleopatra...") ;
+        $this->sshProvision($provisioner, $init);
         return true ;
     }
 
@@ -99,9 +101,9 @@ class ProvisionDefaultLinux extends Base {
     protected function dapperstranoProvision($provisioner, $init) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Initialising Provisioning of VM with Dapperstrano...") ;
-        $this->initialisePharaohProvision($provisioner);
+        $logging->log("SFTP Application Deployment Autopilot for Dapperstrano...") ;
         $this->sftpProvision($provisioner, $init);
+        $logging->log("Provisioning VM with Dapperstrano...") ;
         $this->sshProvision($provisioner, $init);
         return true ;
     }
@@ -118,7 +120,6 @@ class ProvisionDefaultLinux extends Base {
             $sftpParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
         if (isset($this->phlagrantfile->config["ssh"]["timeout"])) {
             $sftpParams["timeout"] = $this->phlagrantfile->config["ssh"]["timeout"] ; }
-        // var_dump('$sftpParams', $sftpParams) ;
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
         $sftp->performSFTPPut();
@@ -135,7 +136,6 @@ class ProvisionDefaultLinux extends Base {
             $sshParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
         if (isset($this->phlagrantfile->config["ssh"]["timeout"])) {
             $sshParams["timeout"] = $this->phlagrantfile->config["ssh"]["timeout"] ; }
-        // var_dump('$sshParams', $sshParams) ;
         $sshFactory = new \Model\Invoke();
         $ssh = $sshFactory->getModel($sshParams) ;
         $ssh->performInvokeSSHData() ;
@@ -153,17 +153,13 @@ class ProvisionDefaultLinux extends Base {
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
             $vmInfo = self::executeAndLoad($command) ;
-            // var_dump("secs", $secs, "vmi", $vmInfo) ;
             for ($i=0;$i<30;$i++) { //for up to 30 ifaces
                 $pattern = "/VirtualBox/GuestInfo/Net/$i/V4/IP" ;
                 $sp = strpos($vmInfo, $pattern) ;
                 if ($sp != false) {
                     $afterValue = substr($vmInfo, $sp+strlen($pattern)+9, 27) ;
-                    // var_dump("av", $afterValue);
                     $endOfIp = strpos($afterValue, ",") ;
-                    // var_dump("eoip", $endOfIp);
                     $ip = substr($afterValue, 0, $endOfIp) ;
-                    // var_dump("ip", $ip);
                     if (!in_array($ip, $ips)) {
                         $ips[] = $ip ;
                         $logging->log("Found $ip...") ;
@@ -177,7 +173,6 @@ class ProvisionDefaultLinux extends Base {
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function waitForSsh($ips, $thisPort) {
         $t = 0;
-        $ipsBack = array() ;
         $totalTime = (isset($this->phlagrantfile->config["vm"]["ssh_find_timeout"]))
             ? $this->phlagrantfile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
@@ -189,9 +184,7 @@ class ProvisionDefaultLinux extends Base {
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
                     $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
-                    $ipsBack[] = $ip ;
-                    if (count($ipsBack) == count($ips)) {
-                        return $ipsBack ; } }
+                    return $ip ; }
                 echo "." ;
                 $t = $t+1; }
             sleep(1) ; }
