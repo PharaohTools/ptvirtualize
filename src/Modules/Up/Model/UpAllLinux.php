@@ -75,7 +75,6 @@ class UpAllLinux extends BaseLinuxApp {
 
     protected function completeBuildUp() {
         $this->importBaseBox();
-        $this->storeInPapyrus();
         $this->modifyVm();
         $this->startVm();
         $this->provisionVm();
@@ -106,16 +105,6 @@ class UpAllLinux extends BaseLinuxApp {
         $importBox->papyrus = $this->papyrus ;
         $importBox->phlagrantfile = $this->phlagrantfile ;
         $importBox->performImport() ;
-    }
-
-    protected function storeInPapyrus() {
-        $phlagrantBox = array() ;
-        $phlagrantBox["name"] = $this->phlagrantfile->config["vm"]["name"] ;
-        $phlagrantBox["username"] = $this->phlagrantfile->config["ssh"]["username"] ;
-        $phlagrantBox["password"] = $this->phlagrantfile->config["ssh"]["password"] ;
-        $phlagrantBox["target"] = $this->phlagrantfile->config["vm"]["name"] ;
-        $this->saveToPapyrus($phlagrantBox);
-        return true ;
     }
 
     protected function modifyVm($onlyIfRequestedByParam = false) {
@@ -160,11 +149,6 @@ class UpAllLinux extends BaseLinuxApp {
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $provision->provisionNow();
-    }
-
-    protected function saveToPapyrus($vars) {
-        $phlagrantBox = array_merge($this->papyrus, $vars) ;
-        \Model\AppConfig::setProjectVariable("phlagrant-box", $phlagrantBox, null, null, true) ;
     }
 
     protected function deleteFromPapyrus() {
