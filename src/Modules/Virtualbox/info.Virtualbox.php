@@ -9,15 +9,15 @@ class VirtualboxInfo extends CleopatraBase {
     public $name = "Virtualbox Provider Integration";
 
     public function _construct() {
-      parent::__construct();
+        parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "Virtualbox" => array_merge(parent::routesAvailable(), array("help") ) );
+        return array( "Virtualbox" => array_merge(parent::routesAvailable(), array("help") ) );
     }
 
     public function routeAliases() {
-      return array("virtualbox"=>"Virtualbox");
+        return array("virtualbox"=>"Virtualbox");
     }
 
     public function vmProviderName() {
