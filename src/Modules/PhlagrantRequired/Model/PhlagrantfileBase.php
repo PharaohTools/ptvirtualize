@@ -7,8 +7,7 @@ class PhlagrantfileBase {
     public $config ;
 
     protected function setDefaultConfig($defaultConfigType = null) {
-        // @todo I need to create an array, or includes or something of
-        // $defaultConfigType, to set different defaults
+        // @todo I need to create an array, or includes or something of $defaultConfigType, to set different defaults
         $config = array() ;
         # Default System Settings
         $config["vm"]["name"] = "phlagrant-box" ;
@@ -24,6 +23,10 @@ class PhlagrantfileBase {
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp/' ;
         $config["vm"]["post_up_message"] = "Your default Phlagrant post_up_message..." ; # A message to show after Phlagrant Up/Reload.
+        # Default Provisioning
+        $this->config["vm"]["provision"] = array() ;
+        # Default Shared Folders
+        $this->config["vm"]["shared_folders"] = array() ;
         # Default SSH Settings
         $config["ssh"]["user"] = "phlagrant" ;
         $config["ssh"]["password"] = "phlagrant" ;
