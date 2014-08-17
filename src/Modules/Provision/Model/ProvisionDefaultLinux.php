@@ -40,48 +40,56 @@ class ProvisionDefaultLinux extends Base {
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function initialisePharaohProvision($provisioner) {
 
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params);
-        // get target ip from phlagrantfile if its there
-        // if not check for guest additions installed
-        $ips = array() ;
-        if (isset($this->phlagrantfile->config["ssh"]["target"])) {
-            $logging->log("Using Phlagrantfile defined ssh target of {$this->phlagrantfile->config["ssh"]["target"]}... ") ;
-            $ips[] = $this->phlagrantfile->config["ssh"]["target"] ; }
-        else if ($this->checkForGuestAdditions()==true) {
-            $logging->log("Guest additions found on VM, finding target from it...") ;
-            $wug = $this->waitUntilGetIP() ;
-            $ips = array_merge($wug, $ips) ;
-            $ipstring = implode(", " , $ips) ;
-            $logging->log("... Found $ipstring") ; }
+        if ($provisioner["target"] == "guest") {
+
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params);
+            // get target ip from phlagrantfile if its there
+            // if not check for guest additions installed
+            $ips = array() ;
+            if (isset($this->phlagrantfile->config["ssh"]["target"])) {
+                $logging->log("Using Phlagrantfile defined ssh target of {$this->phlagrantfile->config["ssh"]["target"]}... ") ;
+                $ips[] = $this->phlagrantfile->config["ssh"]["target"] ; }
+            else if ($this->checkForGuestAdditions()==true) {
+                $logging->log("Guest additions found on VM, finding target from it...") ;
+                $wug = $this->waitUntilGetIP() ;
+                $ips = array_merge($wug, $ips) ;
+                $ipstring = implode(", " , $ips) ;
+                $logging->log("... Found $ipstring") ; }
+            else {
+                $gdi = $this->getDefaultIpList() ;
+                $ips = array_merge($ips, $gdi) ;
+                $logging->log("Using default ip list of $gdi") ;  }
+
+            if (isset($this->phlagrantfile->config["ssh"]["port"])) {
+                $thisPort = $this->phlagrantfile->config["ssh"]["port"] ; }
+            else {
+                $thisPort = 22 ; }
+
+            $ip = $this->waitForSsh($ips, $thisPort, 2) ;
+                if ($ip != null) {
+                    $chosenIp = $ip ; }
+
+            $encodedBox = serialize(array(array(
+                "user" => "{$this->phlagrantfile->config["ssh"]["user"]}",
+                "password" => "{$this->phlagrantfile->config["ssh"]["password"]}",
+                "target" => "$chosenIp"
+            ))) ;
+
+            $this->storeInPapyrus($this->phlagrantfile->config["ssh"]["user"], $this->phlagrantfile->config["ssh"]["password"], $chosenIp) ;
+
+            $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."provision.php" ;
+
+            $ray = array() ;
+            $ray["provision_file"] = $provisionFile ;
+            $ray["encoded_box"] = $encodedBox ;
+            $ray["provision"] = $provisionFile ;
+
+        }
         else {
-            $gdi = $this->getDefaultIpList() ;
-            $ips = array_merge($ips, $gdi) ;
-            $logging->log("Using default ip list of $gdi") ;  }
 
-        if (isset($this->phlagrantfile->config["ssh"]["port"])) {
-            $thisPort = $this->phlagrantfile->config["ssh"]["port"] ; }
-        else {
-            $thisPort = 22 ; }
-
-        $ip = $this->waitForSsh($ips, $thisPort, 2) ;
-            if ($ip != null) {
-                $chosenIp = $ip ; }
-
-        $encodedBox = serialize(array(array(
-            "user" => "{$this->phlagrantfile->config["ssh"]["user"]}",
-            "password" => "{$this->phlagrantfile->config["ssh"]["password"]}",
-            "target" => "$chosenIp"
-        ))) ;
-
-        $this->storeInPapyrus($this->phlagrantfile->config["ssh"]["user"], $this->phlagrantfile->config["ssh"]["password"], $chosenIp) ;
-
-        $provisionFile = $this->phlagrantfile->config["vm"]["default_tmp_dir"]."provision.php" ;
-
-        $ray = array() ;
-        $ray["provision_file"] = $provisionFile ;
-        $ray["encoded_box"] = $encodedBox ;
-        $ray["provision"] = $provisionFile ;
+            $ray = array() ;
+        }
         return $ray ;
 
     }
@@ -90,10 +98,16 @@ class ProvisionDefaultLinux extends Base {
     protected function cleopatraProvision($provisioner, $init) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("SFTP Configuration Management Autopilot for Cleopatra...") ;
-        $this->sftpProvision($provisioner, $init);
-        $logging->log("Provisioning VM with Cleopatra...") ;
-        $this->sshProvision($provisioner, $init);
+        if ($provisioner["target"] == "guest") {
+            $logging->log("Provisioning VM with Cleopatra...") ;
+            $logging->log("SFTP Configuration Management Autopilot to VM for Cleopatra...") ;
+            $this->sftpProvision($provisioner, $init);
+            $logging->log("Provisioning VM with Cleopatra...") ;
+            $this->sshProvision($provisioner, $init); }
+        else if ($provisioner["target"] == "host") {
+            $logging->log("Provisioning Host with Cleopatra...") ;
+            $command = "cleopatra auto x --af={$provisioner["script"]}" ;
+            self::executeAndOutput($command) ; }
         return true ;
     }
 
@@ -101,10 +115,15 @@ class ProvisionDefaultLinux extends Base {
     protected function dapperstranoProvision($provisioner, $init) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("SFTP Application Deployment Autopilot for Dapperstrano...") ;
-        $this->sftpProvision($provisioner, $init);
-        $logging->log("Provisioning VM with Dapperstrano...") ;
-        $this->sshProvision($provisioner, $init);
+        if ($provisioner["target"] == "guest") {
+            $logging->log("SFTP Application Deployment Autopilot for Dapperstrano...") ;
+            $this->sftpProvision($provisioner, $init);
+            $logging->log("Provisioning VM with Dapperstrano...") ;
+            $this->sshProvision($provisioner, $init); }
+        else if ($provisioner["target"] == "host") {
+            $logging->log("Provisioning Host with Dapperstrano...") ;
+            $command = "dapperstrano auto x --af={$provisioner["script"]}" ;
+            self::executeAndOutput($command) ; }
         return true ;
     }
 
@@ -201,7 +220,6 @@ class ProvisionDefaultLinux extends Base {
     }
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
-    // @todo double check this
     protected function countNICs() {
         $count = 0;
         for ($i=0; $i<100; $i++) {
@@ -212,7 +230,7 @@ class ProvisionDefaultLinux extends Base {
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function getDefaultIp() {
-        return array("10.0.2.15", "192.168.56.1" ) ;
+        return array("10.0.2.15", "192.168.56.101" ) ;
     }
 
     // @todo ahem
