@@ -35,6 +35,7 @@ class UpAllLinux extends BaseLinuxApp {
                 $this->modifyVm(true);
                 $this->startVm();
                 $this->provisionVm(true);
+                $this->postUpMessage();
                 return ;}
             $logging->log("This VM has been deleted outside of Phlagrant. Re-creating from scratch.");
             $this->deleteFromPapyrus();
@@ -54,6 +55,12 @@ class UpAllLinux extends BaseLinuxApp {
         $halt->haltNow();
         $logging->log("Bringing Machine up with Modifications and Provisioning...");
         $this->doUp();
+    }
+
+    protected function postUpMessage() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("{$this->phlagrantfile->config["vm"]["post_up_message"]}");
     }
 
     protected function loadFiles() {
@@ -78,6 +85,7 @@ class UpAllLinux extends BaseLinuxApp {
         $this->modifyVm();
         $this->startVm();
         $this->provisionVm();
+        $this->postUpMessage();
     }
 
     protected function isSavedInPapyrus() {
