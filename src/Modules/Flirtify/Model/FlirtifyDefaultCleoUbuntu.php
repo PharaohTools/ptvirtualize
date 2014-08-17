@@ -3,7 +3,7 @@
 Namespace Model;
 
 // @todo shouldnt this extend base templater? is it missing anything?
-class FlirtifyDefaultPhpUbuntu extends Base {
+class FlirtifyDefaultCleoUbuntu extends Base {
 
     // Compatibility
     public $os = array("Linux") ;
@@ -13,7 +13,7 @@ class FlirtifyDefaultPhpUbuntu extends Base {
     public $architectures = array("32", "64") ;
 
     // Model Group
-    public $modelGroup = array("Default", "DefaultPhp") ;
+    public $modelGroup = array("Default", "DefaultCleo") ;
 
     private $environments ;
     private $environmentReplacements ;
@@ -35,7 +35,7 @@ class FlirtifyDefaultPhpUbuntu extends Base {
     }
 
     private function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates", dirname(__FILE__) ) ;
+        $templatesDir = str_replace("Model", "Templates/Phagrantfiles", dirname(__FILE__) ) ;
         $template = $templatesDir . "/default-php.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);

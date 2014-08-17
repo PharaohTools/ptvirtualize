@@ -16,17 +16,16 @@ class Phlagrantfile extends PhlagrantfileBase {
         $this->config["vm"]["box"] = "vanillabuntu" ;
         // Shared folder - This should map to the workstation environment vhost path parent...
         // $this->config["vm"]["shared_folders"][] = array("1024") ;
-        // Networking - maybe use array constants for defaults or something?
-        // $this->config["vm"]["networks"][] = array("1024") ;
         // Provisioning
-
-        $this->config["vm"]["provision"] = array() ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharoahTools",
                 "tool" => "cleopatra",
+                "target" => "guest",
                 "script" => getcwd()."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php"
             ) ;
+        $config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box is configured to be " .
+            "provisioned by Cleopatra's default Phlagrant provisioning.";
     }
 
 }

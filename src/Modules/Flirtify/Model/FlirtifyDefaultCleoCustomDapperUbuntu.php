@@ -3,7 +3,7 @@
 Namespace Model;
 
 // @todo shouldnt this extend base templater? is it missing anything?
-class FlirtifyUbuntu extends Base {
+class FlirtifyDefaultCleoCustomDapperUbuntu extends Base {
 
     // Compatibility
     public $os = array("Linux") ;
@@ -13,7 +13,7 @@ class FlirtifyUbuntu extends Base {
     public $architectures = array("32", "64") ;
 
     // Model Group
-    public $modelGroup = array("Default", "DefaultPhp") ;
+    public $modelGroup = array("DefaultCleoCustomDapper") ;
 
     private $environments ;
     private $environmentReplacements ;
@@ -34,8 +34,8 @@ class FlirtifyUbuntu extends Base {
         return self::askYesOrNo($question, true);
     }
 
-    private function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates", dirname(__FILE__) ) ;
+    protected function doFlirtify() {
+        $templatesDir = str_replace("Model", "Templates/Phagrantfiles", dirname(__FILE__) ) ;
         $template = $templatesDir . "/default-php.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
@@ -43,11 +43,23 @@ class FlirtifyUbuntu extends Base {
         $templator->template(
             file_get_contents($template),
             array(
-                //"env_name" => $environment["any-app"]["gen_env_name"],
-                //"first_server_target" => $environment["servers"][0]["target"],
+                "dapperfile-guest" => $this->getDapperfile("guest"),
+                "dapperfile-host" => $this->getDapperfile("host"),
             ),
             $targetLocation );
         echo $targetLocation."\n";
     }
+
+    protected function getDapperfile($envType) {
+        $envType = strtolower($envType) ;
+        if (isset($this->params["$envType-dapperfile"])) {
+            return $this->params["$envType-dapperfile"] ; }
+        if (isset($this->params["$envType-dapperstrano-autopilot"])) {
+            return $this->params["$envType-dapperstrano-autopilot"] ; }
+        $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File" ;
+        $this->params["$envType-nodes-environment"] = $this->askForInput($question) ;
+        return $this->params["$envType-nodes-environment"] ;
+    }
+
 
 }

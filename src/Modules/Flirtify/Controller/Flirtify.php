@@ -17,13 +17,9 @@ class Flirtify extends Base {
             $this->content["helpData"] = $helpModel->getHelpData($pageVars["route"]["control"]);
             return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
-        if ($action=="now") {
-            $this->content["result"] = $thisModel->askWhetherToFlirtify();
-            return array ("type"=>"view", "view"=>"flirtify", "pageVars"=>$this->content); }
-
         $actionsToModelGroups = array(
-            "medium" => "Medium", "medium-web" => "MediumWeb", "db-cluster" => "DBCluster", "tiny" => "Tiny",
-            "workstation" => "Workstation" ) ;
+            "default-php" => "DefaultPhp", "default-php-dapper" => "DefaultPhpDapper",
+            "custom-php-custom-dapper" => "CustomPhpCustomDapper" ) ;
 
         if (in_array($action, array_keys($actionsToModelGroups))) {
             $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, $actionsToModelGroups[$action]) ;
