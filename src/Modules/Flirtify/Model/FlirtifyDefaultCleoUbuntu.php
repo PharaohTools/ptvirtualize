@@ -35,8 +35,8 @@ class FlirtifyDefaultCleoUbuntu extends Base {
     }
 
     private function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates/Phagrantfiles", dirname(__FILE__) ) ;
-        $template = $templatesDir . "/default-php.php";
+        $templatesDir = str_replace("Model", "Templates/Phlagrantfiles", dirname(__FILE__) ) ;
+        $template = $templatesDir . "/default-cleo.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
         $targetLocation = "Phlagrantfile" ;

@@ -35,7 +35,7 @@ class FlirtifyCustomCleoCustomDapperUbuntu extends Base {
     }
 
     protected function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates/Phagrantfiles", dirname(__FILE__) ) ;
+        $templatesDir = str_replace("Model", "Templates/Phlagrantfiles", dirname(__FILE__) ) ;
         $template = $templatesDir . "/custom-cleo-dapper.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);

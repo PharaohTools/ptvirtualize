@@ -35,8 +35,8 @@ class FlirtifyDefaultCleoCustomDapperUbuntu extends Base {
     }
 
     protected function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates/Phagrantfiles", dirname(__FILE__) ) ;
-        $template = $templatesDir . "/default-php.php";
+        $templatesDir = str_replace("Model", "Templates/Phlagrantfiles", dirname(__FILE__) ) ;
+        $template = $templatesDir . "/default-cleo-dapper.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
         $targetLocation = "Phlagrantfile" ;
@@ -56,9 +56,18 @@ class FlirtifyDefaultCleoCustomDapperUbuntu extends Base {
             return $this->params["$envType-dapperfile"] ; }
         if (isset($this->params["$envType-dapperstrano-autopilot"])) {
             return $this->params["$envType-dapperstrano-autopilot"] ; }
+
+        if (isset($this->params["guess"]) && ($envType=="guest") ) {
+            $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-box-phlagrant-install-code-data.php';
+            return $p ; }
+
+        if (isset($this->params["guess"]) && ($envType=="host") ) {
+            $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-host-host-install-host-file-entry.php';
+            return $p ; }
+
         $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File" ;
-        $this->params["$envType-nodes-environment"] = $this->askForInput($question) ;
-        return $this->params["$envType-nodes-environment"] ;
+        $df = $this->askForInput($question) ;
+        return $df ;
     }
 
 
