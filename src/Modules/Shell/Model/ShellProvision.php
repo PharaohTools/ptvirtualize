@@ -1,22 +1,34 @@
 <?php
 
-Namespace Model ;
+Namespace Model;
 
-class ProvisionDefaultLinux extends Base {
+class ShellProvision extends BaseShellAllOS {
 
-    public $phlagrantfile;
-    public $papyrus ;
+    // Compatibility
+    public $os = array("any") ;
+    public $linuxType = array("any") ;
+    public $distros = array("any") ;
+    public $versions = array("any") ;
+    public $architectures = array("any") ;
 
-    // @todo provisioners should have their own modules, and the pharoahtools code should go there
-    // @todo this should support other provisioners than pharoah, provide some override here to allow
-    // @todo chef solo, puppet agent, salt or ansible to get invoked
-    public function provision() {
-        $pharoahSpellings = array("Pharaoh", "pharaoh", "PharaohTools", "pharaohTools", "Pharoah", "pharoah",
-            "PharoahTools", "pharoahTools") ;
-        var_dump("pr:", $this->phlagrantfile->config["vm"]["provision"]) ;
-        foreach ($this->phlagrantfile->config["vm"]["provision"] as $provisioner) {
-            if (in_array($provisioner["provisioner"], $pharoahSpellings)) {
-                return $this->pharoahProvision($provisioner) ; } }
+    // Model Group
+    public $modelGroup = array("Provision") ;
+
+    public function provision($source, $target, $name) {
+        // add the box here
+        // create the directory for the box
+        $boxDir = $this->createBoxDirectory($target, $name) ;
+        if (!is_null($boxDir)) {
+            // put the metadata file in the new box directory
+            // find the name of the ova file in the tar
+            // extract the ova file in the tar to the box directory
+            // change the name of the ova file
+            $this->extractMetadata($source, $boxDir) ;
+            $ovaFile = $this->findOVA($source) ;
+            $this->extractOVA($source, $boxDir, $ovaFile) ;
+            $this->changeOVAName($boxDir, $ovaFile) ;
+            $this->completion() ;
+        }
     }
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
@@ -68,8 +80,8 @@ class ProvisionDefaultLinux extends Base {
                 $thisPort = 22 ; }
 
             $ip = $this->waitForSsh($ips, $thisPort, 2) ;
-                if ($ip != null) {
-                    $chosenIp = $ip ; }
+            if ($ip != null) {
+                $chosenIp = $ip ; }
 
             $encodedBox = serialize(array(array(
                 "user" => "{$this->phlagrantfile->config["ssh"]["user"]}",
