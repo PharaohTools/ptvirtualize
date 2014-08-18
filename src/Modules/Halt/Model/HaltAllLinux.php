@@ -85,6 +85,7 @@ class HaltAllLinux extends BaseLinuxApp {
         for ($i=0; $i<$total_time; $i=$i+$interval) {
             if($this->isVMInStatus($statusRequested)) {
                 return true ; }
+            echo "." ;
             sleep($interval); }
         return false ;
     }
