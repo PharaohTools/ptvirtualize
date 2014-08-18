@@ -28,7 +28,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "target" => "guest",
                 "script" => getcwd()."/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php"
             ) ;
-        $config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box is configured to be " .
+        $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box is configured to be " .
             "provisioned by Cleopatra's default Phlagrant provisioning.";
     }
 

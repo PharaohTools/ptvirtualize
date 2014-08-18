@@ -42,7 +42,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "target" => "host",
                 "script" => getcwd()."<%tpl.php%>dapperfile-host</%tpl.php%>"
             ) ;
-        $config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This guest was configured to be " .
+        $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This guest was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano, and the host also by Dapperstrano. Your application " .
             "should now be accessible by browser.";
     }
