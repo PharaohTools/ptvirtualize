@@ -22,6 +22,8 @@ class PhlagrantfileBase {
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp/' ;
+        $config["vm"]["graceful_halt_timeout"] = 120 ; # The time in seconds that Phlagrant wait for the machine to gracefully halt by soft power under phlagrant halt now. Defaults to 120 seconds.
+        $config["vm"]["ssh_halt_timeout"] = 60 ; # The time in seconds that Phlagrant will wait for the machine to shutdown via SSH when phlagrant halt now is called, if still running after soft power down. Defaults to 60 seconds.
         $config["vm"]["post_up_message"] = "Your default Phlagrant post_up_message..." ; # A message to show after Phlagrant Up/Reload.
         # Default Provisioning
         $this->config["vm"]["provision"] = array() ;
@@ -44,7 +46,6 @@ class PhlagrantfileBase {
         //$config["vm"]["box_download_client_cert"] - Path to a client certificate to use when downloading the box, if it is necessary. By default, no client certificate is used to download the box.
         //$config["vm"]["box_download_insecure"] - If true, then SSL certificates from the server will not be verified. By default, if the URL is an HTTPS URL, then SSL certs will be verified.
         //$config["vm"]["box_version"] - The version of the box to use. This defaults to ">= 0" (the latest version available). This can contain an arbitrary list of constraints, separated by commas, such as: >= 1.0, < 1.5. When constraints are given, Vagrant will use the latest available box satisfying these constraints.
-        //$config["vm"]["graceful_halt_timeout"] - The time in seconds that Vagrant will wait for the machine to gracefully halt when vagrant halt is called. Defaults to 60 seconds.
         // @todo surely by using vboxmanage this is not an issue?
         //$config["vm"]["usable_port_range"] - A range of ports Vagrant can use for handling port collisions and such. Defaults to 2200..2250.
 
