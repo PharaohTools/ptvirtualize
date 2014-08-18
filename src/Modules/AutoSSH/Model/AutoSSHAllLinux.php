@@ -41,7 +41,7 @@ class AutoSSHAllLinux extends BaseLinuxApp {
             if (isset($this->papyrus["port"])) {
                 $srv["port"] =
                     (isset($this->papyrus["port"]))
-                    ? $this->papyrus["port"] : 22; }
+                        ? $this->papyrus["port"] : 22; }
             if (isset($this->papyrus["timeout"])) {
                 $srv["timeout"] = $this->papyrus["timeout"] ; }
 
@@ -76,6 +76,39 @@ class AutoSSHAllLinux extends BaseLinuxApp {
             $sshFactory = new \Model\Invoke();
             $ssh = $sshFactory->getModel($sshParams) ;
             $ssh->performInvokeSSHShell() ;
+            return true ;
+        }
+
+    }
+
+    // @todo this needs testing
+    public function autoSSHData() {
+        $this->loadFiles();
+        // try the connection
+        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
+        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
+
+        // @todo need to set the SSH Data we're sending
+        if ($sshWorks == true) {
+            $sshParams = $this->params ;
+            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            $srv = array(
+                "user" => $this->papyrus["username"] ,
+                "password" => $this->papyrus["password"] ,
+                "target" => $this->papyrus["target"] );
+            $sshParams["yes"] = true ;
+            $sshParams["guess"] = true ;
+            $sshParams["servers"] = serialize(array($srv)) ;
+            if (isset($this->papyrus["port"])) {
+                $srv["port"] =
+                    (isset($this->papyrus["port"]))
+                        ? $this->papyrus["port"] : 22; }
+            if (isset($this->papyrus["timeout"])) {
+                $srv["timeout"] = $this->papyrus["timeout"] ; }
+
+            $sshFactory = new \Model\Invoke();
+            $ssh = $sshFactory->getModel($sshParams) ;
+            $ssh->performInvokeSSHData() ;
             return true ;
         }
 
