@@ -65,15 +65,14 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->phlagrantfile->config["shared_folders"]) && count($this->phlagrantfile->config["shared_folders"])>0 ) {
         foreach ($this->phlagrantfile->config["shared_folders"] as $sharedFolder) {
-            if (in_array($sharedFolder, $this->availableModifications)) {
-                $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["path_host"]}") ;
-                $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
-                $command .= " --hostpath {$sharedFolder["path_host"]}" ;
-                $flags = array("transient", "readonly", "automount") ;
-                foreach ($flags as $flag) {
-                    if (isset($sharedFolder[$flag])) {
-                        $command .= " --$flag" ; } }
-                $this->executeAndOutput($command); } } }
+            $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["path_host"]}") ;
+            $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
+            $command .= " --hostpath {$sharedFolder["host_path"]}" ;
+            $flags = array("transient", "readonly", "automount") ;
+            foreach ($flags as $flag) {
+                if (isset($sharedFolder[$flag])) {
+                    $command .= " --$flag" ; } }
+            $this->executeAndOutput($command); } }
     }
 
     /*
