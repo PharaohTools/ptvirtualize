@@ -26,6 +26,11 @@ class DestroyAllLinux extends BaseLinuxApp {
         $this->loadFiles();
         $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
         $this->executeAndOutput($command);
+        $this->deleteFromPapyrus() ;
+    }
+
+    protected function deleteFromPapyrus() {
+        \Model\AppConfig::deleteProjectVariable("phlagrant-box", true) ;
     }
 
     protected function loadFiles() {
