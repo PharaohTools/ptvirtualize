@@ -45,7 +45,7 @@ class HaltAllLinux extends BaseLinuxApp {
             $sshParams["yes"] = true ;
             $sshParams["guess"] = true ;
             $sshParams["servers"] = serialize(array($srv)) ;
-            $sshParams["ssh-data"] = $this->setSSHData("sudo shutdown now");
+            $sshParams["ssh-data"] = "sudo shutdown now\n";
 
             if (isset($this->phlagrantfile->config["ssh"]["port"])) {
                 $sshParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
@@ -87,6 +87,7 @@ class HaltAllLinux extends BaseLinuxApp {
                 return true ; }
             echo "." ;
             sleep($interval); }
+        echo "\n" ;
         return false ;
     }
 
