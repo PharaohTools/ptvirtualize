@@ -2,7 +2,7 @@
 
 Namespace Controller ;
 
-class Virtualbox extends Base {
+class PharaohTools extends Base {
 
     public function execute($pageVars) {
 
@@ -16,7 +16,7 @@ class Virtualbox extends Base {
             $this->content["helpData"] = $helpModel->getHelpData($pageVars["route"]["control"]);
             return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
-        $this->content["messages"][] = "Help is the only valid Virtualbox Action";
+        $this->content["messages"][] = "Help is the only valid PharaohTools Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 
     }

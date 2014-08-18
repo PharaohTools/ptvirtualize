@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BaseVirtualboxAllOS extends Base {
+class BasePharaohToolsAllOS extends Base {
 
     // Compatibility
     public $os = array("any") ;
@@ -12,12 +12,12 @@ class BaseVirtualboxAllOS extends Base {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("Base") ;
+    public $modelGroup = array("Default", "Base") ;
 
     protected $clientId ;
     protected $apiKey ;
 
-    protected function askForVirtualboxAPIKey(){
+    protected function askForPharaohToolsAPIKey(){
         if (isset($this->params["digital-ocean-api-key"])) { return $this->params["digital-ocean-api-key"] ; }
         $papyrusVar = \Model\AppConfig::getProjectVariable("digital-ocean-api-key") ;
         if ($papyrusVar != null) {
@@ -25,32 +25,32 @@ class BaseVirtualboxAllOS extends Base {
                 return $papyrusVar ; }
             if (isset($this->params["use-project-api-key"]) && $this->params["use-project-api-key"] == true) {
                 return $papyrusVar ; }
-            $question = 'Use Project saved Virtualbox API Key?';
+            $question = 'Use Project saved PharaohTools API Key?';
             if (self::askYesOrNo($question, true) == true) { return $papyrusVar ; } }
         $appVar = \Model\AppConfig::getProjectVariable("digital-ocean-api-key") ;
         if ($appVar != null) {
-            $question = 'Use Application saved Virtualbox API Key?';
+            $question = 'Use Application saved PharaohTools API Key?';
             if (self::askYesOrNo($question, true) == true) {
                 return $appVar ; } }
-        $question = 'Enter Virtualbox API Key';
+        $question = 'Enter PharaohTools API Key';
         return self::askForInput($question, true);
     }
 
-    protected function askForVirtualboxClientID(){
+    protected function askForPharaohToolsClientID(){
         if (isset($this->params["digital-ocean-client-id"])) { return $this->params["digital-ocean-client-id"] ; }
         $papyrusVar = \Model\AppConfig::getProjectVariable("digital-ocean-client-id") ;
         if ($papyrusVar != null) {
             if ($this->params["guess"] == true) { return $papyrusVar ; }
             if ($this->params["use-project-client-id"] == true) { return $papyrusVar ; }
-            $question = 'Use Project saved Virtualbox Client ID?';
+            $question = 'Use Project saved PharaohTools Client ID?';
             if (self::askYesOrNo($question, true) == true) {
                 return $papyrusVar ; } }
         $appVar = \Model\AppConfig::getProjectVariable("digital-ocean-client-id") ;
         if ($appVar != null) {
-            $question = 'Use Application saved Virtualbox Client ID?';
+            $question = 'Use Application saved PharaohTools Client ID?';
             if (self::askYesOrNo($question, true) == true) {
                 return $appVar ; } }
-        $question = 'Enter Virtualbox Client ID';
+        $question = 'Enter PharaohTools Client ID';
         return self::askForInput($question, true);
     }
 

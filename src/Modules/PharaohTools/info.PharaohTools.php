@@ -2,34 +2,34 @@
 
 Namespace Info;
 
-class VirtualboxInfo extends CleopatraBase {
+class PharaohToolsInfo extends CleopatraBase {
 
     public $hidden = false;
 
-    public $name = "Virtualbox Provider Integration";
+    public $name = "Pharaoh Tools Provisioner Integration";
 
     public function _construct() {
         parent::__construct();
     }
 
     public function routesAvailable() {
-        return array( "Virtualbox" => array_merge(parent::routesAvailable(), array("help") ) );
+        return array( "PharaohTools" => array_merge(parent::routesAvailable(), array("help") ) );
     }
 
     public function routeAliases() {
-        return array("virtualbox"=>"Virtualbox");
+        return array("pharaoh-tools"=>"PharaohTools");
     }
 
-    public function vmProviderName() {
-        return "virtualbox";
+    public function provisonerName() {
+        return "pharaoh-tools";
     }
 
     public function helpDefinition() {
        $help = <<<"HELPDATA"
-    This extension provides integration with Virtualbox as a VM provider. It provides code
+    This extension provides integration with PharaohTools as a Phlagrant Provisioner. It provides code
     functionality, but no extra commands.
 
-    Virtualbox
+    Pharaoh Tools
 
 HELPDATA;
       return $help ;
