@@ -6,7 +6,7 @@ class ShellInfo extends CleopatraBase {
 
     public $hidden = false;
 
-    public $name = "Pharaoh Tools Provisioner Integration";
+    public $name = "Shell Provisioner Integration";
 
     public function _construct() {
         parent::__construct();
@@ -17,11 +17,11 @@ class ShellInfo extends CleopatraBase {
     }
 
     public function routeAliases() {
-        return array("pharaoh-tools"=>"Shell");
+        return array("shell"=>"Shell");
     }
 
     public function provisonerName() {
-        return "pharaoh-tools";
+        return "shell";
     }
 
     public function helpDefinition() {
@@ -29,7 +29,7 @@ class ShellInfo extends CleopatraBase {
     This extension provides integration with Shell as a Phlagrant Provisioner. It provides code
     functionality, but no extra commands.
 
-    Pharaoh Tools
+    Shell
 
 HELPDATA;
       return $help ;

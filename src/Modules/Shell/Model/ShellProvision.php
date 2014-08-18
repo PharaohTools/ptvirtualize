@@ -14,22 +14,24 @@ class ShellProvision extends BaseShellAllOS {
     // Model Group
     public $modelGroup = array("Provision") ;
 
-    public function provision($source, $target, $name) {
-        // add the box here
-        // create the directory for the box
-        $boxDir = $this->createBoxDirectory($target, $name) ;
-        if (!is_null($boxDir)) {
-            // put the metadata file in the new box directory
-            // find the name of the ova file in the tar
-            // extract the ova file in the tar to the box directory
-            // change the name of the ova file
-            $this->extractMetadata($source, $boxDir) ;
-            $ovaFile = $this->findOVA($source) ;
-            $this->extractOVA($source, $boxDir, $ovaFile) ;
-            $this->changeOVAName($boxDir, $ovaFile) ;
-            $this->completion() ;
-        }
+    public function provision($provisioner) {
+        return $this->shellProvision($provisioner) ;
     }
+
+    // @todo provisioners should have their own modules, and the Shell Provisioner code should go there
+    protected function shellProvision($provisioner) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $shellSpellings = arrayarray("shell", "bash");
+        if (in_array($provisioner["tool"], $shellSpellings)) {
+            $logging->log("Initialising Shell Provision... ") ;
+            $init = $this->initialisePharaohProvision($provisioner) ;
+            return $this->cleopatraProvision($provisioner, $init) ; }
+        else {
+            $logging->log("Unrecognised Shell Provisioning Tool {$provisioner["tool"]} specified") ;
+            return null ; }
+    }
+
 
     // @todo provisioners should have their own modules, and the pharoahtools code should go there
     protected function pharoahProvision($provisioner) {
