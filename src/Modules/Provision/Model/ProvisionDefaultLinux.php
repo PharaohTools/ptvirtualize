@@ -185,6 +185,7 @@ class ProvisionDefaultLinux extends Base {
                         if ($cards==count($ips)) { return $ips ; } } } }
             echo "." ;
             sleep(1) ; }
+        echo "\n" ;
         return $ips ;
     }
 
@@ -206,6 +207,7 @@ class ProvisionDefaultLinux extends Base {
                 echo "." ;
                 $t = $t+1; }
             sleep(1) ; }
+        echo "\n" ;
         return null ;
     }
 
