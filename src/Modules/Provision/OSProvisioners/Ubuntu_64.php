@@ -16,9 +16,25 @@ SSHDATA;
         return $sshData ;
     }
 
+    public function getMountSharesSSHData($provisionFile) {
+        $sshData = "" ;
+        foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
+            $sshData .= "echo {$this->phlagrantfile->config["ssh"]["password"]} "
+                . '| sudo -S mount -t vboxsf -o uid=$UID,gid=$(id -g) '
+                . $sharedFolder["name"].' '.$sharedFolder["host_path"].' ' ; }
+        return $sshData ;
+    }
+
     public function getStandardCleopatraSSHData($provisionFile) {
         $sshData = <<<"SSHDATA"
 echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S cleopatra auto x --af=$provisionFile
+SSHDATA;
+        return $sshData ;
+    }
+
+    public function getStandardDapperstranoSSHData($provisionFile) {
+        $sshData = <<<"SSHDATA"
+echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S dapperstrano auto x --af=$provisionFile
 SSHDATA;
         return $sshData ;
     }
