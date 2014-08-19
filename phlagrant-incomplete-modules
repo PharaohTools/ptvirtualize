@@ -1,20 +1,36 @@
 Phlagrant Modules to be created
 ---------------------------------------
 
+1) Need to add the ability to fire up multiple boxes in multiple projects, so we generate the box name to phlagrant-box-{$dirname}
+Then we still get our default single box, and can have more than one in a phlangrantfile (as opposed to multiple phlagrantfiles)?
+or do we want multiple?
+
+2)
+
+
+
 phlagrant command list
 -------------------------
+ssh-config   outputs OpenSSH valid configuration to connect to the machine
+ - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
+ - display the details
+ - 1 day
 
-ssh          connects to machine via SSH
+
+
+
+
+
+DONE
+------------------
+
+ssh DONE auto-ssh cli
+connects to machine via SSH
              invoke ssh using the ssh params configured during phlagrant up and put into local-papyrus
  - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
  - get id from name
  - invokessh with these details
  - 1/2 days
-
-ssh-config   outputs OpenSSH valid configuration to connect to the machine
- - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
- - display the details
- - 1 day
 
 package      packages a running vagrant environment into a box
 THIS WILL BECOME BOX PACKAGE
@@ -56,6 +72,10 @@ up     DONE -
 
 
 
+
+
+
+STUFF TO DOCUMENT
 ------------------------------------------------------------------------------
 
 Concepts
