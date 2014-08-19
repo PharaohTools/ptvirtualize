@@ -63,9 +63,9 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
     protected function setSharedFolders() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->phlagrantfile->config["shared_folders"]) && count($this->phlagrantfile->config["shared_folders"])>0 ) {
-        foreach ($this->phlagrantfile->config["shared_folders"] as $sharedFolder) {
-            $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["path_host"]}") ;
+        if (isset($this->phlagrantfile->config["vm"]["shared_folders"]) && count($this->phlagrantfile->config["vm"]["shared_folders"])>0 ) {
+        foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
+            $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
             $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
             $command .= " --hostpath {$sharedFolder["host_path"]}" ;
             $flags = array("transient", "readonly", "automount") ;
