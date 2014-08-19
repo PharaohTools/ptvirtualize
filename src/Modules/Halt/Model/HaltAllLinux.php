@@ -30,7 +30,7 @@ class HaltAllLinux extends BaseLinuxApp {
         $logging->log("Waiting up to {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
         $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
         $this->executeAndOutput($command);
-        if ($this->waitForStatus("poweredoff", $this->phlagrantfile->config["vm"]["graceful_halt_timeout"], "3")==true) {
+        if ($this->waitForStatus("powered off", $this->phlagrantfile->config["vm"]["graceful_halt_timeout"], "3")==true) {
             $logging->log("Successful soft power off by button...") ;
             return true ; }
         else {
@@ -58,11 +58,18 @@ class HaltAllLinux extends BaseLinuxApp {
             $logging->log("Attempting shutdown by SSH...") ;
             $logging->log("Waiting up to {$this->phlagrantfile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...") ;
 
-            if ($this->waitForStatus("poweredoff", $this->phlagrantfile->config["vm"]["ssh_halt_timeout"], "3")==true) {
+            if ($this->waitForStatus("powered off", $this->phlagrantfile->config["vm"]["ssh_halt_timeout"], "3")==true) {
                 $logging->log("Successful power off SSH Shutdown...") ;
                 return true ; } }
+        if (isset($this->params["fail-hard"])) {
+            $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
+                " parameter --fail-hard to do hard power off now." ;
+            $logging->log($lmsg) ;
+            $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
+            $this->executeAndOutput($command);
+            return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
-            "phlagrant halt hard..." ;
+            "phlagrant halt hard. You can also use the parameter --fail-hard to do this automatically." ;
         $logging->log($lmsg) ;
         return false ;
 
