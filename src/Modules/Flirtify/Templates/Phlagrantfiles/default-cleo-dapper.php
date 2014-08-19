@@ -26,6 +26,13 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "provisioner" => "Shell",
                 "tool" => "shell",
                 "target" => "guest",
+                "default" => "MountShares"
+            ) ;
+        $this->config["vm"]["provision"][] =
+            array(
+                "provisioner" => "Shell",
+                "tool" => "shell",
+                "target" => "guest",
                 "default" => "CleopatraInit"
             ) ;
         $this->config["vm"]["provision"][] =
