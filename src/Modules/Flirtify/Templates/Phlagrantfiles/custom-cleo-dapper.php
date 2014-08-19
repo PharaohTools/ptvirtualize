@@ -23,6 +23,13 @@ class Phlagrantfile extends PhlagrantfileBase {
         # Provisioning
         $this->config["vm"]["provision"][] =
             array(
+                "provisioner" => "Shell",
+                "tool" => "shell",
+                "target" => "guest",
+                "default" => "CleopatraInit"
+            ) ;
+        $this->config["vm"]["provision"][] =
+            array(
                 "provisioner" => "PharoahTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
