@@ -18,10 +18,11 @@ SSHDATA;
 
     public function getMountSharesSSHData($provisionFile) {
         $sshData = "" ;
+        $sshData .= "echo {$this->phlagrantfile->config["ssh"]["password"]} "
+            .'| sudo ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
         foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
             $sshData .= "echo {$this->phlagrantfile->config["ssh"]["password"]} "
-                . '| sudo -S mount -t vboxsf -o uid=$UID,gid=$(id -g) '
-                . $sharedFolder["name"].' '.$sharedFolder["host_path"].' ' ; }
+                . '| sudo -S mount -t vboxsf ' . $sharedFolder["name"].' '.$sharedFolder["host_path"].' '."\n" ; }
         return $sshData ;
     }
 
