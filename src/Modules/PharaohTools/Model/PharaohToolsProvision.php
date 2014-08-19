@@ -151,20 +151,20 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $logging->log("Attempting to use default {$provisionerSettings["tool"]} script {$provisionerSettings["default"]}") ;
             $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
-                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner") ;
+                $logging->log("Found $methodName method in OS Provisioner") ;
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue") ;
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue") ;
                 return false ; } }
         else {
             $tool = ucfirst($provisionerSettings["tool"]) ;
             $logging->log("Attempting to use Standard {$tool} script {$provisionerSettings["script"]}") ;
             $methodName = "getStandard{$tool}SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
-                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner") ;
+                $logging->log("Found $methodName method in OS Provisioner") ;
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue") ;
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue") ;
                 return false ; } }
 
         $sshParams["yes"] = true ;
