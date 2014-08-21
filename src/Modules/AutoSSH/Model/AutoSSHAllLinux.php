@@ -99,7 +99,7 @@ class AutoSSHAllLinux extends BaseLinuxApp {
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );;
+                "target" => $this->papyrus["target"] );
             $sftpParams["yes"] = true ;
             $sftpParams["guess"] = true ;
             $sftpParams["servers"] = serialize(array($srv)) ;
