@@ -5,7 +5,10 @@ Phlagrant Modules to be created
 Then we still get our default single box, and can have more than one in a phlangrantfile (as opposed to multiple phlagrantfiles)?
 or do we want multiple?
 
-2)
+2) need to add destroy hooks that run uninstall provisioners, ie remove host file entry
+
+3) set correct share folder, not /var/www. I think this needs to be in cleofy, so it cant be a generic auto anymore
+   it only has one qustion in cleo "share_directory" which is /var/www/pharoah-tools
 
 
 
