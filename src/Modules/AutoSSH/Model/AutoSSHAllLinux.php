@@ -51,34 +51,6 @@ class AutoSSHAllLinux extends BaseLinuxApp {
             return true ;
         }
 
-        // if it doesn't work, try phlagrantfile connection details
-        // try the connection
-        $thisPort = (isset($this->phlagrantfile->config["ssh"]["port"])) ? : 22 ;
-        $sshWorks = $this->waitForSsh($this->phlagrantfile->config["ssh"]["target"], $thisPort);
-
-        if ($sshWorks == true) {
-            $sshParams = $this->params ;
-            $srv = array(
-                "user" => $this->phlagrantfile->config["ssh"]["username"] ,
-                "password" => $this->phlagrantfile->config["ssh"]["password"] ,
-                "target" => $this->phlagrantfile->config["ssh"]["target"] );
-            if (isset($this->phlagrantfile->config["ssh"]["port"])) {
-                $sshParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
-            if (isset($this->phlagrantfile->config["ssh"]["timeout"])) {
-                $sshParams["timeout"] = $this->phlagrantfile->config["ssh"]["timeout"] ; }
-            $sshParams["yes"] = true ;
-            $sshParams["guess"] = true ;
-            $sshParams["servers"] = serialize(array($srv)) ;
-            if (isset($this->phlagrantfile->config["ssh"]["port"])) {
-                $sshParams["port"] = $this->phlagrantfile->config["ssh"]["port"] ; }
-            if (isset($this->phlagrantfile->config["ssh"]["timeout"])) {
-                $sshParams["timeout"] = $this->phlagrantfile->config["ssh"]["timeout"] ; }
-            $sshFactory = new \Model\Invoke();
-            $ssh = $sshFactory->getModel($sshParams) ;
-            $ssh->performInvokeSSHShell() ;
-            return true ;
-        }
-
     }
 
     // @todo this needs testing
@@ -109,6 +81,74 @@ class AutoSSHAllLinux extends BaseLinuxApp {
             $sshFactory = new \Model\Invoke();
             $ssh = $sshFactory->getModel($sshParams) ;
             $ssh->performInvokeSSHData() ;
+            return true ;
+        }
+
+    }
+
+    // @todo this and method below can be rolled into one
+    public function autoSFTPPut() {
+        $this->loadFiles();
+        // try the connection
+        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
+        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
+
+        if ($sshWorks == true) {
+            $sftpParams = $this->params ;
+            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            $srv = array(
+                "user" => $this->papyrus["username"] ,
+                "password" => $this->papyrus["password"] ,
+                "target" => $this->papyrus["target"] );;
+            $sftpParams["yes"] = true ;
+            $sftpParams["guess"] = true ;
+            $sftpParams["servers"] = serialize(array($srv)) ;
+            $sftpParams["source"] = $this->getSourceFilePath() ;
+            $sftpParams["target"] = $this->getTargetFilePath() ;
+            if (isset($this->papyrus["port"])) {
+                $srv["port"] =
+                    (isset($this->papyrus["port"]))
+                        ? $this->papyrus["port"] : 22; }
+            if (isset($this->papyrus["timeout"])) {
+                $srv["timeout"] = $this->papyrus["timeout"] ; }
+
+            $sshFactory = new \Model\SFTP();
+            $ssh = $sshFactory->getModel($sftpParams) ;
+            $ssh->performSFTPPut() ;
+            return true ;
+        }
+
+    }
+
+    // @todo this and method above can be rolled into one
+    public function autoSFTPGet() {
+        $this->loadFiles();
+        // try the connection
+        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
+        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
+
+        if ($sshWorks == true) {
+            $sftpParams = $this->params ;
+            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            $srv = array(
+                "user" => $this->papyrus["username"] ,
+                "password" => $this->papyrus["password"] ,
+                "target" => $this->papyrus["target"] );;
+            $sftpParams["yes"] = true ;
+            $sftpParams["guess"] = true ;
+            $sftpParams["servers"] = serialize(array($srv)) ;
+            $sftpParams["source"] = $this->getSourceFilePath() ;
+            $sftpParams["target"] = $this->getTargetFilePath() ;
+            if (isset($this->papyrus["port"])) {
+                $srv["port"] =
+                    (isset($this->papyrus["port"]))
+                        ? $this->papyrus["port"] : 22; }
+            if (isset($this->papyrus["timeout"])) {
+                $srv["timeout"] = $this->papyrus["timeout"] ; }
+
+            $sshFactory = new \Model\SFTP();
+            $ssh = $sshFactory->getModel($sftpParams) ;
+            $ssh->performSFTPPut() ;
             return true ;
         }
 
@@ -149,6 +189,22 @@ class AutoSSHAllLinux extends BaseLinuxApp {
             $t = $t+1;
             sleep(1) ; }
         return null ;
+    }
+
+    protected function getSourceFilePath($flag = null){
+        if (isset($this->params["source"])) { return $this->params["source"] ; }
+        if (isset($flag)) { $question = "Enter $flag source file path" ; }
+        else { $question = "Enter source file path"; }
+        $input = self::askForInput($question) ;
+        return ($input=="") ? false : $input ;
+    }
+
+    protected function getTargetFilePath($flag = null){
+        if (isset($this->params["target"])) { return $this->params["target"] ; }
+        if (isset($flag)) { $question = "Enter $flag target file path" ; }
+        else { $question = "Enter target file path"; }
+        $input = self::askForInput($question) ;
+        return ($input=="") ? false : $input ;
     }
 
 }

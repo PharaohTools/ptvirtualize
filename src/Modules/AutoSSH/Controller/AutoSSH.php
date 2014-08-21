@@ -21,6 +21,14 @@ class AutoSSH extends Base {
             $this->content["result"] = $thisModel->autoSSHCli();
             return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
 
+        if ($action=="sftp-put") {
+            $this->content["result"] = $thisModel->autoSSHCli();
+            return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
+
+        if ($action=="sftp-get") {
+            $this->content["result"] = $thisModel->autoSSHCli();
+            return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
+
         $this->content["messages"][] = "Invalid AutoSSH Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 
