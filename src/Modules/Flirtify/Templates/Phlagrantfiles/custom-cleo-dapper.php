@@ -39,6 +39,13 @@ class Phlagrantfile extends PhlagrantfileBase {
             array(
                 "provisioner" => "PharoahTools",
                 "tool" => "cleopatra",
+                "target" => "host",
+                "script" => getcwd()."/<%tpl.php%>cleofile-host</%tpl.php%>"
+            ) ;
+        $this->config["vm"]["provision"][] =
+            array(
+                "provisioner" => "PharoahTools",
+                "tool" => "cleopatra",
                 "target" => "guest",
                 "script" => getcwd()."/<%tpl.php%>cleofile-guest</%tpl.php%>"
                 // build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php
@@ -47,15 +54,15 @@ class Phlagrantfile extends PhlagrantfileBase {
             array(
                 "provisioner" => "PharoahTools",
                 "tool" => "dapperstrano",
-                "target" => "guest",
-                "script" => getcwd()."/<%tpl.php%>dapperfile-guest</%tpl.php%>"
+                "target" => "host",
+                "script" => getcwd()."/<%tpl.php%>dapperfile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharoahTools",
                 "tool" => "dapperstrano",
-                "target" => "host",
-                "script" => getcwd()."/<%tpl.php%>dapperfile-host</%tpl.php%>"
+                "target" => "guest",
+                "script" => getcwd()."/<%tpl.php%>dapperfile-guest</%tpl.php%>"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano. Your application should now be accessible.";
