@@ -21,6 +21,9 @@ SSHDATA;
         $sshData .= "echo {$this->phlagrantfile->config["ssh"]["password"]} "
             .'| sudo -S ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
         foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
+            // @todo might be better not to sudo this creation, or allow it more params (owner, perms)
+            $sshData .= "echo {$this->phlagrantfile->config["ssh"]["password"]} "
+                .'| sudo -S mkdir -p '.$sharedFolder["host_path"]."\n" ;
             $sshData .= "echo {$this->phlagrantfile->config["ssh"]["password"]} "
                 . '| sudo -S mount -t vboxsf ' . $sharedFolder["name"].' '.$sharedFolder["host_path"].' '."\n" ; }
         return $sshData ;
