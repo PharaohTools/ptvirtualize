@@ -70,5 +70,25 @@ class FlirtifyDefaultCleoCustomDapperUbuntu extends Base {
         return $df ;
     }
 
+    protected function getPhlagrantHostEnvironment($envType) {
+        $envType = strtolower($envType) ;
+        if (isset($this->params["$envType-dapperfile"])) {
+            return $this->params["$envType-dapperfile"] ; }
+        if (isset($this->params["$envType-dapperstrano-autopilot"])) {
+            return $this->params["$envType-dapperstrano-autopilot"] ; }
+
+        if (isset($this->params["guess"]) && ($envType=="guest") ) {
+            $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-box-phlagrant-install-code-data.php';
+            return $p ; }
+
+        if (isset($this->params["guess"]) && ($envType=="host") ) {
+            $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-host-host-install-host-file-entry.php';
+            return $p ; }
+
+        $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File" ;
+        $df = $this->askForInput($question) ;
+        return $df ;
+    }
+
 
 }
