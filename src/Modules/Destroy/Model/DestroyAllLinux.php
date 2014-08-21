@@ -30,7 +30,7 @@ class DestroyAllLinux extends BaseLinuxApp {
     }
 
     protected function deleteFromPapyrus() {
-        \Model\AppConfig::deleteProjectVariable("phlagrant-box", true) ;
+        \Model\AppConfig::deleteProjectVariable("phlagrant-box", null, null, true) ;
     }
 
     protected function loadFiles() {
