@@ -22,11 +22,11 @@ class AutoSSH extends Base {
             return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
 
         if ($action=="sftp-put") {
-            $this->content["result"] = $thisModel->autoSSHCli();
+            $this->content["result"] = $thisModel->autoSFTPPut();
             return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
 
         if ($action=="sftp-get") {
-            $this->content["result"] = $thisModel->autoSSHCli();
+            $this->content["result"] = $thisModel->autoSFTPGet();
             return array ("type"=>"view", "view"=>"autoSSH", "pageVars"=>$this->content); }
 
         $this->content["messages"][] = "Invalid AutoSSH Action";
