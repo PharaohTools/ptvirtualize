@@ -1,15 +1,21 @@
 Phlagrant Modules to be created
 ---------------------------------------
 
+NOTES even if a phlagrant user has an ssh key, we still should not delete their password as commands like shutdown pipe it
+in. you can disallow password based ssh login if needed
+
 1) Need to add the ability to fire up multiple boxes in multiple projects, so we generate the box name to phlagrant-box-{$dirname}
 Then we still get our default single box, and can have more than one in a phlangrantfile (as opposed to multiple phlagrantfiles)?
 or do we want multiple?
 
-2) need to add destroy hooks that run uninstall provisioners, ie remove host file entry
+2) need to add a destroy hook that run uninstall provisioners, ie remove host file entry
 
 3) set correct share folder, not /var/www. I think this needs to be in cleofy, so it cant be a generic auto anymore
    it only has one qustion in cleo "share_directory" which is /var/www/pharoah-tools
 
+4) get provisioners to check papyrusfilelocal first
+
+5) allow a flag to delete bash history when running shell with piped sudo password
 
 
 phlagrant command list
@@ -18,9 +24,10 @@ ssh-config   outputs OpenSSH valid configuration to connect to the machine
  - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
  - display the details
  - 1 day
+DO AN ENV-CONFIG LIST LOCAL
 
-
-
+package      packages a running vagrant environment into a box
+THIS WILL BECOME BOX PACKAGE
 
 
 
@@ -34,9 +41,6 @@ connects to machine via SSH
  - get id from name
  - invokessh with these details
  - 1/2 days
-
-package      packages a running vagrant environment into a box
-THIS WILL BECOME BOX PACKAGE
 
 box DONE box add, box remove
     add - manages boxes: installation, removal, etc. download/install/remove a base box
