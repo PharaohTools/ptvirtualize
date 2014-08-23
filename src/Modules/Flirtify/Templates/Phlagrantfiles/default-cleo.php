@@ -18,7 +18,7 @@ class Phlagrantfile extends PhlagrantfileBase {
         $this->config["vm"]["shared_folders"][] =
             array(
                 "name" => "host_www",
-                "host_path" => "/var/www/",
+                "host_path" => getcwd()."/",
             ) ;
         # Provisioning
         $this->config["vm"]["provision"][] =

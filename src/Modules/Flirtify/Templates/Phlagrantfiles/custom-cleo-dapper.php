@@ -14,11 +14,11 @@ class Phlagrantfile extends PhlagrantfileBase {
         $this->setDefaultConfig();
         # $this->config["vm"]["gui_mode"] = "gui" ;
         $this->config["vm"]["box"] = "vanillabuntu" ;
-        # Shared folder - This should map to the workstation environment vhost path parent...
+        # Shared folders @todo this is not ready for any OS as it requires
         $this->config["vm"]["shared_folders"][] =
             array(
                 "name" => "host_www",
-                "host_path" => "/var/www/",
+                "host_path" => getcwd()."/",
             ) ;
         # Provisioning
         $this->config["vm"]["provision"][] =

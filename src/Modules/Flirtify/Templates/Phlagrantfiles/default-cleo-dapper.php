@@ -17,8 +17,8 @@ class Phlagrantfile extends PhlagrantfileBase {
         # Shared folder - This should map to the workstation environment vhost path parent...
         $this->config["vm"]["shared_folders"][] =
             array(
-                "name" => "host_www",
-                "host_path" => "/var/www/",
+                "name" => "host_web_path",
+                "host_path" => getcwd()."/",
             ) ;
         # Provisioning
         $this->config["vm"]["provision"][] =
