@@ -2,7 +2,7 @@ Phlagrant Modules to be created
 ---------------------------------------
 
 NOTES even if a phlagrant user has an ssh key, we still should not delete their password as commands like shutdown pipe it
-in. you can disallow password based ssh login if needed
+in. you can disallow password based ssh login instead if needed
 
 1) Need to add the ability to fire up multiple boxes in multiple projects, so we generate the box name to phlagrant-box-{$dirname}
 Then we still get our default single box, and can have more than one in a phlangrantfile (as opposed to multiple phlagrantfiles)?
@@ -12,6 +12,7 @@ or do we want multiple?
 
 3) set correct share folder, not /var/www. I think this needs to be in cleofy, so it cant be a generic auto anymore
    it only has one qustion in cleo "share_directory" which is /var/www/pharoah-tools
+   DONE
 
 4) get provisioners to check papyrusfilelocal first
 
