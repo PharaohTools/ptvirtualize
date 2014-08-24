@@ -54,14 +54,14 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "provisioner" => "PharoahTools",
                 "tool" => "dapperstrano",
                 "target" => "host",
-                "script" => getcwd()."<%tpl.php%>dapperfile-host</%tpl.php%>"
+                "script" => getcwd()."/<%tpl.php%>dapperfile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharoahTools",
                 "tool" => "dapperstrano",
                 "target" => "guest",
-                "script" => getcwd()."<%tpl.php%>dapperfile-guest</%tpl.php%>"
+                "script" => getcwd()."/<%tpl.php%>dapperfile-guest</%tpl.php%>"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This guest was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano, and the host also by Dapperstrano. Your application " .
