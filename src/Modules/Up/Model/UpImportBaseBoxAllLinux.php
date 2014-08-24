@@ -40,11 +40,11 @@ class UpImportBaseBoxAllLinux extends BaseLinuxApp {
         $filesInDir = scandir($dirscan) ;
         $boxes = array() ;
         foreach ($filesInDir as $fileInDir) {
-            if (is_dir($fileInDir)) {
-                $boxes[] = $fileInDir ; } }
+            if (in_array($fileInDir, array(".", ".."))) { continue ; }
+            if (is_dir($dirscan.'/'.$fileInDir)) { $boxes[] = $fileInDir ; } }
         foreach ($boxes as $box) {
-//            echo "box: $box\n" ;
-//            echo "cbox: {$this->phlagrantfile->config["vm"]["box"]}\n" ;
+            echo "box: $box\n" ;
+            echo "cbox: {$this->phlagrantfile->config["vm"]["box"]}\n" ;
             if ($box == $this->phlagrantfile->config["vm"]["box"]) {
                 $logging->log("Found base box {$box}") ;
                 return $dirscan.'/'.$box ; } }
