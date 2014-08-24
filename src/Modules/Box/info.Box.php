@@ -45,6 +45,7 @@ class BoxInfo extends Base {
             --slug="" # guess can generate this based on name field
             --description="A Vanilla install of Ubuntu..."
             --home_location="http://www.someplace.net/" # guess will set this to http://www.phlagrant-box.org/
+            --target="/opt/phlagrant/boxes" # save location, will guess /opt/phlagrant/boxes
 
         - list
         List boxes installed in Phlagrant
