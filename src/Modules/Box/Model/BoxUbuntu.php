@@ -72,11 +72,15 @@ class BoxUbuntu extends BaseLinuxApp {
     }
 
     public function performBoxPackage() {
-        $providerName = $this->askForProvider();
         $this->metadata = new \StdClass() ;
-        $this->metadata->provider = $providerName ;
-        $this->target = $this->getTargetBoxLocation();
         $this->name = $this->getBoxNewName();
+        $this->metadata->provider = $this->askForProvider();
+        $this->metadata->name = $this->name;
+        $this->metadata->description = $this->askForDescription();
+        $this->metadata->group = $this->askForGroup();
+        $this->metadata->slug = $this->askForSlug();
+        $this->metadata->home_location = $this->askForHomeLocation();
+        $this->target = $this->getTargetBoxLocation();
         $this->vmname = $this->getVmName();
         $this->findProvider("BoxPackage") ;
         $this->attemptBoxPackage() ;
@@ -85,28 +89,71 @@ class BoxUbuntu extends BaseLinuxApp {
 
     protected function askForProvider() {
         if (isset($this->params["provider"])) { return $this->params["provider"]; }
+        else if (isset($this->params["guess"])) { return "virtualbox"; }
         else {
-            $source = self::askForInput("Enter Provider Name:", true);
+            $source = self::askForInput("Enter Provider Name for Box Metadata:", true);
             return $source ; }
     }
 
+    protected function askForDescription() {
+        if (isset($this->params["description"])) { return $this->params["description"]; }
+        else {
+            $source = self::askForInput("Enter Description for Box Metadata:", true);
+            return $source ; }
+    }
+
+    protected function askForGroup() {
+        if (isset($this->params["group"])) { return $this->params["group"]; }
+        else {
+            $source = self::askForInput("Enter Group for Box Metadata:", true);
+            return $source ; }
+    }
+
+    protected function askForSlug() {
+        if (isset($this->params["slug"])) { return $this->params["slug"]; }
+        else if (isset($this->params["guess"])) { return $this->formatSlug($this->params["name"]); }
+        else {
+            $source = self::askForInput("Enter Slug for Box Metadata:", true);
+            return $source ; }
+    }
+
+    protected function formatSlug($slug) {
+        $slug = str_replace(" ", "", $slug);
+        $slug = str_replace(".", "", $slug);
+        $slug = str_replace("_", "", $slug);
+        $slug = strtolower($slug);
+        return $slug ;
+    }
+
+    protected function askForHomeLocation() {
+        if (isset($this->params["home-location"])) {
+            return $this->ensureTrailingSlash($this->params["home-location"]); }
+        else if (isset($this->params["guess"])) { return "http://www.phlagrant-box.org/"; }
+        else {
+            $source = self::askForInput("Enter Home Location:", true);
+            return $this->ensureTrailingSlash($source) ; }
+    }
+
     protected function getOriginalBoxLocation() {
-        if (isset($this->params["source"])) { return $this->params["source"]; }
+        if (isset($this->params["source"])) {
+            return $this->ensureTrailingSlash($this->params["source"]); }
         else {
             $source = self::askForInput("Enter Box Source Path:", true);
-            return $source ; }
+            return $this->ensureTrailingSlash($source) ; }
     }
 
     protected function getTargetBoxLocation() {
         // @todo dont hardcode the /opt/phlagrant/
-        if (isset($this->params["target"])) { return $this->params["target"]; }
+        if (isset($this->params["target"])) {
+            return $this->ensureTrailingSlash($this->params["target"]) ; }
         else if (isset($this->params["guess"])) {
-            $target = '/opt/phlagrant/boxes' ;
+            $target = DIRECTORY_SEPARATOR.'opt'.DIRECTORY_SEPARATOR.'phlagrant'.DIRECTORY_SEPARATOR.'boxes' ;
+            $this->ensureTrailingSlash($target) ;
             if (!file_exists($target)) { mkdir($target, true) ; }
-            return $target ; }
+            return $this->ensureTrailingSlash($target) ; }
         else {
             $target = self::askForInput("Enter Box Target Path:", true);
-            return $target ; }
+            return $this->ensureTrailingSlash($target) ; }
     }
 
     protected function getBoxNewName() {
@@ -119,7 +166,7 @@ class BoxUbuntu extends BaseLinuxApp {
     protected function getVmName() {
         if (isset($this->params["vmname"])) { return $this->params["vmname"]; }
         else {
-            $name = self::askForInput("Enter VM Name to Export:", true);
+            $name = self::askForInput("Enter VM Name (or ID) to Export:", true);
             return $name ;}
     }
 
@@ -135,7 +182,7 @@ class BoxUbuntu extends BaseLinuxApp {
     }
 
     protected function getMetadataFromFS() {
-        $file = "{$this->target}/{$this->name}/metadata.json" ;
+        $file = "{$this->target}{$this->name}/metadata.json" ;
         $string = file_get_contents($file) ;
         $fdo = json_decode($string) ;
         return $fdo ;
@@ -194,7 +241,7 @@ class BoxUbuntu extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
             $logging->log("Attempting to package box via provider {$this->metadata->provider}...");
-            $this->provider->packageBox($this->target, $this->vmname, $this->name, $this->metadata) ; }
+            $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
         else {
             $logging->log("No Provider available, will not attempt to package box."); }
     }
