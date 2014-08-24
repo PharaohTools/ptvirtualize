@@ -37,7 +37,11 @@ class UpImportBaseBoxAllLinux extends BaseLinuxApp {
         $logging->log("Finding base box {$this->phlagrantfile->config["vm"]["box"]} from Phlagrantfile") ;
         // @todo get rid of this hardcode
         $dirscan = '/opt/phlagrant/boxes' ;
-        $boxes = scandir($dirscan) ;
+        $filesInDir = scandir($dirscan) ;
+        $boxes = array() ;
+        foreach ($filesInDir as $fileInDir) {
+            if (is_dir($fileInDir)) {
+                $boxes[] = $fileInDir ; } }
         foreach ($boxes as $box) {
 //            echo "box: $box\n" ;
 //            echo "cbox: {$this->phlagrantfile->config["vm"]["box"]}\n" ;
