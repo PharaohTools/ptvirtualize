@@ -1,6 +1,11 @@
 Phlagrant Modules to be created
 ---------------------------------------
 
+BUG
+
+Package at command line doesnt allow a user to enter multi word names interaactively. its fine as a parameter so this is parameters only for now
+for the vm name use the id in between the curly brackets from vboxmanage list vms
+
 NOTES even if a phlagrant user has an ssh key, we still should not delete their password as commands like shutdown pipe it
 in. you can disallow password based ssh login instead if needed
 
