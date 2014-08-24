@@ -14,17 +14,17 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
     // Model Group
     public $modelGroup = array("BoxPackage") ;
 
-    public function packageBox($target, $vmName, $packageName, $metadata) {
+    public function packageBox($target, $vmName, $metadata) {
         // package the box here
         // create the directory for the box
-        $boxDir = $this->createTempDirectory($packageName) ;
+        $boxDir = $this->createTempDirectory($metadata) ;
         if (!is_null($boxDir)) {
             // put the metadata file in the temp box directory
-            $this->saveMetadataToFS($packageName, $metadata) ;
+            $this->saveMetadataToFS($metadata) ;
             // export the ova there too
-            $this->exportOVA($vmName, $packageName) ;
+            $this->exportOVA($vmName, $metadata) ;
             // tar both to the target directory
-            $this->createPackage($target, $packageName) ;
+            $this->createPackage($target, $metadata) ;
             $this->completion() ;
         }
     }
@@ -35,14 +35,14 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
         return self::askYesOrNo($question);
     }
 
-    protected function saveMetadataToFS($name, $metadata) {
-        $file = "/tmp/phlagrant/{$name}/metadata.json" ;
+    protected function saveMetadataToFS($metadata) {
+        $file = "/tmp/phlagrant/{$metadata->slug}/metadata.json" ;
         $string = json_encode($metadata) ;
         file_put_contents($file, $string) ;
     }
 
-    protected function createTempDirectory($name) {
-        $boxdir = '/tmp/phlagrant/' . $name ;
+    protected function createTempDirectory($metadata) {
+        $boxdir = '/tmp/phlagrant/' . $metadata->slug ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (file_exists($boxdir) && !is_writable($boxdir)) {
@@ -66,22 +66,22 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
             return $boxdir ; }
     }
 
-    protected function exportOVA($vmName, $packageName) {
+    protected function exportOVA($vmName, $metadata) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Exporting ova file box,ova from Virtual Machine $vmName...");
-        $command = "vboxmanage export {$vmName} --output=/tmp/phlagrant/{$packageName}/box.ova" ;
+        $command = "vboxmanage export {$vmName} --output=/tmp/phlagrant/{$metadata->slug}/box.ova" ;
         self::executeAndOutput($command);
         $logging->log("Export complete...");
     }
 
-    protected function createPackage($target, $packageName) {
+    protected function createPackage($target, $metadata) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Creating box file from ova file and json file...");
-        $command = "tar -cvf $target/$packageName.box -C /tmp/phlagrant/{$packageName} . " ;
+        $command = "tar -cvf $target$metadata->slug.box -C /tmp/phlagrant/{$metadata->slug} . " ;
         self::executeAndOutput($command);
-        $logging->log("Created box file $target/$packageName.box...");
+        $logging->log("Created box file $target{$metadata->slug}.box...");
         return true ;
     }
 

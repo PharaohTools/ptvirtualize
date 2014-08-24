@@ -14,10 +14,10 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
     // Model Group
     public $modelGroup = array("BoxAdd") ;
 
-    public function addBox($source, $target, $name) {
+    public function addBox($source, $target, $metadata) {
         // add the box here
         // create the directory for the box
-        $boxDir = $this->createBoxDirectory($target, $name) ;
+        $boxDir = $this->createBoxDirectory($target, $metadata) ;
         if (!is_null($boxDir)) {
             // put the metadata file in the new box directory
             // find the name of the ova file in the tar
@@ -37,8 +37,8 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
         return self::askYesOrNo($question);
     }
 
-    protected function createBoxDirectory($target, $name) {
-        $boxdir = $target . '/' . $name ;
+    protected function createBoxDirectory($target, $metadata) {
+        $boxdir = $target . $metadata->slug ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $command = "whoami" ;
