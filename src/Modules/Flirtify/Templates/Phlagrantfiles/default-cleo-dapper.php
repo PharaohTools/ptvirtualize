@@ -63,6 +63,13 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "target" => "guest",
                 "script" => getcwd()."/<%tpl.php%>dapperfile-guest</%tpl.php%>"
             ) ;
+        $this->config["vm"]["provision_destroy"][] =
+            array(
+                "provisioner" => "PharoahTools",
+                "tool" => "dapperstrano",
+                "target" => "host",
+                "script" => getcwd()."/<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
+            ) ;
         $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This guest was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano, and the host also by Dapperstrano. Your application " .
             "should now be accessible by browser.";
