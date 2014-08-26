@@ -23,9 +23,9 @@ class ProvisionAllLinux extends BaseLinuxApp {
         $this->initialize();
     }
 
-    public function provisionNow() {
+    public function provisionNow($hook = "") {
         $this->loadFiles();
-        $this->osProvisioner->provision($this->phlagrantfile, $this->papyrus);
+        $this->osProvisioner->provision($hook);
     }
 
     protected function loadFiles() {
