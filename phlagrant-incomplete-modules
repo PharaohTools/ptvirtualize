@@ -1,6 +1,10 @@
 Phlagrant Modules to be created
 ---------------------------------------
 
+Bug
+Check the phlagrant default cm log for this...
+1NET_SFTP_STATUS_FAILURE:
+
 BUG
 
 Package at command line doesnt allow a user to enter multi word names interaactively. its fine as a parameter so this is parameters only for now
