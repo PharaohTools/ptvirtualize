@@ -46,6 +46,7 @@ class FlirtifyCustomCleoCustomDapperUbuntu extends Base {
                 "cleofile-guest" => $this->getCleofile("guest"),
                 "dapperfile-guest" => $this->getDapperfile("guest"),
                 "dapperfile-host" => $this->getDapperfile("host"),
+                "dapperfile-host-destroy" => $this->getDapperfile("host", "destroy"),
             ),
             $targetLocation );
         echo $targetLocation."\n";
@@ -62,15 +63,31 @@ class FlirtifyCustomCleoCustomDapperUbuntu extends Base {
         return $this->params["$envType-nodes-environment"] ;
     }
 
-    protected function getDapperfile($envType) {
+    protected function getDapperfile($envType, $provisionType = "up") {
         $envType = strtolower($envType) ;
-        if (isset($this->params["$envType-dapperfile"])) {
-            return $this->params["$envType-dapperfile"] ; }
-        if (isset($this->params["$envType-dapperstrano-autopilot"])) {
-            return $this->params["$envType-dapperstrano-autopilot"] ; }
-        $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File" ;
-        $this->params["$envType-nodes-environment"] = $this->askForInput($question) ;
-        return $this->params["$envType-nodes-environment"] ;
+        if ($provisionType == "up") {
+            if (isset($this->params["$envType-dapperfile"])) {
+                return $this->params["$envType-dapperfile"] ; }
+            if (isset($this->params["$envType-dapperstrano-autopilot"])) {
+                return $this->params["$envType-dapperstrano-autopilot"] ; }
+            if (isset($this->params["guess"]) && ($envType=="guest") ) {
+                $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-box-phlagrant-install-code-data.php';
+                return $p ; }
+            if (isset($this->params["guess"]) && ($envType=="host") ) {
+                $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-host-phlagrant-host-install-host-file-entry.php';
+                return $p ; } }
+        else if ($provisionType == "destroy") {
+            if (isset($this->params["$envType-dapperfile-destroy"])) {
+                return $this->params["$envType-dapperfile-destroy"] ; }
+            if (isset($this->params["$envType-dapperstrano-autopilot-destroy"])) {
+                return $this->params["$envType-dapperstrano-autopilot-destroy"] ; }
+            if (isset($this->params["guess"]) && ($envType=="host") ) {
+                $p = '/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-host-phlagrant-host-uninstall-host-file-entry.php';
+                return $p ; } }
+        $forDestruct = ($provisionType == "destroy") ? " For Destruction" : "" ;
+        $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File$forDestruct" ;
+        $df = $this->askForInput($question) ;
+        return $df ;
     }
 
 
