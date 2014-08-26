@@ -37,7 +37,7 @@ class Phlagrantfile extends PhlagrantfileBase {
             ) ;
         $this->config["vm"]["provision"][] =
             array(
-                "provisioner" => "PharoahTools",
+                "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
                 "script" => getcwd()."/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-box.php"

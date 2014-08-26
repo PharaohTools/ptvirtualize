@@ -37,14 +37,14 @@ class Phlagrantfile extends PhlagrantfileBase {
             ) ;
         $this->config["vm"]["provision"][] =
             array(
-                "provisioner" => "PharoahTools",
+                "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "host",
                 "script" => getcwd()."/<%tpl.php%>cleofile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
-                "provisioner" => "PharoahTools",
+                "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
                 "script" => getcwd()."/<%tpl.php%>cleofile-guest</%tpl.php%>"
@@ -52,21 +52,21 @@ class Phlagrantfile extends PhlagrantfileBase {
             ) ;
         $this->config["vm"]["provision"][] =
             array(
-                "provisioner" => "PharoahTools",
+                "provisioner" => "PharaohTools",
                 "tool" => "dapperstrano",
                 "target" => "host",
                 "script" => getcwd()."/<%tpl.php%>dapperfile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
-                "provisioner" => "PharoahTools",
+                "provisioner" => "PharaohTools",
                 "tool" => "dapperstrano",
                 "target" => "guest",
                 "script" => getcwd()."/<%tpl.php%>dapperfile-guest</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision_destroy"][] =
             array(
-                "provisioner" => "PharoahTools",
+                "provisioner" => "PharaohTools",
                 "tool" => "dapperstrano",
                 "target" => "host",
                 "script" => getcwd()."/<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
