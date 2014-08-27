@@ -18,14 +18,25 @@ Then we still get our default single box, and can have more than one in a phlang
 or do we want multiple?
 
 2) need to add a destroy hook that run uninstall provisioners, ie remove host file entry
+   DONE
 
 3) set correct share folder, not /var/www. I think this needs to be in cleofy, so it cant be a generic auto anymore
-   it only has one qustion in cleo "share_directory" which is /var/www/pharoah-tools
+   it only has one qustion in cleo "share_directory" which is /var/www/pharaoh-tools
    DONE
 
 4) get provisioners to check papyrusfilelocal first
 
 5) allow a flag to delete bash history when running shell with piped sudo password
+
+6) Phlagrant Hooks. So, we have our Phlagrantfile, which specifies provisioners. We can also leave autopilot files
+   in a named directory structure :
+   getcwd()."/build/config/phlagrant/hooks/$provisioner/$tool/$hook/$target/$type"
+   $provisioner = "PharaohTools"
+   $tool = "cleopatra" || "dapperstrano"
+   $hook = "up"
+   $target = "guest"
+   $type = "post"
+
 
 
 phlagrant command list
@@ -56,7 +67,7 @@ box DONE box add, box remove
     add - manages boxes: installation, removal, etc. download/install/remove a base box
 
 provision DONE phlagrant provision now
-    now -provisions the vagrant machine, install pharoah and execute pharoah autopilots
+    now -provisions the vagrant machine, install pharaoh and execute pharaoh autopilots
 reload  DONE phlagrant up reload
     restarts vagrant machine, loads new Vagrantfile configuration
 
@@ -117,7 +128,7 @@ Providers
     VMware - Contact VMWare and ask them to write their own one? After above wrapper is made
 
 Plugins
-    The software is built on the Pyramid framework as are all Pharoah tools, and extensions are written and provided
+    The software is built on the Pyramid framework as are all Pharaoh tools, and extensions are written and provided
     through Pyramid modules. Click here for more information on Pyramid module development in general.
 
 Command-Line Interface
@@ -130,7 +141,7 @@ Phlagrant is primarily a command line tool, is done through the command-line int
 The interface is available using the phlagrant command, and comes installed with Vagrant automatically. The phlagrant
 command in turn has many subcommands, such as phlagrant up, phlagrant destroy, etc.
 
-As with all Pharoah Tools, running the command with no modules, parameters or actions will display a list, help
+As with all Pharaoh Tools, running the command with no modules, parameters or actions will display a list, help
 will be displayed showing all available subcommands.
 
 Further, you can run any Phlagrant module with the help action to output help about that module. For example,
