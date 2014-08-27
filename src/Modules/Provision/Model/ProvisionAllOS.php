@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class ProvisionAllLinux extends BaseLinuxApp {
+class ProvisionAllOS extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -26,6 +26,11 @@ class ProvisionAllLinux extends BaseLinuxApp {
     public function provisionNow($hook = "") {
         $this->loadFiles();
         $this->osProvisioner->provision($hook);
+    }
+
+    public function provisionHook($hook, $type) {
+        $this->loadFiles();
+        $this->osProvisioner->provisionHook($hook, $type);
     }
 
     protected function loadFiles() {
@@ -49,7 +54,8 @@ class ProvisionAllLinux extends BaseLinuxApp {
     protected function loadOSProvisioner() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $provFile = dirname(dirname(__FILE__))."/OSProvisioners/".$this->phlagrantfile->config["vm"]["ostype"].".php" ;
+        $provFile = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR."OSProvisioners".DIRECTORY_SEPARATOR.
+            $this->phlagrantfile->config["vm"]["ostype"].".php" ;
         if (file_exists($provFile)) {
             require_once ($provFile) ;
             $logging->log("OS Provisioner found for {$this->phlagrantfile->config["vm"]["ostype"]}") ;
