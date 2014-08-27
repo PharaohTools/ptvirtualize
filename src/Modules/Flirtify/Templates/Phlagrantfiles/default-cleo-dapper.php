@@ -63,7 +63,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "target" => "guest",
                 "script" => getcwd()."/<%tpl.php%>dapperfile-guest</%tpl.php%>"
             ) ;
-        $this->config["vm"]["provision_destroy"][] =
+        $this->config["vm"]["provision_destroy_post"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "dapperstrano",
