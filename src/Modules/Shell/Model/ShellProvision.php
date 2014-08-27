@@ -30,7 +30,7 @@ class ShellProvision extends BaseShellAllOS {
             return null ; }
     }
 
-    // @todo this code is identical to the initialisePharoahTools except the provisionfile extension.
+    // @todo this code is identical to the initialisePharaohTools except the provisionfile extension.
     // @todo they should both extend a base class of provisioner
     protected function initialiseShellProvision($provisionerSettings) {
 
