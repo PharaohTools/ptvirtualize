@@ -2,7 +2,7 @@
 
 ## About:
 
-Virtual Machine and Development Environment management. Native PHP and complete integration with Pharoah Tools for
+Virtual Machine and Development Environment management. Native PHP and complete integration with Pharaoh Tools for
 provisioning. Automating, versioning, standardising and managing the setup, teardown and provisioning of virtualised
 development environments for your projects.
 
@@ -19,8 +19,8 @@ Currently, all of the Modules work on Ubuntu 12, most on 13 and 14, and a few on
     
 ## Installation
 
-The preferred way to install any of the Pharoah apps (including this) is through cleopatra. If you install cleopatra
-on your machine (http://git.pharoah-tools.org.uk/phpengine/cleopatra), then you can install phlagrant using the following:
+The preferred way to install any of the Pharaoh apps (including this) is through cleopatra. If you install cleopatra
+on your machine (http://git.pharaoh-tools.com/phpengine/cleopatra), then you can install phlagrant using the following:
 
 sudo cleopatra phlagrant install --yes --guess
 
@@ -31,11 +31,11 @@ To install phlagrant cli on your machine without cleopatra do the following:
 
 sudo apt-get install php5 git
 
-git clone https://git.pharoah-tools.org.uk/phpengine/phlagrant && sudo php phlagrant/install-silent
+git clone https://git.pharaoh-tools.com/phpengine/phlagrant && sudo php phlagrant/install-silent
 
 or...
 
-git clone https://git.pharoah-tools.org.uk/phpengine/phlagrant && sudo php phlagrant/install
+git clone https://git.pharaoh-tools.com/phpengine/phlagrant && sudo php phlagrant/install
 (if you want to choose the install location)
 
 ... that's it, now the phlagrant command should be available at the command line for you.
