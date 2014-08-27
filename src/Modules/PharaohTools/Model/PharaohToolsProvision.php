@@ -31,7 +31,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->dapperstranoProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
-            $logging->log("Unrecognised Pharoah Provisioning Tool {$provisionerSettings["tool"]} specified") ;
+            $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified") ;
             return null ; }
     }
 
