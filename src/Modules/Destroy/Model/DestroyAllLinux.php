@@ -24,9 +24,10 @@ class DestroyAllLinux extends BaseLinuxApp {
 
     public function destroyNow() {
         $this->loadFiles();
-        $this->runDestroyHooks() ;
+        $this->runHook("pre") ;
         $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
         $this->executeAndOutput($command);
+        $this->runHook("post") ;
         $this->deleteFromPapyrus() ;
     }
 
@@ -34,15 +35,19 @@ class DestroyAllLinux extends BaseLinuxApp {
         \Model\AppConfig::deleteProjectVariable("phlagrant-box", null, null, true) ;
     }
 
-    protected function runDestroyHooks() {
+    protected function runHook($type) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->params["ignore-hooks"]) ) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
             $logging->log("Not provisioning destroy hooks as ignore hooks parameter is set");
             return ; }
+        $ut = ucfirst($type) ;
+        $logging->log("Provisioning $ut Destroy Hooks");
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
-        $provision->provisionNow("destroy");
+        $provision->provisionHook("destroy", $type);
     }
 
     protected function loadFiles() {
