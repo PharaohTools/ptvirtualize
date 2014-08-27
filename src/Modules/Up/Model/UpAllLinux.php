@@ -32,9 +32,11 @@ class UpAllLinux extends BaseLinuxApp {
                     $logging->log("This VM is already up and running.");
                     return; }
                 $logging->log("Phlagrant will start and optionally modify and provision your existing VM.");
+                $this->runHook("up", "pre") ;
                 $this->modifyVm(true);
                 $this->startVm();
                 $this->provisionVm(true);
+                $this->runHook("up", "post") ;
                 $this->postUpMessage();
                 return ;}
             $logging->log("This VM has been deleted outside of Phlagrant. Re-creating from scratch.");
@@ -81,10 +83,12 @@ class UpAllLinux extends BaseLinuxApp {
     }
 
     protected function completeBuildUp() {
+        $this->runHook("up", "pre") ;
         $this->importBaseBox();
         $this->modifyVm();
         $this->startVm();
         $this->provisionVm();
+        $this->runHook("up", "post") ;
         $this->postUpMessage();
     }
 
@@ -161,6 +165,20 @@ class UpAllLinux extends BaseLinuxApp {
 
     protected function deleteFromPapyrus() {
         \Model\AppConfig::deleteProjectVariable("phlagrant-box", true) ;
+    }
+
+    protected function runHook($hook, $type) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->params["ignore-hooks"]) ) {
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set");
+            return ; }
+        $logging->log("Provisioning $hook $type hooks");
+        $provisionFactory = new \Model\Provision();
+        $provision = $provisionFactory->getModel($this->params) ;
+        $provision->provisionHook($hook, $type);
     }
 
 }
