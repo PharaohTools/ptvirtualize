@@ -54,6 +54,8 @@ class BoxUbuntu extends BaseLinuxApp {
         $this->source = $this->getOriginalBoxLocation();
         $this->target = $this->getTargetBoxLocation();
         $this->name = $this->getBoxNewName();
+        if ($this->downloadIfRemote() == false) {
+            return false; }
         $this->metadata = $this->extractMetadata();
         $this->findProvider() ;
         $this->attemptBoxAdd() ;
@@ -136,10 +138,10 @@ class BoxUbuntu extends BaseLinuxApp {
 
     protected function getOriginalBoxLocation() {
         if (isset($this->params["source"])) {
-            return $this->ensureTrailingSlash($this->params["source"]); }
+            return $this->params["source"]; }
         else {
             $source = self::askForInput("Enter Box Source Path:", true);
-            return $this->ensureTrailingSlash($source) ; }
+            return $source ; }
     }
 
     protected function getTargetBoxLocation() {
@@ -224,6 +226,25 @@ class BoxUbuntu extends BaseLinuxApp {
             $this->provider->addBox($this->source, $this->target, $this->name) ; }
         else {
             $logging->log("No Provider available, will not attempt to add box."); }
+    }
+
+    protected function downloadIfRemote() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (substr($this->source, 0, 7) == "http://" || substr($this->source, 0, 8) == "https://") {
+            $this->source = $this->ensureTrailingSlash($this->source);
+            $logging->log("Box is remote not local, will download to temp directory before adding...");
+            set_time_limit(0); // unlimited max execution time
+            $tmpFile = BASE_TEMP_DIR.'file.box' ;
+            $logging->log("Downloading File ...");
+            if (substr($this->source, strlen($this->source)-1, 1) == '/') {
+                $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
+            // @todo error return false
+            self::executeAndOutput("wget -O $tmpFile {$this->source}") ;
+            $this->source = $tmpFile ;
+            $logging->log("Download complete ...");
+            return true ;}
+        return true ;
     }
 
     protected function attemptBoxRemove() {
