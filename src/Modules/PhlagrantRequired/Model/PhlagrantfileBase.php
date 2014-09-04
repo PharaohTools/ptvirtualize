@@ -22,7 +22,7 @@ class PhlagrantfileBase {
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp/' ;
-        $config["vm"]["graceful_halt_timeout"] = 60 ; # The time in seconds that Phlagrant wait for the machine to gracefully halt by soft power under phlagrant halt now. Defaults to 120 seconds.
+        $config["vm"]["graceful_halt_timeout"] = 30 ; # The time in seconds that Phlagrant wait for the machine to gracefully halt by soft power under phlagrant halt now. Defaults to 120 seconds.
         $config["vm"]["ssh_halt_timeout"] = 60 ; # The time in seconds that Phlagrant will wait for the machine to shutdown via SSH when phlagrant halt now is called, if still running after soft power down. Defaults to 60 seconds.
         $config["vm"]["post_up_message"] = "Your default Phlagrant post_up_message..." ; # A message to show after Phlagrant Up/Reload.
         # Default Provisioning
