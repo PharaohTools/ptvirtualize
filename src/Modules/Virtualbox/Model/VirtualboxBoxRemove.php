@@ -27,8 +27,8 @@ class VirtualboxBoxRemove extends BaseVirtualboxAllOS {
         return self::askYesOrNo($question);
     }
 
-    protected function removeBoxDirectory($target, $metadata) {
-        $boxdir = $target . $metadata->slug ;
+    protected function removeBoxDirectory($target, $name) {
+        $boxdir = $target . $name ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $command = "whoami" ;
