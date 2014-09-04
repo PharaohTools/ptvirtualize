@@ -94,7 +94,6 @@ class UpImportBaseBoxAllLinux extends BaseLinuxApp {
     protected function doImport($ovaFile) {
         $command  = "vboxmanage import {$ovaFile} --vsys 0 --ostype {$this->phlagrantfile->config["vm"]["ostype"]}" ;
         $command .= " --vmname {$this->phlagrantfile->config["vm"]["name"]}" ;
-        echo $command . "\n" ;
         $this->executeAndOutput($command);
         return true ;
     }
