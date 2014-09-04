@@ -69,7 +69,7 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
     protected function exportOVA($vmName, $metadata) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Exporting ova file box,ova from Virtual Machine $vmName...");
+        $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...");
         $command = "vboxmanage export {$vmName} --output=/tmp/phlagrant/{$metadata->slug}/box.ova" ;
         self::executeAndOutput($command);
         $logging->log("Export complete...");
