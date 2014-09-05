@@ -171,7 +171,8 @@ class AutoSSHAllLinux extends BaseLinuxApp {
         return $papyrusLocalLoader->load() ;
     }
 
-    // @todo provisioners should have their own modules, and the pharoahtools code should go there
+    // @todo provisioners should have their own modules, and the pharaohtools code should go there
+    // @todo this should get port module probably do it within app
     protected function waitForSsh($ip, $thisPort=22) {
         $t = 0;
         $totalTime = (isset($this->phlagrantfile->config["vm"]["ssh_find_timeout"]))

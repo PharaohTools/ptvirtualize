@@ -2,7 +2,11 @@ Phlagrant Modules to be created
 ---------------------------------------
 
 Bug
-Check the phlagrant default cm log for this...
+Phlagrant destroy hooks should delete the shared folder, and it should be randomly named so we can have multiple guests
+zero config connect to one host share
+
+Bug
+Check the phlagrant default cm log for this. it appears even though the sftp transfer worked
 1NET_SFTP_STATUS_FAILURE:
 
 BUG
