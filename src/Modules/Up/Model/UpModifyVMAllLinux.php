@@ -23,6 +23,8 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $this->setAvailableModifications();
+        if (isset($this->phlagrantfile->config["vm"]["hd_resize"])) {
+            $this->modifyHardDisks(); }
         foreach ($this->phlagrantfile->config["vm"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
@@ -35,6 +37,13 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                 $command = "vboxmanage modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
                 $this->executeAndOutput($command); } }
         $this->setSharedFolders();
+    }
+
+    public function removeShares() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Removing shared folders") ;
+        $this->destroyExistingShares();
     }
 
     /// @todo can we pull this information from vboxmanage, then we dont have to udate this method when vboxmanage changes
@@ -75,18 +84,65 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->phlagrantfile->config["vm"]["shared_folders"]) && count($this->phlagrantfile->config["vm"]["shared_folders"])>0 ) {
-        foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
+            $this->destroyExistingShares();
+            foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
+                $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
+                $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
+                $command .= " --hostpath {$sharedFolder["host_path"]}" ;
+                $flags = array("transient", "readonly", "automount") ;
+                foreach ($flags as $flag) {
+                    if (isset($sharedFolder[$flag])) {
+                        $command .= " --$flag" ; } }
+                $this->executeAndOutput($command); } }
+    }
 
-            // @todo we check if a shared folder by this name exists. if it does, we delete it
 
-            $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
-            $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
-            $command .= " --hostpath {$sharedFolder["host_path"]}" ;
-            $flags = array("transient", "readonly", "automount") ;
-            foreach ($flags as $flag) {
-                if (isset($sharedFolder[$flag])) {
-                    $command .= " --$flag" ; } }
-            $this->executeAndOutput($command); } }
+    protected function destroyExistingShares() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Finding existing shares") ;
+        $command  = "vboxmanage showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
+        $out = $this->executeAndLoad($command);
+        $lines = explode("\n", $out) ;
+        $names = array() ;
+        foreach ($lines as $oneline) {
+            if (strpos($oneline, "Shared folders")===0) {
+                $cstill = 1;
+                continue ; } // skip a line
+            else {
+                if (isset($cstill) && $cstill == 1) {
+                    $cstill = 2;
+                    continue ;  } // skip a line
+                else if (isset($cstill) && $cstill == 2) {
+                    if (strpos($oneline, "Name: '")===0) {
+                        $end = str_replace("Name: '", "", $oneline) ;
+                        $names[] = substr($end, 0, strpos($end, "'")) ; }
+                    else {
+                        break ;  } } } }
+
+        foreach ($names as $name) {
+            $logging->log("Removing Shared Folder named {$name} from VM {$this->phlagrantfile->config["vm"]["name"]}") ;
+            $command  = "vboxmanage sharedfolder remove {$this->phlagrantfile->config["vm"]["name"]} --name {$name} " ;
+            $this->executeAndOutput($command); }
+
+    }
+
+    protected function modifyHardDisks() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Phlagrantfile specifies Resizing HD for VM {$this->phlagrantfile->config["vm"]["name"]}") ;
+        $logging->log("Finding existing hard disks") ;
+        $command  = "vboxmanage showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
+        $out = $this->executeAndLoad($command);
+        $lines = explode("\n", $out) ;
+        foreach ($lines as $oneline) {
+            if (strpos($oneline, "SATA (0, 0): ")===0) {
+                $start = strpos($oneline, '(UUID: ')+6 ;
+                $end = strpos($oneline, ')') ;
+                $uuid = substr($oneline, $start, $end) ;
+                $logging->log("Modifying HD $uuid system by changing size to {$this->phlagrantfile->config["vm"]["hd_resize"]}") ;
+                $command = "vboxmanage modifyhd $uuid --resize {$this->phlagrantfile->config["vm"]["hd_resize"]}" ;
+                $this->executeAndOutput($command); } }
     }
 
 }
