@@ -25,6 +25,7 @@ class DestroyAllLinux extends BaseLinuxApp {
     public function destroyNow() {
         $this->loadFiles();
         $this->runHook("pre") ;
+        $this->removeShares();
         $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
         $this->executeAndOutput($command);
         $this->runHook("post") ;
@@ -33,6 +34,14 @@ class DestroyAllLinux extends BaseLinuxApp {
 
     protected function deleteFromPapyrus() {
         \Model\AppConfig::deleteProjectVariable("phlagrant-box", null, null, true) ;
+    }
+
+    protected function removeShares() {
+        $upFactory = new \Model\Up();
+        $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
+        $modifyVM->papyrus = $this->papyrus ;
+        $modifyVM->phlagrantfile = $this->phlagrantfile ;
+        $modifyVM->removeShares() ;
     }
 
     protected function runHook($type) {
