@@ -47,9 +47,12 @@ class SFTPAllLinux extends Base {
                 if ($srvId == $this->params["environment-box-id-ignore"] ) {
                     $logging->log("Skipping {$$server["name"]} for box id Ignore constraint") ;
                     continue ; } }
-            $logging->log("[".$server["target"]."] Executing SFTP Put...")  ;
-            $logging->log($this->doSFTPPut($server["sftpObject"], $targetPath, $sourceData)) ;
-            $logging->log("[".$server["target"]."] SFTP Put Completed...") ; }
+            if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
+                $logging->log("[".$server["target"]."] Executing SFTP Put...")  ;
+                $logging->log($this->doSFTPPut($server["sftpObject"], $targetPath, $sourceData)) ;
+                $logging->log("[".$server["target"]."] SFTP Put Completed...") ; }
+            else {
+                echo "[".$server["target"]."]Connection failure. Will not execute commands on this box..\n"  ; } }
         $logging->log("All SFTP Puts Completed");
         return true;
     }
@@ -202,7 +205,7 @@ class SFTPAllLinux extends Base {
 *   Due to a software limitation, *
 *    The user that you use here   *
 *  will have their command prompt *
-*    changed to PHAROAHPROMPT     *
+*    changed to PHARAOHPROMPT     *
 *  ... I'm working on that one... *
 *  Exit program to stop (CTRL+C)  *
 ***********************************
