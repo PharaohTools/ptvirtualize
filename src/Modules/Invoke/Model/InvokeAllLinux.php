@@ -40,9 +40,12 @@ class InvokeAllLinux extends Base {
                 $commandExecution = false; }
             else {
                 foreach ($this->servers as &$server) {
-                    echo "[".$server["target"]."] Executing $command...\n"  ;
-                    echo $this->doSSHCommand($server["ssh2Object"], $command) ;
-                    echo "[".$server["target"]."] $command Completed...\n"  ; } } }
+                    if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
+                        echo "[".$server["target"]."] Executing $command...\n"  ;
+                        echo $this->doSSHCommand($server["ssh2Object"], $command) ;
+                        echo "[".$server["target"]."] $command Completed...\n"  ; }
+                    else {
+                        echo "[".$server["target"]."]Connection failure. Will not execute commands on this box..\n"  ; } } } }
         echo "Shell Completed";
         return true;
     }
@@ -54,9 +57,12 @@ class InvokeAllLinux extends Base {
         $this->sshCommands = explode("\n", file_get_contents($scriptLoc) ) ;
         foreach ($this->sshCommands as $sshCommand) {
             foreach ($this->servers as &$server) {
-                echo "[".$server["target"]."] Executing $sshCommand...\n"  ;
-                echo $this->doSSHCommand($server["ssh2Object"], $sshCommand ) ;
-                echo "[".$server["target"]."] $sshCommand Completed...\n"  ; } }
+                if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
+                    echo "[".$server["target"]."] Executing $sshCommand...\n"  ;
+                    echo $this->doSSHCommand($server["ssh2Object"], $sshCommand ) ;
+                    echo "[".$server["target"]."] $sshCommand Completed...\n"  ; }
+                else {
+                    echo "[".$server["target"]."]Connection failure. Will not execute commands on this box..\n"  ; } } }
         echo "Script by SSH Completed";
         return true;
     }
@@ -68,9 +74,12 @@ class InvokeAllLinux extends Base {
         $this->sshCommands = explode("\n", $data) ;
         foreach ($this->sshCommands as $sshCommand) {
             foreach ($this->servers as &$server) {
-                echo "[".$server["target"]."] Executing $sshCommand...\n"  ;
-                echo $this->doSSHCommand($server["ssh2Object"], $sshCommand ) ;
-                echo "[".$server["target"]."] $sshCommand Completed...\n"  ; } }
+                if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
+                    echo "[".$server["target"]."] Executing $sshCommand...\n"  ;
+                    echo $this->doSSHCommand($server["ssh2Object"], $sshCommand ) ;
+                    echo "[".$server["target"]."] $sshCommand Completed...\n"  ; }
+                else {
+                    echo "[".$server["target"]."]Connection failure. Will not execute commands on this box..\n"  ; } } }
         echo "Data by SSH Completed\n";
         return true;
     }
@@ -192,7 +201,7 @@ class InvokeAllLinux extends Base {
 *   Due to a software limitation, *
 *    The user that you use here   *
 *  will have their command prompt *
-*    changed to PHAROAHPROMPT     *
+*    changed to PHARAOHPROMPT     *
 *  ... I'm working on that one... *
 *  Exit program to stop (CTRL+C)  *
 ***********************************
@@ -261,15 +270,15 @@ QUESTION;
     }
 
     private function changeBashPromptToPharaoh( $sshObject ) {
-        $command = 'echo "export PS1=PHAROAHPROMPT" > ~/.bash_login ' ;
+        $command = 'echo "export PS1=PHARAOHPROMPT" > ~/.bash_login ' ;
         return $sshObject->exec("$command\n") ;
     }
 
     private function doSSHCommand( $sshObject, $command, $first=null ) {
-        $returnVar = ($first==null) ? "" : $sshObject->read("PHAROAHPROMPT") ;
+        $returnVar = ($first==null) ? "" : $sshObject->read("PHARAOHPROMPT") ;
         $sshObject->write("$command\n") ;
-        $returnVar .= $sshObject->read("PHAROAHPROMPT") ;
-        return str_replace("PHAROAHPROMPT", "", $returnVar) ;
+        $returnVar .= $sshObject->read("PHARAOHPROMPT") ;
+        return str_replace("PHARAOHPROMPT", "", $returnVar) ;
     }
 
 }
