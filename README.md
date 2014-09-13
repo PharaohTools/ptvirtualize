@@ -20,7 +20,7 @@ Currently, all of the Modules work on Ubuntu 12, most on 13 and 14, and a few on
 ## Installation
 
 The preferred way to install any of the Pharaoh apps (including this) is through cleopatra. If you install cleopatra
-on your machine (http://git.pharaoh-tools.com/phpengine/cleopatra), then you can install phlagrant using the following:
+on your machine (http://git.pharaohtools.com/phpengine/cleopatra), then you can install phlagrant using the following:
 
 sudo cleopatra phlagrant install --yes --guess
 
@@ -31,11 +31,11 @@ To install phlagrant cli on your machine without cleopatra do the following:
 
 sudo apt-get install php5 git
 
-git clone https://git.pharaoh-tools.com/phpengine/phlagrant && sudo php phlagrant/install-silent
+git clone https://git.pharaohtools.com/phpengine/phlagrant && sudo php phlagrant/install-silent
 
 or...
 
-git clone https://git.pharaoh-tools.com/phpengine/phlagrant && sudo php phlagrant/install
+git clone https://git.pharaohtools.com/phpengine/phlagrant && sudo php phlagrant/install
 (if you want to choose the install location)
 
 ... that's it, now the phlagrant command should be available at the command line for you.
@@ -97,5 +97,4 @@ network and shared directory configuration for the Virtual Machine.
 - Resume - Resume - Stop a Phlagrant Box
 - SystemDetection - System Detection - Detect the Running Operating System
 - Templating - Templating
-- Testify - Testifyer - Creates default tests for your project
 - Up - Up - Create and Start a Phlagrant Box
