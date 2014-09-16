@@ -16,6 +16,7 @@ class InvokeAllLinux extends Base {
 
     private $servers = array();
     private $sshCommands;
+    protected $isNativeSSH ;
 
     public function askWhetherToInvokeSSHShell() {
         return $this->performInvokeSSHShell();
@@ -40,12 +41,9 @@ class InvokeAllLinux extends Base {
                 $commandExecution = false; }
             else {
                 foreach ($this->servers as &$server) {
-                    if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
-                        echo "[".$server["target"]."] Executing $command...\n"  ;
-                        echo $this->doSSHCommand($server["ssh2Object"], $command) ;
-                        echo "[".$server["target"]."] $command Completed...\n"  ; }
-                    else {
-                        echo "[".$server["target"]."]Connection failure. Will not execute commands on this box..\n"  ; } } } }
+                    echo "[".$server["target"]."] Executing $command...\n"  ;
+                    echo $this->doSSHCommand($server["ssh2Object"], $command) ;
+                    echo "[".$server["target"]."] $command Completed...\n"  ; } } }
         echo "Shell Completed";
         return true;
     }
@@ -117,37 +115,51 @@ class InvokeAllLinux extends Base {
     }
 
     private function loadSSHConnections() {
-        echo 'Attempting to load SSH connections... ';
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Attempting to load SSH connections...");
         foreach ($this->servers as $srvId => &$server) {
             if (isset($this->params["environment-box-id-include"])) {
                 if ($srvId != $this->params["environment-box-id-include"] ) {
-                    echo "Skipping {$$server["name"]} for box id Include constraint\n" ;
+                    $logging->log("Skipping {$server["name"]} for box id Include constraint") ;
                     continue ; } }
             if (isset($this->params["environment-box-id-ignore"])) {
                 if ($srvId == $this->params["environment-box-id-ignore"] ) {
-                    echo "Skipping {$$server["name"]} for box id Ignore constraint\n" ;
+                    $logging->log("Skipping {$server["name"]} for box id Ignore constraint") ;
                     continue ; } }
             $attempt = $this->attemptSSH2Connection($server) ;
             if ($attempt == null) {
-                echo 'Connection to Server '.$server["target"].' failed. '; }
+                $logging->log("Connection to Server {$server["target"]} failed.");  }
             else {
                 $server["ssh2Object"] = $attempt ;
-                echo $this->changeBashPromptToPharaoh($server["ssh2Object"]);
+                $logging->log("Connection to Server {$server["target"]} successful.");
+                if (!isset($this->isNativeSSH) || (isset($this->isNativeSSH) || $this->isNativeSSH != true)) {
+                    echo $this->changeBashPromptToPharaoh($server["ssh2Object"]); }
                 echo $this->doSSHCommand($server["ssh2Object"], 'echo "Pharaoh Remote SSH on ...'.$server["target"].'"', true ) ; } }
         return true;
     }
 
-    private function attemptSSH2Connection($server) {
-        if (!class_exists('Net_SSH2')) {
-            $srcFolder =  str_replace("/Model", "", dirname(__FILE__) ) ;
-            $ssh2File = $srcFolder."/Libraries/seclib/Net/SSH2.php" ;
-            require_once($ssh2File) ; }
-        $ssh = new \Net_SSH2($server["target"], $this->params["port"], $this->params["timeout"]);
+    protected function attemptSSH2Connection($server) {
         $pword = (isset($server["pword"])) ? $server["pword"] : false ;
         $pword = (isset($server["password"])) ? $server["password"] : $pword ;
-        $pword = $this->getKeyIfAvailable($pword);
-        if ($ssh->login($server["user"], $pword) == true) { return $ssh; }
-        return null;
+        if (function_exists("ssh2_connect")) {
+            $this->isNativeSSH = true ;
+            $sshFactory = new \Model\Invoke();
+            $ssh = $sshFactory->getModel($this->params, "NativeWrapper" ) ;
+            $ssh->target = $server["target"] ;
+            $ssh->port = $this->params["port"];
+            $ssh->timeout = $this->params["timeout"] ;
+            if ($ssh->login($server["user"], $pword) == true) { return $ssh; }
+            return null; }
+        else {
+            if (!class_exists('Net_SSH2')) {
+                $srcFolder =  str_replace("/Model", "", dirname(__FILE__) ) ;
+                $ssh2File = $srcFolder."/Libraries/seclib/Net/SSH2.php" ;
+                require_once($ssh2File) ;
+                $ssh = new \Net_SSH2($server["target"], $this->params["port"], $this->params["timeout"]); }
+            $pword = $this->getKeyIfAvailable($pword);
+            if ($ssh->login($server["user"], $pword) == true) { return $ssh; }
+            return null; }
     }
 
     private function getKeyIfAvailable($pword) {
@@ -275,6 +287,8 @@ QUESTION;
     }
 
     private function doSSHCommand( $sshObject, $command, $first=null ) {
+        if ($this->isNativeSSH) {
+            return $sshObject->exec($command) ; }
         $returnVar = ($first==null) ? "" : $sshObject->read("PHARAOHPROMPT") ;
         $sshObject->write("$command\n") ;
         $returnVar .= $sshObject->read("PHARAOHPROMPT") ;
