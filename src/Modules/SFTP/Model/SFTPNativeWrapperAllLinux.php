@@ -50,6 +50,10 @@ class SFTPNativeWrapperAllLinux extends Base {
         return $out ;
     }
 
+    // @todo get the actual errors
+    public function getSFTPErrors() {
+        return array();
+    }
 
     public function put($remotefile, $data) {
         // @todo randomly generate this
