@@ -52,42 +52,15 @@ class SFTPNativeWrapperAllLinux extends Base {
 
 
     public function put($remotefile, $data) {
-
-
-        ssh2_scp_send($this->connection, '/local/filename', '/remote/filename', 0644);
-
-        $stream = ssh2_exec($this->connection, $command);
-        stream_set_blocking( $stream, true );
-        stream_set_timeout ( $stream, 100 );
-        $out = stream_get_contents ( $stream );
-        // $out = fread($stream,4096);
-        fclose($stream);
-        return $out ;
+        // @todo randomly generate this
+        file_put_contents($this->tempDir.DS.'sftptempfile', $data) ;
+        $res = ssh2_scp_send($this->connection, $this->tempDir.DS.'sftptempfile', $remotefile, 0644);
+        self::executeAndOutput('rm -f '.$this->tempDir.DS.'sftptempfile') ;
+        return $res ;
     }
 
     public function _is_dir($dn) {
-
-        $command = "cd /tmp/" ;
-        $stream = ssh2_exec($this->connection, $command);
-        stream_set_blocking( $stream, true );
-        stream_set_timeout ( $stream, 100 );
-        $out = stream_get_contents ( $stream );
-        var_dump("for /tmp/", $out) ;
-
-        $command = "cd /tm/" ;
-        $stream = ssh2_exec($this->connection, $command);
-        stream_set_blocking( $stream, true );
-        stream_set_timeout ( $stream, 100 );
-        $out = stream_get_contents ( $stream );
-        var_dump("for /tm/", $out) ;
-
-        $command = "cd $dn" ;
-        $stream = ssh2_exec($this->connection, $command);
-        stream_set_blocking( $stream, true );
-        stream_set_timeout ( $stream, 100 );
-        $out = stream_get_contents ( $stream );
-        var_dump("for $dn", $out) ;
-
+        // @todo this wont work
         $sftp = ssh2_sftp($this->connection);
         return ssh2_sftp_mkdir ($sftp, $dn, 0775, true) ;
     }
