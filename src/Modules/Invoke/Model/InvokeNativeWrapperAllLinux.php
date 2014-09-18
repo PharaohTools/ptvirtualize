@@ -43,22 +43,24 @@ class InvokeNativeWrapperAllLinux extends Base {
     public function exec($command) {
         $stream = ssh2_exec($this->connection, $command);
         stream_set_blocking( $stream, true ); // THIS IS REQUIRED TO PREVENT https://bugs.php.net/bug.php?id=58893
-        $all = "" ;
+//        $abit = stream_get_contents ($stream) ;
+//        $all = "" ;
 //        sleep(1);
 //        $abit = stream_get_contents ($stream, -1, strlen($all)) ;
 //        $all .= $abit ;
         // var_dump($stream); @todo this should be able to update output properly
-        while ( !feof($stream) ) {
-            $c = fgetc($stream);
-            if($c === false) break;
-
+//        while ( !feof($stream) ) {
+//            $c = fgetc($stream);
+//            if($c === false) break;
+//
             sleep(1);
-            $abit = stream_get_contents ($stream, -1, strlen($all)) ;
-            $all .= $abit ;
-            echo $abit."\n" ;
-//            echo "sle:".strlen($all)."\n" ;
-//            echo "x"."\n" ;
-        }
+//            $abit = stream_get_contents ($stream) ;
+//            $all .= $abit ;
+//            echo $abit."\n" ;
+////            echo "sle:".strlen($all)."\n" ;
+//            echo "." ;
+//        }
+        $all = stream_get_contents ($stream) ;
         fclose($stream);
         return $all ;
     }
