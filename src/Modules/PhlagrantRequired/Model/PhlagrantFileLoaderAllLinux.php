@@ -15,17 +15,44 @@ class PhlagrantFileLoaderAllLinux extends BaseLinuxApp {
     public $modelGroup = array("PhlagrantFileLoader") ;
 
     public function load() {
-        if (file_exists(getcwd()."/Phlagrantfile")) {
+        $this->findFile() ;
+        $phlagrant = $this->loadClass() ;
+        return $phlagrant;
+    }
+
+    public function loadClass() {
+        $phlagrantfilename = $this->getPfile() ;
+        $cname = (isset($this->params["classname"])) ?
+            $this->params["classname"] :
+            substr($phlagrantfilename, 0, strlen($phlagrantfilename)-4) ;
+        $cname = '\Model\\'.$cname  ;
+        $phlagrant = (class_exists($cname)) ? new $cname($this->params) : null ;
+        return $phlagrant;
+    }
+
+    private function getPfile() {
+        $phlagrantfile = null ;
+        $phlagrantfile = (isset($this->params["pfile"])) ? $this->params["pfile"] : null ;
+        $phlagrantfile = (isset($this->params["phlagrantfile"])) ? $this->params["phlagrantfile"] : $phlagrantfile ;
+        return $phlagrantfile;
+    }
+
+    protected function findFile() {
+        $phlagrantfile = $this->getPfile() ;
+        if (file_exists(getcwd()."/$phlagrantfile") && is_file(getcwd()."/$phlagrantfile")) {
+            require_once(getcwd()."/$phlagrantfile"); }
+        else if (file_exists($phlagrantfile)) {
+            require_once($phlagrantfile); }
+        else if (!is_null($phlagrantfile)) {
+            require_once(getcwd()."/Phlagrantfile"); }
+        else if (file_exists(getcwd()."/Phlagrantfile")) {
             require_once(getcwd()."/Phlagrantfile"); }
         else if (file_exists(getcwd()."/phlagrantfile")) {
-            include_once(getcwd()."/phlagrantfile"); }
+            require_once(getcwd()."/phlagrantfile"); }
+        else if (file_exists(getcwd()."/build/config/phlagrant/Phlagrantfile")) {
+            require_once(getcwd()."/build/config/phlagrant/Phlagrantfile"); }
         else if (file_exists(getcwd()."/build/config/phlagrant/phlagrantfile")) {
-            include_once(getcwd()."/build/config/phlagrant/phlagrantfile"); }
-        else if (file_exists(getcwd()."/build/config/phlagrant/phlagrantfile")) {
-            include_once(getcwd()."/build/config/phlagrant/phlagrantfile"); }
-        $phlagrant = (class_exists('\Model\Phlagrantfile')) ?
-            new \Model\Phlagrantfile($this->params) : null ;
-        return $phlagrant;
+            require_once(getcwd()."/build/config/phlagrant/phlagrantfile"); }
     }
 
 }
