@@ -29,7 +29,7 @@ class InvokeNativeWrapperAllLinux extends Base {
             if ($this->pubkey == null) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
-                $logging->log("Native PHP SSH requires the public key to exist longside the private. Using ".$this->privkey.".pub") ;
+                $logging->log("Native PHP SSH requires the public key to exist alongside the private. Using ".$this->privkey.".pub") ;
                 $this->pubkey = $this->privkey.".pub" ; }
             if (ssh2_auth_pubkey_file($connection, $username, $this->pubkey, $this->privkey, 'secret')) {
                 $this->connection = $connection ;
@@ -43,13 +43,21 @@ class InvokeNativeWrapperAllLinux extends Base {
     }
 
     public function exec($command) {
+        var_dump($this->connection) ;
         $stream = ssh2_exec($this->connection, $command);
-        stream_set_blocking( $stream, true );
-        // $all = "" ;
-       // while ( !feof($stream) ) {
-       //     sleep(1) ;
-       //     echo "." ; }
-        $all = stream_get_contents ($stream) ;
+
+        var_dump($stream, stream_get_meta_data($stream)) ;
+        stream_set_blocking( $stream, false );
+        $md = stream_get_meta_data($stream);
+        $all = stream_get_contents ($stream, -1, 0) ;
+        while ($md["unread_bytes"] !== 0) {
+            sleep(1) ;
+            // var_dump($md["unread_bytes"], $md["eof"]) ;
+            echo "\n...\n" ;
+            $all .= stream_get_contents ($stream, -1, $md["unread_bytes"]) ;
+            $md = stream_get_meta_data($stream);
+        }
+        //$all = stream_get_contents ($stream) ;
         fclose($stream);
         return $all ;
     }
