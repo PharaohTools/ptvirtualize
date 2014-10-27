@@ -40,7 +40,7 @@ class LoggingAll extends BaseLinuxApp {
 
     public function log($message = null, $source = null) {
         if (isset($this->logMessage)) { $message = $this->logMessage ; }
-        $stx = (!is_null($source)) ? "[$source] " : "" ;
+        $stx = (strlen($source)>0) ? "[$source] " : "" ;
         $fullMessage = "[Pharaoh Logging] " . $stx . $message . "\n" ;
         file_put_contents("php://stderr", $fullMessage );
         if (isset($this->params["php-log"])) {
