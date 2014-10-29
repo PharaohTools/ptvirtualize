@@ -33,7 +33,7 @@ class DestroyAllLinux extends BaseLinuxApp {
     }
 
     protected function deleteFromPapyrus() {
-        \Model\AppConfig::deleteProjectVariable("phlagrant-box", null, null, true) ;
+        \Model\AppConfig::deleteProjectVariable($this->phlagrantfile->config["vm"]["name"], null, null, true) ;
     }
 
     protected function removeShares() {

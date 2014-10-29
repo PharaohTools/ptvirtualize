@@ -33,7 +33,7 @@ class UpAllLinux extends BaseLinuxApp {
 
     public function setLogSource() {
         $this->loadFiles();
-        $this->source = (isset($this->params["pfile"])) ? $this->params["pfile"] : "" ;
+        $this->source = (isset($this->params["pfile"]) && $this->params["pfile"] != "Phlagrantfile" ) ? $this->params["pfile"] : "" ;
     }
 
     protected function doSingleUp() {
@@ -135,15 +135,13 @@ class UpAllLinux extends BaseLinuxApp {
 
     protected function vmExistsInProvider() {
         $out = $this->executeAndLoad("vboxmanage list vms");
-        if (strpos($out, $this->phlagrantfile->config["vm"]["name"])!= false) {
-            return true ; }
+        if (strpos($out, $this->phlagrantfile->config["vm"]["name"])!= false) { return true ; }
         return false ;
     }
 
     protected function vmIsRunning() {
         $out = $this->executeAndLoad("vboxmanage list runningvms");
-        if (strpos($out, $this->phlagrantfile->config["vm"]["name"] ) != false ) {
-            return true ; }
+        if (strpos($out, $this->phlagrantfile->config["vm"]["name"] ) != false ) { return true ; }
         return false ;
     }
 
@@ -200,7 +198,7 @@ class UpAllLinux extends BaseLinuxApp {
     }
 
     protected function deleteFromPapyrus() {
-        \Model\AppConfig::deleteProjectVariable("phlagrant-box", true) ;
+        \Model\AppConfig::deleteProjectVariable($this->phlagrantfile->config["vm"]["name"], null, null, true) ;
     }
 
     protected function runHook($hook, $type) {
