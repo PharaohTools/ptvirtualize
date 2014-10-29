@@ -115,7 +115,7 @@ class UpAllLinux extends BaseLinuxApp {
     protected function loadPapyrusLocal() {
         $prFactory = new \Model\PhlagrantRequired() ;
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load() ;
+        return $papyrusLocalLoader->load($this->phlagrantfile->config["vm"]["name"]) ;
     }
 
     protected function completeBuildUp() {
