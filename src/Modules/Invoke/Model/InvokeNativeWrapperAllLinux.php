@@ -43,23 +43,16 @@ class InvokeNativeWrapperAllLinux extends Base {
     }
 
     public function exec($command) {
-        var_dump($this->connection) ;
         $stream = ssh2_exec($this->connection, $command);
-
-        var_dump($stream, stream_get_meta_data($stream)) ;
-        stream_set_blocking( $stream, false );
-        $md = stream_get_meta_data($stream);
-        $all = stream_get_contents ($stream, -1, 0) ;
-        while ($md["unread_bytes"] !== 0) {
-            sleep(1) ;
-            // var_dump($md["unread_bytes"], $md["eof"]) ;
-            echo "\n...\n" ;
-            $all .= stream_get_contents ($stream, -1, $md["unread_bytes"]) ;
-            $md = stream_get_meta_data($stream);
-        }
-        //$all = stream_get_contents ($stream) ;
+        stream_set_blocking( $stream, true );
+        // $all = "" ;
+        // while ( !feof($stream) ) {
+        //     sleep(1) ;
+        //     echo "." ; }
+        $all = stream_get_contents ($stream) ;
         fclose($stream);
         return $all ;
     }
+
 
 }
