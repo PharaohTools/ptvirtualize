@@ -63,7 +63,7 @@ class ProvisionAllOS extends BaseLinuxApp {
             $osp->phlagrantfile = $this->phlagrantfile;
             $osp->papyrus = $this->papyrus;
             return $osp ; }
-        $logging->log("No suitable OS Provisionerfound");
+        $logging->log("No suitable OS Provisioner found");
         return null ;
     }
 
