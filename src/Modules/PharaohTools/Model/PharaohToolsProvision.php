@@ -101,6 +101,9 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         else if ($provisionerSettings["target"] == "host") {
             $logging->log("Provisioning Host with Cleopatra...") ;
             $command = "cleopatra auto x --af={$provisionerSettings["script"]}" ;
+            if (isset($provisionerSettings["params"])) {
+                foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
+                    $command .= " --$paramkey=\"$paramval\"" ; } }
             self::executeAndOutput($command) ; }
         return true ;
     }
@@ -109,7 +112,6 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         if ($provisionerSettings["target"] == "guest") {
-
             if (isset($provisioner["default"])) {
                 $logging->log("Provisioning VM with Default Cleopatra Autopilot for {$provisioner["default"]}...") ;
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
@@ -122,6 +124,9 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         else if ($provisionerSettings["target"] == "host") {
             $logging->log("Provisioning Host with Dapperstrano...") ;
             $command = "dapperstrano auto x --af={$provisionerSettings["script"]}" ;
+            if (isset($provisionerSettings["params"])) {
+                foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
+                    $command .= " --$paramkey=\"$paramval\"" ; } }
             self::executeAndOutput($command) ; }
         return true ;
     }
@@ -143,7 +148,6 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     }
 
     protected function sshProvision($provisionerSettings, $init, $osProvisioner) {
-
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $sshParams = $this->params ;
