@@ -42,14 +42,21 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $logging = $loggingFactory->getModel($this->params);
             // get target ip from phlagrantfile if its there
             // if not check for guest additions installed
+            $pflocal = $this->loadPapyrusLocal() ;
+
             $ips = array() ;
-            if (isset($this->phlagrantfile->config["ssh"]["target"])) {
+            if (isset($pflocal[$this->phlagrantfile->config["vm"]["name"]]["target"])) {
+                $logging->log("Using papyrusfilelocal defined ssh target of {$pflocal[$this->phlagrantfile->config["vm"]["name"]]["target"]}... ") ;
+                $ips[] = $pflocal[$this->phlagrantfile->config["vm"]["name"]]["target"] ; }
+            else if (isset($this->phlagrantfile->config["ssh"]["target"])) {
                 $logging->log("Using Phlagrantfile defined ssh target of {$this->phlagrantfile->config["ssh"]["target"]}... ") ;
                 $ips[] = $this->phlagrantfile->config["ssh"]["target"] ; }
             else if ($this->checkForGuestAdditions()==true) {
                 $logging->log("Guest additions found on VM, finding target from it...") ;
                 $wug = $this->waitUntilGetIP() ;
                 $ips = array_merge($wug, $ips) ;
+                // this should be quicker because guest additions returns the unused one first
+                $ips = array_reverse($ips) ;
                 $ipstring = implode(", " , $ips) ;
                 $logging->log("... Found $ipstring") ; }
             else {
@@ -151,22 +158,24 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $sshParams = $this->params ;
+        $psparams = (isset($provisionerSettings["params"])) ? $provisionerSettings["params"] : array() ;
+
         if (isset($provisionerSettings["default"])) {
             $logging->log("Attempting to use default {$provisionerSettings["tool"]} script {$provisionerSettings["default"]}") ;
             $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
                 $logging->log("Found $methodName method in OS Provisioner") ;
-                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams) ; }
             else {
                 $logging->log("No method $methodName found in OS Provisioner, cannot continue") ;
                 return false ; } }
         else {
             $tool = ucfirst($provisionerSettings["tool"]) ;
-            $logging->log("Attempting to use Standard {$tool} script {$provisionerSettings["script"]}") ;
+            $logging->log("Attempting to use {$tool} script {$provisionerSettings["script"]}") ;
             $methodName = "getStandard{$tool}SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
                 $logging->log("Found $methodName method in OS Provisioner") ;
-                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams ) ; }
             else {
                 $logging->log("No method $methodName found in OS Provisioner, cannot continue") ;
                 return false ; } }
@@ -230,6 +239,12 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             sleep(1) ; }
         echo "\n" ;
         return null ;
+    }
+
+    protected function loadPapyrusLocal() {
+        $prFactory = new \Model\PhlagrantRequired() ;
+        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
+        return $papyrusLocalLoader->load($this->phlagrantfile) ;
     }
 
     protected function storeInPapyrus($user, $pass, $target) {
