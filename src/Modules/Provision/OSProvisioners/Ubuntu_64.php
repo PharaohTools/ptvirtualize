@@ -29,16 +29,20 @@ SSHDATA;
         return $sshData ;
     }
 
-    public function getStandardCleopatraSSHData($provisionFile) {
+    public function getStandardCleopatraSSHData($provisionFile, $params = array() ) {
+        $paramString = "" ;
+        foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
         $sshData = <<<"SSHDATA"
-echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S cleopatra auto x --af=$provisionFile
+echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S cleopatra auto x --af={$provisionFile}{$paramString}
 SSHDATA;
         return $sshData ;
     }
 
-    public function getStandardDapperstranoSSHData($provisionFile) {
+    public function getStandardDapperstranoSSHData($provisionFile, $params = array() ) {
+        $paramString = "" ;
+        foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
         $sshData = <<<"SSHDATA"
-echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S dapperstrano auto x --af=$provisionFile
+echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S dapperstrano auto x --af={$provisionFile}{$paramString}
 SSHDATA;
         return $sshData ;
     }
