@@ -26,8 +26,8 @@ class BoxUbuntu extends BaseLinuxApp {
         parent::__construct($params);
         $this->actionsToMethods = $this->setActionsToMethods() ;
         $this->autopilotDefiner = "Box" ;
-        $this->installCommands = array("apt-get install -y ufw") ;
-        $this->uninstallCommands = array("apt-get remove -y ufw") ;
+        $this->installCommands = array() ;
+        $this->uninstallCommands = array() ;
         $this->programDataFolder = "" ;
         $this->programNameMachine = "box" ; // command and app dir name
         $this->programNameFriendly = "!Box!!" ; // 12 chars
