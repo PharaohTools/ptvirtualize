@@ -24,6 +24,7 @@ class DestroyAllLinux extends BaseLinuxApp {
 
     public function destroyNow() {
         $this->loadFiles();
+        if ($this->currentStateIsDestroyable() == false) { return ; }
         $this->runHook("pre") ;
         $this->removeShares();
         $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
@@ -42,6 +43,24 @@ class DestroyAllLinux extends BaseLinuxApp {
         $modifyVM->papyrus = $this->papyrus ;
         $modifyVM->phlagrantfile = $this->phlagrantfile ;
         $modifyVM->removeShares() ;
+    }
+
+    protected function currentStateIsDestroyable() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $status = $this->isVMInStatus("powered off") ;
+        if ($status == true) {
+            $logging->log("This VM is in a Destroyable state...") ;
+            return true ; }
+        $logging->log("This VM is not in a Destroyable state...") ;
+        return false ;
+    }
+
+    protected function isVMInStatus($statusRequested) {
+        $command = "vboxmanage showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
+        $out = $this->executeAndLoad($command);
+        $isStatusRequested = strpos($out, strtolower($statusRequested)) ;
+        return $isStatusRequested ;
     }
 
     protected function runHook($type) {
