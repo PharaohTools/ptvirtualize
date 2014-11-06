@@ -26,6 +26,8 @@ class HaltAllLinux extends BaseLinuxApp {
         $this->loadFiles();
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
+        if ($this->currentStateIsHaltable() == false) { return ; }
+        $logging->log("Checking current state...") ;
         $logging->log("Attempting soft power off by button...") ;
         $logging->log("Waiting up to {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
         $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
@@ -85,6 +87,17 @@ class HaltAllLinux extends BaseLinuxApp {
         $this->loadFiles();
         $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
         $this->executeAndOutput($command);
+    }
+
+    protected function currentStateIsHaltable() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $status = $this->isVMInStatus("running") ;
+        if ($status == true) {
+            $logging->log("This VM is in a Haltable state...") ;
+            return true ; }
+        $logging->log("This VM is not in a Haltable state...") ;
+        return false ;
     }
 
     # @todo in_array or something to check a sane status was requested
