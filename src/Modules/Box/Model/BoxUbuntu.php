@@ -145,12 +145,11 @@ class BoxUbuntu extends BaseLinuxApp {
     }
 
     protected function getTargetBoxLocation() {
-        // @todo dont hardcode the /opt/phlagrant/
         if (isset($this->params["target"])) {
             return $this->ensureTrailingSlash($this->params["target"]) ; }
         else if (isset($this->params["guess"])) {
-            $target = DIRECTORY_SEPARATOR.'opt'.DIRECTORY_SEPARATOR.'phlagrant'.DIRECTORY_SEPARATOR.'boxes' ;
-            $this->ensureTrailingSlash($target) ;
+            $parentDir = dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))))));
+            $target = $parentDir.DIRECTORY_SEPARATOR.'boxes' ;
             if (!file_exists($target)) { mkdir($target, true) ; }
             return $this->ensureTrailingSlash($target) ; }
         else {
