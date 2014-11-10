@@ -27,11 +27,26 @@ class BoxWindows extends BoxUbuntu {
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
-            self::executeAndOutput("wget -O $tmpFile {$this->source}") ;
+            $this->downloadCall($this->source, $tmpFile) ;
             $this->source = $tmpFile ;
             $logging->log("Download complete ...");
             return true ;}
         return true ;
+    }
+
+    protected function downloadCall($source, $tmpFile) {
+
+        $ctx = stream_context_create();
+        stream_context_set_params($ctx, array("notification" => "stream_notification_callback"));
+
+        $fp = fopen($source, "r", false, $ctx);
+        if (is_resource($fp) && file_put_contents($tmpFile, $fp)) {
+            echo "\nDone!\n";
+            return true; }
+
+        $err = error_get_last();
+        echo "\nError..\n", $err["message"], "\n";
+        return false ;
     }
 
     protected function extractMetadata() {
@@ -44,4 +59,48 @@ class BoxWindows extends BoxUbuntu {
         return $fdo ;
     }
 
+
+
+}
+
+function stream_notification_callback($notification_code, $severity, $message, $message_code, $bytes_transferred, $bytes_max) {
+    static $filesize = null;
+
+    switch($notification_code) {
+        case STREAM_NOTIFY_RESOLVE:
+        case STREAM_NOTIFY_AUTH_REQUIRED:
+        case STREAM_NOTIFY_COMPLETED:
+        case STREAM_NOTIFY_FAILURE:
+        case STREAM_NOTIFY_AUTH_RESULT:
+            /* Ignore */
+            break;
+
+        case STREAM_NOTIFY_REDIRECTED:
+            echo "Being redirected to: ", $message, "\n";
+            break;
+
+        case STREAM_NOTIFY_CONNECT:
+            echo "Connected...\n";
+            break;
+
+        case STREAM_NOTIFY_FILE_SIZE_IS:
+            $filesize = $bytes_max;
+            echo "Filesize: ", $filesize, "\n";
+            break;
+
+        case STREAM_NOTIFY_MIME_TYPE_IS:
+            echo "Mime-type: ", $message, "\n";
+            break;
+
+        case STREAM_NOTIFY_PROGRESS:
+            if ($bytes_transferred > 0) {
+                if (!isset($filesize)) {
+                    printf("\rUnknown filesize.. %2d kb done..", $bytes_transferred/1024);
+                } else {
+                    $length = (int)(($bytes_transferred/$filesize)*100);
+                    printf("\r[%-100s] %d%% (%2d/%2d kb)", str_repeat("=", $length). ">", $length, ($bytes_transferred/1024), $filesize/1024);
+                }
+            }
+            break;
+    }
 }
