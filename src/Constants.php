@@ -11,7 +11,7 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     echo $command."\n" ;
     $outputArray = array();
     exec($command, $outputArray);
-    define('VBOXMGCOMM', "{$outputArray[0]} ") ;
+    define('VBOXMGCOMM', "\"{$outputArray[0]}\" ") ;
     define('CLEOCOMM', "cleopatra.bat") ;
     define('DAPPCOMM', "dapperstrano.bat") ;
     define('PHLCOMM', "phlagrant.bat") ;
