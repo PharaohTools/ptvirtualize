@@ -40,9 +40,9 @@ class BoxWindows extends BoxUbuntu {
         $pd = new \PharData($this->source) ;
         $pd->extractTo(BASE_TEMP_DIR."metadata.json", "metadata.json", true) ;
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
-        $command = "del -y ".BASE_TEMP_DIR."metadata.json" ;
-        self::executeAndOutput($command);
         $fdo = json_decode($fData) ;
+        $command = "del ".BASE_TEMP_DIR."metadata.json" ;
+        self::executeAndOutput($command);
         return $fdo ;
     }
 
