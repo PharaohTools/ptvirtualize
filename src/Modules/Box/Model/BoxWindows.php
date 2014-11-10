@@ -5,7 +5,7 @@ Namespace Model;
 class BoxWindows extends BoxUbuntu {
 
     // Compatibility
-    public $os = array("Windows", "WNINT") ;
+    public $os = array("Windows", "WINNT") ;
     public $linuxType = array("None") ;
     public $distros = array("None") ;
     public $versions = array(array("5.0" => "+")) ;
