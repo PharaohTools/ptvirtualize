@@ -27,7 +27,7 @@ class BoxWindows extends BoxUbuntu {
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
-            $wgetExe = dirname(dirname(dirname(__FILE__))).'\WgetWin\Packages\WgetWin\wget.exe' ;
+            $wgetExe = '"'.dirname(dirname(dirname(__FILE__))).'\WgetWin\Packages\WgetWin\wget.exe"' ;
             self::executeAndOutput("$wgetExe -O $tmpFile {$this->source}") ;
             $this->source = $tmpFile ;
             $logging->log("Download complete ...");
