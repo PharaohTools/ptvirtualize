@@ -86,7 +86,7 @@ class UpImportBaseBoxAllOS extends BaseLinuxApp {
     }
 
     protected function findOVAFile($baseBox) {
-        $ovaFile = $baseBox.'/box.ova' ;
+        $ovaFile = $baseBox.DS.'box.ova' ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding OVA file $ovaFile") ;
