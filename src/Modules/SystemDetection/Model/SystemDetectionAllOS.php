@@ -4,15 +4,13 @@ Namespace Model;
 
 class SystemDetectionAllOS extends Base {
 
-    public $os = array() ; // = array("any", "Linux", "Windows", "MacOS") ;
-    public $linuxType = array() ; // = array("any", "Debian", "Redhat") ;
-    public $distro = array() ; // = array("any", "Ubuntu", "Arch", "Debian", "Fedora", "CentOS") ; @todo add suse, mandriva
-    public $version = array() ; // = array("any", "11.04", "11.10", "12.04", "13.04") ; @todo win7, win2003, etc
-    public $architecture = array() ; // = array("any", "32", "64" ;
-    public $hostName = array() ; // = array("any", "32", "64" ;
+    public $os ; // = array("any", "Linux", "Windows", "MacOS") ;
+    public $linuxType ; // = array("any", "Debian", "Redhat") ;
+    public $distro ; // = array("any", "Ubuntu", "Arch", "Debian", "Fedora", "CentOS") ; @todo add suse, mandriva
+    public $version ; // = array("any", "11.04", "11.10", "12.04", "13.04") ; @todo win7, win2003, etc
+    public $architecture ; // = array("any", "32", "64" ;
+    public $hostName ; // = array("any", "32", "64" ;
     public $ipAddresses = array();
-
-    public $modelGroup = array();
 
     public function __construct() {
         $this->setOperatingSystem();
@@ -29,14 +27,12 @@ class SystemDetectionAllOS extends Base {
     }
 
     private function setDistro() {
-        switch ($this->os) {
-            case "Linux" :
-                $this->distro = $this->getLinuxDistro() ;
-                break ;
-            case "Darwin" :
-                $this->distro = $this->getMacDistro() ;
-                break ;
-        }
+        if ($this->os == "Linux" ) {
+            $this->distro = $this->getLinuxDistro() ; }
+        else if ($this->os == "Darwin"  ) {
+            $this->distro = $this->getMacDistro() ; }
+        else {
+            $this->distro = "None" ; }
     }
 
     private function setLinuxType() {
@@ -98,11 +94,20 @@ class SystemDetectionAllOS extends Base {
                 exec("lsb_release -a 2> /dev/null", $output_array);
                 $this->version = substr($output_array[2], 9) ; }
             if (in_array($this->distro, array("CentOS")) ) {
-                exec("cat /etc/centos-release", $output_array);
+                exec("cat /etc/*-release", $output_array);
                 $this->version = substr($output_array[0], 15, 3) ; } }
-        if ($this->os == "Darwin") {
+        else if ($this->os == "Darwin") {
             exec("sw_vers | grep 'ProductVersion:' | grep -o '[0-9]*\.[0-9]*\.[0-9]*'", $output_array);
             $this->version = $output_array[0] ; }
+        else if (in_array($this->os, array("Windows", "WINNT"))) {
+            exec("ver", $output_array);
+            $verString = substr(
+                $output_array[1],
+                (strpos($output_array[1], "[Version ")+9),
+                ((strlen($output_array[1])-1) - (strpos($output_array[1], "[Version ")+9))
+            ) ;
+            $versionObject = new \Model\SoftwareVersion($verString) ;
+            $this->version =  $versionObject->fullVersionNumber; }
     }
 
     private function setArchitecture() {
@@ -115,17 +120,29 @@ class SystemDetectionAllOS extends Base {
                 $this->architecture = "32" ; }
             if (strpos($output, "i686") !== false ) {
                 $this->architecture = "32" ; } }
+        else if (in_array($this->os, array("Windows", "WINNT"))) {
+            $output = self::executeAndLoad("wmic OS get OSArchitecture");
+            if (strpos($output, "64") !== false ) {
+                $this->architecture = "64" ; }
+            else {
+                $this->architecture = "32" ; } }
     }
 
     private function setHostname() {
-        if ($this->os == "Linux" || $this->os == "Darwin") {
+        if (in_array($this->os, array("Windows", "WINNT", "Darwin", "Linux"))) {
             exec("hostname", $output_array);
             $this->hostName = $output_array[0] ; }
     }
 
     private function setIPAddresses() {
         if ($this->os == "Linux") {
-            $ifComm = "sudo ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'" ;
+            if ($this->distro == "CentOS") {
+                // Centos has no network tools at all for some crazy reason, install them now
+                // @todo surely captain, there must be a better way
+                exec('yum install net-tools -y', $outputArray);
+            }
+            $ifComm = 'sudo ip addr list | awk \'/inet /{sub(/\/[0-9]+/,"",$2); print $2}\' ';
+            // $ifComm = "sudo ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'" ;
             exec($ifComm, $outputArray);
             foreach($outputArray as $outputLine ) {
                 $this->ipAddresses[] = $outputLine ; } }
@@ -139,7 +156,6 @@ class SystemDetectionAllOS extends Base {
             exec($ifComm, $outputArray);
             foreach($outputArray as $outputLine ) {
                 $this->ipAddresses[] = $outputLine ; } }
-
     }
 
 }
