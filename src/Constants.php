@@ -8,7 +8,6 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     $pf = getenv('ProgramFiles') ;
     $pf = str_replace(" (x86)", "", $pf) ;
     $command = "where /R \"{$pf}\" *VBoxManage* " ;
-    echo $command."\n" ;
     $outputArray = array();
     exec($command, $outputArray);
     define('VBOXMGCOMM', "\"{$outputArray[0]}\" ") ;
