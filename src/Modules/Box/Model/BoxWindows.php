@@ -24,7 +24,7 @@ class BoxWindows extends BoxUbuntu {
             set_time_limit(0); // unlimited max execution time
             $tmpFile = BASE_TEMP_DIR.'file.box' ;
             $logging->log("Downloading File ...");
-            if (substr($this->source, strlen($this->source)-1, 1) == '/') {
+            if (substr($this->source, strlen($this->source)-1, 1) == DS) {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
             $wgetExe = '"'.dirname(dirname(dirname(__FILE__))).'\WgetWin\Packages\WgetWin\wget.exe"' ;
