@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class UpImportBaseBoxAllLinux extends BaseLinuxApp {
+class UpImportBaseBoxAllOS extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -66,17 +66,16 @@ class UpImportBaseBoxAllLinux extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding base box {$this->phlagrantfile->config["vm"]["box"]} from Phlagrantfile") ;
-        // @todo get rid of this hardcode
-        $dirscan = '/opt/phlagrant/boxes' ;
-        $filesInDir = scandir($dirscan) ;
+        $dirscan = BOXDIR ;
+        $filesInDir = scandir(BOXDIR) ;
         $boxes = array() ;
         foreach ($filesInDir as $fileInDir) {
             if (in_array($fileInDir, array(".", ".."))) { continue ; }
-            if (is_dir($dirscan.'/'.$fileInDir)) { $boxes[] = $fileInDir ; } }
+            if (is_dir($dirscan.DS.$fileInDir)) { $boxes[] = $fileInDir ; } }
         foreach ($boxes as $box) {
             if ($box == $this->phlagrantfile->config["vm"]["box"]) {
                 $logging->log("Found base box {$box}") ;
-                return $dirscan.'/'.$box ; } }
+                return $dirscan.DS.$box ; } }
         return null ;
     }
 
@@ -92,7 +91,7 @@ class UpImportBaseBoxAllLinux extends BaseLinuxApp {
     }
 
     protected function doImport($ovaFile) {
-        $command  = "vboxmanage import {$ovaFile} --vsys 0 --ostype {$this->phlagrantfile->config["vm"]["ostype"]}" ;
+        $command  = VBOXMGCOMM." import {$ovaFile} --vsys 0 --ostype {$this->phlagrantfile->config["vm"]["ostype"]}" ;
         $command .= " --vmname {$this->phlagrantfile->config["vm"]["name"]}" ;
         $this->executeAndOutput($command);
         return true ;

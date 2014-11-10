@@ -30,7 +30,7 @@ class HaltAllLinux extends BaseLinuxApp {
         $logging->log("Checking current state...") ;
         $logging->log("Attempting soft power off by button...") ;
         $logging->log("Waiting up to {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
+        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
         $this->executeAndOutput($command);
         if ($this->waitForStatus("powered off", $this->phlagrantfile->config["vm"]["graceful_halt_timeout"], "3")==true) {
             $logging->log("Successful soft power off by button...") ;
@@ -67,7 +67,7 @@ class HaltAllLinux extends BaseLinuxApp {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 " parameter --fail-hard to do hard power off now." ;
             $logging->log($lmsg) ;
-            $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
+            $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
             $this->executeAndOutput($command);
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
@@ -79,13 +79,13 @@ class HaltAllLinux extends BaseLinuxApp {
 
     public function haltPause() {
         $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} pause" ;
+        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} pause" ;
         $this->executeAndOutput($command);
     }
 
     public function haltHard() {
         $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
+        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
         $this->executeAndOutput($command);
     }
 
@@ -112,7 +112,7 @@ class HaltAllLinux extends BaseLinuxApp {
     }
 
     protected function isVMInStatus($statusRequested) {
-        $command = "vboxmanage showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
+        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
         $out = $this->executeAndLoad($command);
         $isStatusRequested = strpos($out, strtolower($statusRequested)) ;
         return $isStatusRequested ;

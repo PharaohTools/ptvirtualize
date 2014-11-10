@@ -161,7 +161,7 @@ class ShellProvision extends BaseShellAllOS {
         //while ($t < $totalTime) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $command = "vboxmanage guestproperty enumerate {$this->phlagrantfile->config["vm"]["name"]} | grep \"V4/IP\" " ;
+        $command = VBOXMGCOMM." guestproperty enumerate {$this->phlagrantfile->config["vm"]["name"]} | grep \"V4/IP\" " ;
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
             $vmInfo = self::executeAndLoad($command) ;

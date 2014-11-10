@@ -57,7 +57,7 @@ class DestroyAllLinux extends BaseLinuxApp {
     }
 
     protected function isVMInStatus($statusRequested) {
-        $command = "vboxmanage showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
+        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
         $out = $this->executeAndLoad($command);
         $isStatusRequested = strpos($out, strtolower($statusRequested)) ;
         return $isStatusRequested ;

@@ -42,7 +42,7 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
     }
 
     protected function createTempDirectory($metadata) {
-        $boxdir = '/tmp/phlagrant/' . $metadata->slug ;
+        $boxdir = BASE_TEMP_DIR.'phlagrant'.DS . $metadata->slug ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (file_exists($boxdir) && !is_writable($boxdir)) {
@@ -70,7 +70,7 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...");
-        $command = "vboxmanage export {$vmName} --output=/tmp/phlagrant/{$metadata->slug}/box.ova" ;
+        $command = VBOXMGCOMM." export {$vmName} --output=/tmp/phlagrant/{$metadata->slug}/box.ova" ;
         self::executeAndOutput($command);
         $logging->log("Export complete...");
     }

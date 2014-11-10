@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class UpModifyVMAllLinux extends BaseLinuxApp {
+class UpModifyVMAllOS extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -28,13 +28,13 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         foreach ($this->phlagrantfile->config["vm"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
-                $command = "vboxmanage modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
+                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
                 $this->executeAndOutput($command); } }
         $this->setAvailableNetworkModifications();
         foreach ($this->phlagrantfile->config["network"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableNetworkModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
-                $command = "vboxmanage modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
+                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
                 $this->executeAndOutput($command); } }
         $this->setSharedFolders();
     }
@@ -87,7 +87,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
             $this->destroyExistingShares();
             foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
                 $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
-                $command  = "vboxmanage sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
+                $command  = VBOXMGCOMM." sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
                 $command .= " --hostpath {$sharedFolder["host_path"]}" ;
                 $flags = array("transient", "readonly", "automount") ;
                 foreach ($flags as $flag) {
@@ -101,7 +101,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding existing shares") ;
-        $command  = "vboxmanage showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
+        $command  = VBOXMGCOMM." showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
         $out = $this->executeAndLoad($command);
         $lines = explode("\n", $out) ;
         $names = array() ;
@@ -122,7 +122,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
 
         foreach ($names as $name) {
             $logging->log("Removing Shared Folder named {$name} from VM {$this->phlagrantfile->config["vm"]["name"]}") ;
-            $command  = "vboxmanage sharedfolder remove {$this->phlagrantfile->config["vm"]["name"]} --name {$name} " ;
+            $command  = VBOXMGCOMM." sharedfolder remove {$this->phlagrantfile->config["vm"]["name"]} --name {$name} " ;
             $this->executeAndOutput($command); }
 
     }
@@ -132,7 +132,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Phlagrantfile specifies Resizing HD for VM {$this->phlagrantfile->config["vm"]["name"]}") ;
         $logging->log("Finding existing hard disks") ;
-        $command  = "vboxmanage showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
+        $command  = VBOXMGCOMM." showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
         $out = $this->executeAndLoad($command);
         $lines = explode("\n", $out) ;
         foreach ($lines as $oneline) {
@@ -141,7 +141,7 @@ class UpModifyVMAllLinux extends BaseLinuxApp {
                 $end = strpos($oneline, ')') ;
                 $uuid = substr($oneline, $start, $end) ;
                 $logging->log("Modifying HD $uuid system by changing size to {$this->phlagrantfile->config["vm"]["hd_resize"]}") ;
-                $command = "vboxmanage modifyhd $uuid --resize {$this->phlagrantfile->config["vm"]["hd_resize"]}" ;
+                $command = VBOXMGCOMM." modifyhd $uuid --resize {$this->phlagrantfile->config["vm"]["hd_resize"]}" ;
                 $this->executeAndOutput($command); } }
     }
 

@@ -24,7 +24,7 @@ class ResumeAllLinux extends BaseLinuxApp {
 
     public function resumeNow() {
         $this->loadFiles();
-        $command = "vboxmanage controlvm {$this->phlagrantfile->config["vm"]["name"]} resume" ;
+        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} resume" ;
         $this->executeAndOutput($command);
     }
 

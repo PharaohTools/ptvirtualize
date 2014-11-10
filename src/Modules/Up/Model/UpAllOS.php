@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class UpAllLinux extends BaseLinuxApp {
+class UpAllOS extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -134,13 +134,13 @@ class UpAllLinux extends BaseLinuxApp {
     }
 
     protected function vmExistsInProvider() {
-        $out = $this->executeAndLoad("vboxmanage list vms");
+        $out = $this->executeAndLoad(VBOXMGCOMM." list vms");
         if (strpos($out, $this->phlagrantfile->config["vm"]["name"])!= false) { return true ; }
         return false ;
     }
 
     protected function vmIsRunning() {
-        $out = $this->executeAndLoad("vboxmanage list runningvms");
+        $out = $this->executeAndLoad(VBOXMGCOMM." list runningvms");
         if (strpos($out, $this->phlagrantfile->config["vm"]["name"] ) != false ) { return true ; }
         return false ;
     }
@@ -180,7 +180,7 @@ class UpAllLinux extends BaseLinuxApp {
             else {
                 $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->source);
                 $guiMode = "headless" ; } }
-        $command = "vboxmanage startvm {$this->phlagrantfile->config["vm"]["name"]} --type $guiMode" ;
+        $command = VBOXMGCOMM." startvm {$this->phlagrantfile->config["vm"]["name"]} --type $guiMode" ;
         $this->executeAndOutput($command);
         return true ;
     }

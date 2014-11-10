@@ -152,7 +152,7 @@ class BasePHPApp extends Base {
     $arrayOfPaths = scandir($this->programDataFolder);
     $pathStr = "" ;
     foreach ($arrayOfPaths as $path) {
-      $pathStr .= $this->programDataFolder.'/'.$path . PATH_SEPARATOR ; }
+      $pathStr .= $this->programDataFolder.DS.$path . PATH_SEPARATOR ; }
     $this->bootStrapData = "#!/usr/bin/php\n
 <?php\n
 set_include_path('" . $pathStr . "'.get_include_path() );
@@ -185,13 +185,13 @@ require('".$this->programDataFolder.DIRECTORY_SEPARATOR.$this->programExecutorTa
   }
 
   private function deleteInstallationFiles(){
-    $command = 'rm -rf '.$this->tempDir.'/'.$this->programNameMachine;
+    $command = 'rm -rf '.$this->tempDir.DS.$this->programNameMachine;
     self::executeAndOutput($command);
   }
 
   private function saveExecutorFile(){
     $this->populateExecutorFile();
-    return file_put_contents($this->programExecutorFolder.'/'.$this->programNameMachine, $this->bootStrapData);
+    return file_put_contents($this->programExecutorFolder.DS.$this->programNameMachine, $this->bootStrapData);
   }
 
   private function changePermissions(){
