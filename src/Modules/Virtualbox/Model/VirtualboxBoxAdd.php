@@ -33,7 +33,7 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
 
     protected function askForBoxAddExecute() {
         if (isset($this->params["yes"]) && $this->params["yes"]==true) { return true ; }
-        $question = 'Add Virtualbox Server Boxes?';
+        $question = 'Add Virtualbox Box Image?';
         return self::askYesOrNo($question);
     }
 
