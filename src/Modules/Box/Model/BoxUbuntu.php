@@ -56,9 +56,9 @@ class BoxUbuntu extends BaseLinuxApp {
         $this->name = $this->getBoxNewName();
         if ($this->downloadIfRemote() == false) {
             return false; }
-        $this->metadata = $this->extractMetadata();
-        $this->findProvider() ;
-        $this->attemptBoxAdd() ;
+//        $this->metadata = $this->extractMetadata();
+//        $this->findProvider() ;
+//        $this->attemptBoxAdd() ;
         # vbox module
         return true;
     }
