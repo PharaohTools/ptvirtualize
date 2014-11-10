@@ -67,15 +67,21 @@ class UpImportBaseBoxAllOS extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding base box {$this->phlagrantfile->config["vm"]["box"]} from Phlagrantfile") ;
         $dirscan = BOXDIR ;
-        $filesInDir = scandir(BOXDIR) ;
-        $boxes = array() ;
-        foreach ($filesInDir as $fileInDir) {
-            if (in_array($fileInDir, array(".", ".."))) { continue ; }
-            if (is_dir($dirscan.DS.$fileInDir)) { $boxes[] = $fileInDir ; } }
-        foreach ($boxes as $box) {
-            if ($box == $this->phlagrantfile->config["vm"]["box"]) {
-                $logging->log("Found base box {$box}") ;
-                return $dirscan.DS.$box ; } }
+        if (file_exists(BOXDIR)) {
+            $logging->log("Found base box directory ".BOXDIR) ;
+            $filesInDir = scandir(BOXDIR) ;
+            $boxes = array() ;
+            foreach ($filesInDir as $fileInDir) {
+                if (in_array($fileInDir, array(".", ".."))) { continue ; }
+                if (is_dir($dirscan.DS.$fileInDir)) { $boxes[] = $fileInDir ; } }
+            foreach ($boxes as $box) {
+                if ($box == $this->phlagrantfile->config["vm"]["box"]) {
+                    $logging->log("Found base box {$box}") ;
+                    return $dirscan.DS.$box ; } } }
+        else {
+            $logging->log("No base box directory ".BOXDIR) ;
+
+        }
         return null ;
     }
 
