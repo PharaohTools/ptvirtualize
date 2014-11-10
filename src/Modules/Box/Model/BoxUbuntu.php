@@ -173,17 +173,17 @@ class BoxUbuntu extends BaseLinuxApp {
 
     protected function extractMetadata() {
         $boxFile = $this->source ;
-        $command = "tar --extract --file=$boxFile -C /tmp ./metadata.json" ;
+        $command = "tar --extract --file=$boxFile -C ".BASE_TEMP_DIR." .".DS."metadata.json" ;
         self::executeAndOutput($command);
-        $fData = file_get_contents("/tmp/metadata.json") ;
-        $command = "rm /tmp/metadata.json" ;
+        $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
+        $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
         self::executeAndOutput($command);
         $fdo = json_decode($fData) ;
         return $fdo ;
     }
 
     protected function getMetadataFromFS() {
-        $file = "{$this->target}{$this->name}/metadata.json" ;
+        $file = "{$this->target}{$this->name}".DS."metadata.json" ;
         $string = file_get_contents($file) ;
         $fdo = json_decode($string) ;
         return $fdo ;
