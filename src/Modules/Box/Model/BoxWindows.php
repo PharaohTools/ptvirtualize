@@ -34,4 +34,14 @@ class BoxWindows extends BoxUbuntu {
         return true ;
     }
 
+    protected function extractMetadata() {
+        $pd = new \PharData($this->source) ;
+        $pd->extractTo(BASE_TEMP_DIR."metadata.json", ".".DS."metadata.json", true) ;
+        $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
+        $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
+        self::executeAndOutput($command);
+        $fdo = json_decode($fData) ;
+        return $fdo ;
+    }
+
 }
