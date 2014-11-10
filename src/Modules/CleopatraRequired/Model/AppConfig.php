@@ -120,7 +120,7 @@ class AppConfig {
     }
 
     private static function getAppBaseDir() {
-        $baseDir = dirname(__FILE__)."/../../..";
+        $baseDir = dirname(dirname(dirname(dirname(__FILE__))));
         return $baseDir;
     }
 

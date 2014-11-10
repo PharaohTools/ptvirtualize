@@ -40,7 +40,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
-                "script" => getcwd()."/build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-box.php"
+                "script" => getcwd().DS."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-box.php"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box is configured to be " .
             "provisioned by Cleopatra's default Phlagrant provisioning.";

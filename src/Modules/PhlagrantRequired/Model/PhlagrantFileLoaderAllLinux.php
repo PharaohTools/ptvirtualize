@@ -5,7 +5,7 @@ Namespace Model;
 class PhlagrantFileLoaderAllLinux extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -39,20 +39,20 @@ class PhlagrantFileLoaderAllLinux extends BaseLinuxApp {
 
     protected function findFile() {
         $phlagrantfile = $this->getPfile() ;
-        if (file_exists(getcwd()."/$phlagrantfile") && is_file(getcwd()."/$phlagrantfile")) {
-            require_once(getcwd()."/$phlagrantfile"); }
+        if (file_exists(getcwd().DS."$phlagrantfile") && is_file(getcwd().DS."$phlagrantfile")) {
+            require_once(getcwd().DS."$phlagrantfile"); }
         else if (file_exists($phlagrantfile)) {
             require_once($phlagrantfile); }
         else if (!is_null($phlagrantfile)) {
-            require_once(getcwd()."/Phlagrantfile"); }
-        else if (file_exists(getcwd()."/Phlagrantfile")) {
-            require_once(getcwd()."/Phlagrantfile"); }
-        else if (file_exists(getcwd()."/phlagrantfile")) {
-            require_once(getcwd()."/phlagrantfile"); }
-        else if (file_exists(getcwd()."/build/config/phlagrant/Phlagrantfile")) {
-            require_once(getcwd()."/build/config/phlagrant/Phlagrantfile"); }
-        else if (file_exists(getcwd()."/build/config/phlagrant/phlagrantfile")) {
-            require_once(getcwd()."/build/config/phlagrant/phlagrantfile"); }
+            require_once(getcwd().DS."Phlagrantfile"); }
+        else if (file_exists(getcwd().DS."Phlagrantfile")) {
+            require_once(getcwd().DS."Phlagrantfile"); }
+        else if (file_exists(getcwd().DS."phlagrantfile")) {
+            require_once(getcwd().DS."phlagrantfile"); }
+        else if (file_exists(getcwd().DS."build/config/phlagrant/Phlagrantfile")) {
+            require_once(getcwd().DS."build/config/phlagrant/Phlagrantfile"); }
+        else if (file_exists(getcwd().DS."build/config/phlagrant/phlagrantfile")) {
+            require_once(getcwd().DS."build/config/phlagrant/phlagrantfile"); }
     }
 
 }

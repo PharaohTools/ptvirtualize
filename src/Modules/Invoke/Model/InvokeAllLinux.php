@@ -155,7 +155,7 @@ class InvokeAllLinux extends Base {
         else {
             if (!class_exists('Net_SSH2')) {
                 $srcFolder =  str_replace("/Model", "", dirname(__FILE__) ) ;
-                $ssh2File = $srcFolder."/Libraries/seclib/Net/SSH2.php" ;
+                $ssh2File = $srcFolder.DS."Libraries/seclib/Net/SSH2.php" ;
                 require_once($ssh2File) ;}
             $ssh = new \Net_SSH2($server["target"], $this->params["port"], $this->params["timeout"]);
             $pword = $this->getKeyIfAvailable($pword);
@@ -170,7 +170,7 @@ class InvokeAllLinux extends Base {
         if (file_exists($pword)) {
             if (!class_exists('Crypt_RSA')) {
                 $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $rsaFile = $srcFolder."/seclib/Crypt/RSA.php" ;
+                $rsaFile = $srcFolder.DS."seclib/Crypt/RSA.php" ;
                 require_once($rsaFile) ; }
             $key = new \Crypt_RSA();
             $key->loadKey(file_get_contents($pword));

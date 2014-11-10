@@ -49,7 +49,7 @@ class ProvisionDefaultLinux extends Base {
                 // echo "dave a3\n" ;
                 $targets = array("host", "guest") ;
                 foreach ($targets as $target) {
-                    $dir = getcwd()."/build/config/phlagrant/hooks/$provisioner/$tool/$hook/$target/$type" ;
+                    $dir = getcwd().DS."build/config/phlagrant/hooks/$provisioner/$tool/$hook/$target/$type" ;
                     $hookDirectoryExists = file_exists($dir) ;
                     $hookDirectoryIsDir = is_dir($dir) ;
                     // var_dump("hde", $hookDirectoryExists, "hdd", $hookDirectoryIsDir) ;

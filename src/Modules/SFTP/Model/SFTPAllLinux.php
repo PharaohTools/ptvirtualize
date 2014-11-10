@@ -196,11 +196,11 @@ class SFTPAllLinux extends Base {
             if (!class_exists('Net_SSH2')) {
                 // Always load SSH2 class from here as SFTP class tries to load it wrongly
                 $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $ssh2File = $srcFolder."/seclib/Net/SSH2.php" ;
+                $ssh2File = $srcFolder.DS."seclib/Net/SSH2.php" ;
                 require_once($ssh2File) ; }
             if (!class_exists('Net_SFTP')) {
                 $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $sftpFile = $srcFolder."/seclib/Net/SFTP.php" ;
+                $sftpFile = $srcFolder.DS."seclib/Net/SFTP.php" ;
                 require_once($sftpFile) ; }
             $sftp = new \Net_SFTP($server["target"], $this->params["port"], $this->params["timeout"]);
             $pword = (isset($server["pword"])) ? $server["pword"] : false ;
@@ -217,7 +217,7 @@ class SFTPAllLinux extends Base {
         if (file_exists($pword)) {
             if (!class_exists('Crypt_RSA')) {
                 $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $rsaFile = $srcFolder."/seclib/Crypt/RSA.php" ;
+                $rsaFile = $srcFolder.DS."seclib/Crypt/RSA.php" ;
                 require_once($rsaFile) ; }
             $key = new \Crypt_RSA();
             $key->loadKey(file_get_contents($pword));
