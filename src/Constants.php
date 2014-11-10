@@ -6,6 +6,8 @@
 
 if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     $pf = getenv('ProgramFiles') ;
+    $pf = str_replace(" (x86)", "", $pf) ;
+    $pf = $pf.'\\' ;
     $command = "where /R \"{$pf}\" \"*VBoxManage*\" " ;
     $outputArray = array();
     exec($command, $outputArray);
