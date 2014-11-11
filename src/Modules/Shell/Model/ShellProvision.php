@@ -200,7 +200,7 @@ class ShellProvision extends BaseShellAllOS {
         $logging->log("Waiting for ssh...") ;
         while ($t < $totalTime) {
             foreach ($ips as $ip) {
-                $command = "cleopatra port is-responding --ip=$ip --port-number=$thisPort" ;
+                $command = CLEOCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
                     $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;

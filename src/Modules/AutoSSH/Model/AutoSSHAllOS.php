@@ -181,7 +181,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...") ;
         while ($t < $totalTime) {
-            $command = "cleopatra port is-responding --ip=$ip --port-number=$thisPort" ;
+            $command = CLEOCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
             $vmInfo = self::executeAndLoad($command) ;
             if (strpos($vmInfo, "Port: Success") != false) {
                 $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
