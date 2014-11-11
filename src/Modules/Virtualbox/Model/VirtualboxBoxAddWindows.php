@@ -50,7 +50,9 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         chdir("C:\\Temp") ;
         $boxFile = str_replace("C:\\Temp\\", "", $this->source) ;
         $command = "$tarExe -tvf \"$boxFile\"" ;
+        var_dump($command);
         $eachFileRay = explode("\n", self::executeAndLoad($command));
+        var_dump($eachFileRay) ;
         foreach ($eachFileRay as $oneFile) {
             $fileExt = substr($oneFile, -4) ;
             if ($fileExt == ".ova" || $fileExt ==".ovf") {
