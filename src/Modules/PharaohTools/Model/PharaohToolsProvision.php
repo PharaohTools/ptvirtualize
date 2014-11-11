@@ -225,6 +225,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             echo "." ;
             sleep(1) ; }
         echo "\n" ;
+
+        var_dump($outStr) ;
         return $ips ;
     }
 
