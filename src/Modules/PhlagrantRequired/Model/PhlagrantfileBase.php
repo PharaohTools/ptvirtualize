@@ -64,10 +64,10 @@ class PhlagrantfileBase extends BaseLinuxApp {
             if (strpos($outLine, "Name:") !== false) {
                 $outStr .= $outLine."\n" ;
                 break; } }
-        $vmInfo = $outStr;
-        var_dump($vmInfo) ;
-
-        return "vboxnet0" ;
+        $lpos = strrpos($outStr, " ") + 2 ;
+        $name = substr($outStr, $lpos) ;
+        var_dump($name);
+        return $name ;
     }
 
 }
