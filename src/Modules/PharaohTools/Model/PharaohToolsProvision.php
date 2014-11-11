@@ -208,8 +208,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $outStr = "" ;
             foreach ($outLines as $outLine) {
                 if (strpos($outLine, "V4/IP") !== false) {
-                    $outStr .= $outLine."\n" ;
-                    break; } }
+                    $outStr .= $outLine."\n" ; } }
 
             $vmInfo = $outStr;
             for ($i=0;$i<30;$i++) { //for up to 30 ifaces
