@@ -51,7 +51,6 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $boxFile = str_replace("C:\\Temp\\", "", $source) ;
         $command = "$tarExe -tvf \"$boxFile\"" ;
         $eachFileRay = explode("\n", self::executeAndLoad($command));
-        var_dump($eachFileRay) ;
         foreach ($eachFileRay as $oneFile) {
             $fileExt = substr($oneFile, -4) ;
             if (strpos($oneFile, ".ova")!==false || strpos($oneFile, ".ovf")!==false) {
@@ -73,6 +72,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $source = str_replace("C:\\", "", $source) ;
         $boxDir = str_replace("C:\\", "", $boxDir) ;
         $command = "$tarExe --extract --file=$source $boxDir ./$ovaFile" ;
+        var_dump($command) ;
         self::executeAndOutput($command);
         $logging->log("Extraction complete...");
     }
