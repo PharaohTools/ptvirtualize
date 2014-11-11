@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class DestroyAllLinux extends BaseLinuxApp {
+class DestroyAllOS extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -27,7 +27,7 @@ class DestroyAllLinux extends BaseLinuxApp {
         if ($this->currentStateIsDestroyable() == false) { return ; }
         $this->runHook("pre") ;
         $this->removeShares();
-        $command = "VBoxManage unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
+        $command = VBOXMGCOMM." unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
         $this->executeAndOutput($command);
         $this->runHook("post") ;
         $this->deleteFromPapyrus() ;
