@@ -38,14 +38,7 @@ class BoxWindows extends BoxUbuntu {
 
     protected function extractMetadata() {
         $pd = new \PharData($this->source) ;
-        $ri = new \RecursiveIteratorIterator($pd) ;
-        var_dump($ri) ;
-        foreach ($ri as $file) {
-            echo "gf: ".$file->getFileName()."\n" ;
-            if (strpos($file->getFileName(), ".json") !== false) {
-                $mdfile =  $file->getFileName() ; } }
-        echo "mdf: ".$mdfile."\n" ;
-        $pd->extractTo(BASE_TEMP_DIR."metadata.json", "./metadata.json", true) ;
+        $pd->extractTo(BASE_TEMP_DIR, "./metadata.json", true) ;
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $fdo = json_decode($fData) ;
         $command = "del ".BASE_TEMP_DIR."metadata.json" ;
