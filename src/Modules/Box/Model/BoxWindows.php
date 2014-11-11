@@ -40,11 +40,7 @@ class BoxWindows extends BoxUbuntu {
         $boxFile = $this->source ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         $boxFile = str_replace("C:", "", $boxFile) ;
-        $command = "$tarExe -tvf \"$boxFile\"" ;
-        var_dump($command) ;
-        self::executeAndOutput($command);
-        $command = "$tarExe --extract --file=\"$boxFile\" -C ".BASE_TEMP_DIR." .".DS."metadata.json" ;
-        var_dump($command) ;
+        $command = "$tarExe --extract --file=\"$boxFile\" -C ".BASE_TEMP_DIR." ./metadata.json" ;
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
