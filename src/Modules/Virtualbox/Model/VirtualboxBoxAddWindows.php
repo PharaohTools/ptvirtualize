@@ -49,7 +49,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         chdir("C:\\Temp") ;
         $boxFile = str_replace("C:\\Temp\\", "", $this->source) ;
-        $command = "$tarExe -tvf --file=\"$boxFile\"" ;
+        $command = "$tarExe -tvf \"$boxFile\"" ;
         $eachFileRay = explode("\n", self::executeAndLoad($command));
         foreach ($eachFileRay as $oneFile) {
             $fileExt = substr($oneFile, -4) ;
