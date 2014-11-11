@@ -71,7 +71,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $fname = basename($source) ;
         echo "bd : $boxDir\n" ;
         if (!file_exists($boxDir)) {
-            $command = "mkdir $boxDir" ;
+            $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command);}
         $command = "move $source \"$boxDir\" " ;
         self::executeAndOutput($command);
