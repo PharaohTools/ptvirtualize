@@ -31,8 +31,8 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
     protected function extractMetadata($source, $boxDir) {
         $boxFile = $source ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
-        chdir($boxDir) ;
-         // $boxFile = str_replace(BASE_TEMP_DIR, "", $boxFile) ;
+        chdir("C:\\") ;
+         $boxFile = str_replace("C:", "", $boxFile) ;
         $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
