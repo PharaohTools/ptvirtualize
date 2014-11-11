@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class VirtualboxBoxAddWindows extends BaseVirtualboxAllOS {
+class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
 
     // Compatibility
     public $os = array("Windows", "WINNT") ;
