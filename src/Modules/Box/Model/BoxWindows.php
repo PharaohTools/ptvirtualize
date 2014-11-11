@@ -43,6 +43,7 @@ class BoxWindows extends BoxUbuntu {
         self::executeAndOutput($command);
         $td = str_replace("C:", "", BASE_TEMP_DIR) ;
         $command = "$tarExe -tvf \"$boxFile\"" ;
+        $boxFile = str_replace(BASE_TEMP_DIR, "", $boxFile) ;
         $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
         var_dump($command) ;
         self::executeAndOutput($command);
