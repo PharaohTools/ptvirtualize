@@ -168,6 +168,7 @@ class ShellProvision extends BaseShellAllOS {
             $out = $this->executeAndLoad($command);
             $outLines = explode("\n", $out);
             $outStr = "" ;
+            var_dump(count($outLines)) ;
             foreach ($outLines as $outLine) {
                 if (strpos($outLine, "V4/IP") !== false) {
                     $outStr .= $outLine."\n" ;
