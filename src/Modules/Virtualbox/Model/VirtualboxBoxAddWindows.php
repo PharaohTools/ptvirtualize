@@ -34,6 +34,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         chdir("C:\\") ;
          $boxFile = str_replace("C:", "", $boxFile) ;
         $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
+        var_dump($command) ;
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $command = "del ".BASE_TEMP_DIR."metadata.json" ;
