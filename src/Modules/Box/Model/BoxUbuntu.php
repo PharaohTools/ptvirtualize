@@ -148,8 +148,7 @@ class BoxUbuntu extends BaseLinuxApp {
         if (isset($this->params["target"])) {
             return $this->ensureTrailingSlash($this->params["target"]) ; }
         else if (isset($this->params["guess"])) {
-            $parentDir = dirname(dirname(dirname(dirname(dirname(dirname(__FILE__))))));
-            $target = $parentDir.DIRECTORY_SEPARATOR.'boxes' ;
+            $target = BOXDIR ;
             if (!file_exists($target)) { mkdir($target, true) ; }
             return $this->ensureTrailingSlash($target) ; }
         else {
