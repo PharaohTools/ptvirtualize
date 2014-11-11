@@ -29,6 +29,10 @@ class BoxInfo extends Base {
         - add
         Initialises the Box as usable by Phlagrant
         example: phlagrant box add
+        example: phlagrant box add --yes --guess
+            --source="/home/dave/file.box" # where the box file is
+            --target="opt/phlagrant/boxes" # will guess the dir next to phlagrant install dir
+            --name="vanillaubuntu"
 
         - remove
         Removes the box as usable by Phlagrant
