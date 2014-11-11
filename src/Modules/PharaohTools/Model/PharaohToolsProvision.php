@@ -200,6 +200,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $command = VBOXMGCOMM." guestproperty enumerate {$this->phlagrantfile->config["vm"]["name"]} " ;
+        echo "\n\n-$command\n\n" ;
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
 
