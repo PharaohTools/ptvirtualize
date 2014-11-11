@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
+class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
 
     // Compatibility
-    public $os = array("any") ;
+    public $os = array("Linux", "Darwin") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -81,7 +81,7 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
     protected function findOVA($source) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Finding ova file name from pbox file...");
+        $logging->log("Finding ova file name from box file...");
         $command = "tar -tvf $source" ;
         $allFilesString = self::executeAndLoad($command);
         $eachFile = explode("\n", $allFilesString) ;
@@ -90,7 +90,7 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
             if ($fileExt == ".ova" || $fileExt ==".ovf") {
                 $rp = strrpos($oneFile, "./") ;
                 $stripped = substr($oneFile, ($rp+2)) ;
-                $logging->log("Found ova file $stripped from pbox file...");
+                $logging->log("Found ova file $stripped from box file...");
                 return $stripped ; } }
         return null ;
     }
@@ -98,7 +98,7 @@ class VirtualboxBoxAdd extends BaseVirtualboxAllOS {
     protected function extractOVA($source, $boxDir, $ovaFile) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting ova file $ovaFile from pbox file...");
+        $logging->log("Extracting ova file $ovaFile from box file...");
         $command = "tar --extract --file=$source -C $boxDir ./$ovaFile" ;
         self::executeAndOutput($command);
         $logging->log("Extraction complete...");
