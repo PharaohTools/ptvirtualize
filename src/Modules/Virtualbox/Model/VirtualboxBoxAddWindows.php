@@ -55,8 +55,8 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         foreach ($eachFileRay as $oneFile) {
             $fileExt = substr($oneFile, -4) ;
             if (strpos($oneFile, ".ova")!==false || strpos($oneFile, ".ovf")!==false) {
-                $stripped = str_replace("./", "", $oneFile) ;
-                $stripped = str_replace(".\\", "", $stripped) ;
+                $lpos = strpos($oneFile, "./") ;
+                $stripped = substr($oneFile, $lpos) ;
                 $logging->log("Found ova file $stripped from box file...");
                 return $stripped ; } }
         return null ;
