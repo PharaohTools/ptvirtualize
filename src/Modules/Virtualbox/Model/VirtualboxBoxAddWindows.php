@@ -69,14 +69,15 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $logging->log("Extracting ova file $ovaFile from box file...");
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         $fname = basename($source) ;
-        echo "bd : $boxDir\n" ;
         if (!file_exists($boxDir)) {
             $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command);}
         $command = "move $source \"$boxDir\" " ;
         self::executeAndOutput($command);
-        chdir($boxDir) ;
-        $command = "$tarExe --extract --file=$fname ./$ovaFile" ;
+        chdir("C:\\") ;
+        $csource = str_replace("C:\\", "", $source) ;
+        $cboxdir = str_replace("C:\\", "", $source) ;
+        $command = "$tarExe --extract --file=\"$csource\" -C \"$cboxdir\" ./$ovaFile" ;
         var_dump($command) ;
         self::executeAndOutput($command);
         $logging->log("Extraction complete...");
