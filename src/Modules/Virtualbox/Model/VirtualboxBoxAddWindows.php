@@ -33,13 +33,13 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         chdir("C:\\Temp") ;
          $boxFile = str_replace("C:\\Temp\\", "", $boxFile) ;
+        if (!file_exists($boxDir)) {
+            $command = "mkdir \"$boxDir\"" ;
+            self::executeAndOutput($command);}
         $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
         self::executeAndOutput($command);
-        $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
-        $command = "del ".BASE_TEMP_DIR."metadata.json" ;
+        $command = "move ".BASE_TEMP_DIR."metadata.json $boxDir" ;
         self::executeAndOutput($command);
-        $fdo = json_decode($fData) ;
-        return $fdo ;
     }
 
     protected function findOVA($source) {
@@ -71,7 +71,6 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         if (!file_exists($boxDir)) {
             $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command);}
-        self::executeAndOutput($command);
         chdir("C:\\Temp\\") ;
         $csource = substr($source, 8) ;
         echo $boxDir."\n" ;
