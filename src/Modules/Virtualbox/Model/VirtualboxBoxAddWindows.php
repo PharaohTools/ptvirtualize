@@ -34,7 +34,6 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         chdir("C:\\Temp") ;
          $boxFile = str_replace("C:\\Temp\\", "", $boxFile) ;
         $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
-        var_dump($command) ;
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $command = "del ".BASE_TEMP_DIR."metadata.json" ;
@@ -47,11 +46,12 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding ova file name from box file...") ;
-        $tar = new \Phar($source);
-        $eachFile = array() ;
-        foreach (new \RecursiveIteratorIterator($tar) as $file) {
-            $eachFile[] = $file->getFileName() ; }
-        foreach ($eachFile as $oneFile) {
+        $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
+        chdir("C:\\Temp") ;
+        $boxFile = str_replace("C:\\Temp\\", "", $this->source) ;
+        $command = "$tarExe --tvf --file=\"$boxFile\"" ;
+        $eachFileRay = explode("\n", self::executeAndLoad($command));
+        foreach ($eachFileRay as $oneFile) {
             $fileExt = substr($oneFile, -4) ;
             if ($fileExt == ".ova" || $fileExt ==".ovf") {
                 $stripped = str_replace("./", "", $oneFile) ;
@@ -65,12 +65,11 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Extracting ova file $ovaFile from box file...");
-        $tar = new \Phar($source);
-
-        $tar->extractTo($boxDir, $ovaFile); // extract only file.txt
-
-        //$command = "tar --extract --file=$source -C $boxDir ./$ovaFile" ;
-        //self::executeAndOutput($command);
+        $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
+        chdir("C:\\Temp") ;
+        $source = str_replace("C:\\Temp\\", "", $source) ;
+        $command = "$tarExe --extract --file=$source -C $boxDir ./$ovaFile" ;
+        self::executeAndOutput($command);
         $logging->log("Extraction complete...");
     }
 
