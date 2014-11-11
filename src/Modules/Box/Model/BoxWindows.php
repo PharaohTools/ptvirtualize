@@ -45,7 +45,7 @@ class BoxWindows extends BoxUbuntu {
             if (strpos($file->getFileName(), ".json") !== false) {
                 $mdfile =  $file->getFileName() ; } }
         echo "mdf: ".$mdfile."\n" ;
-        $pd->extractTo(BASE_TEMP_DIR."metadata.json", $mdfile, true) ;
+        $pd->extractTo(BASE_TEMP_DIR."metadata.json", "/.metadata.json", true) ;
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $fdo = json_decode($fData) ;
         $command = "del ".BASE_TEMP_DIR."metadata.json" ;
