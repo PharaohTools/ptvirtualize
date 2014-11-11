@@ -32,7 +32,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $boxFile = $source ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         chdir("C:\\Temp") ;
-         $boxFile = str_replace("C:\\Temp", "", $boxFile) ;
+         $boxFile = str_replace("C:\\Temp\\", "", $boxFile) ;
         $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
         var_dump($command) ;
         self::executeAndOutput($command);
