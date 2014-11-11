@@ -66,7 +66,7 @@ class PhlagrantfileBase extends BaseLinuxApp {
                 break; } }
         var_dump($outStr);
         $lpos = strrpos($outStr, "  ") + 2 ;
-        $name = substr($outStr, $lpos) ;
+        $name = substr($outStr, $lpos, strlen($outStr)-1) ;
         var_dump($name);
         return $name ;
     }
