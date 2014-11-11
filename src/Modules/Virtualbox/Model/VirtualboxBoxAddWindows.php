@@ -40,7 +40,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding ova file name from box file...") ;
-        $tar = new \Phar($source, 0);
+        $tar = new \Phar($source);
         $eachFile = array() ;
         foreach (new \RecursiveIteratorIterator($tar) as $file) {
             $eachFile[] = $file->getFileName() ; }
