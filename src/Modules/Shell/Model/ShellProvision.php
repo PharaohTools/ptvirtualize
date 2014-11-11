@@ -204,6 +204,7 @@ class ShellProvision extends BaseShellAllOS {
         while ($t < $totalTime) {
             foreach ($ips as $ip) {
                 $command = CLEOCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
+                var_dump($command) ;
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
                     $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
