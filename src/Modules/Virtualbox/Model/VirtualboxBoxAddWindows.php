@@ -76,7 +76,9 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         self::executeAndOutput($command);
         chdir("C:\\") ;
         $csource = str_replace("C:\\", "", $source) ;
+        echo $boxDir ;
         $cboxdir = str_replace("C:\\", "", $boxDir) ;
+        echo $cboxdir ;
         $command = "$tarExe --force-local --extract --file=\"$csource\" -C \"$cboxdir\" ./$ovaFile" ;
         var_dump($command) ;
         self::executeAndOutput($command);
