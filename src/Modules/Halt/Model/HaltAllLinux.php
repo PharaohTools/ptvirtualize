@@ -112,9 +112,15 @@ class HaltAllLinux extends BaseLinuxApp {
     }
 
     protected function isVMInStatus($statusRequested) {
-        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
+        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" " ;
         $out = $this->executeAndLoad($command);
-        $isStatusRequested = strpos($out, strtolower($statusRequested)) ;
+        $outLines = explode("\n", $out);
+        $outStr = "" ;
+        foreach ($outLines as $outLine) {
+            if (strpos($outLine, "State:") !== false) {
+                $outStr .= $outLine."\n" ;
+                break; } }
+        $isStatusRequested = strpos($outStr, strtolower($statusRequested)) ;
         return $isStatusRequested ;
     }
 

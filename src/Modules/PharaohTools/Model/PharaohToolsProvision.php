@@ -199,10 +199,19 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         //while ($t < $totalTime) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $command = VBOXMGCOMM." guestproperty enumerate {$this->phlagrantfile->config["vm"]["name"]} | grep \"V4/IP\" " ;
+        $command = VBOXMGCOMM." guestproperty enumerate {$this->phlagrantfile->config["vm"]["name"]} " ;
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
-            $vmInfo = self::executeAndLoad($command) ;
+
+            $out = $this->executeAndLoad($command);
+            $outLines = explode("\n", $out);
+            $outStr = "" ;
+            foreach ($outLines as $outLine) {
+                if (strpos($outLine, "V4/IP") !== false) {
+                    $outStr .= $outLine."\n" ;
+                    break; } }
+
+            $vmInfo = $outStr;
             for ($i=0;$i<30;$i++) { //for up to 30 ifaces
                 $pattern = "/VirtualBox/GuestInfo/Net/$i/V4/IP" ;
                 $sp = strpos($vmInfo, $pattern) ;
