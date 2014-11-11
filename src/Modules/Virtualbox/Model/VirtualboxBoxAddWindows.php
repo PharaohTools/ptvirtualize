@@ -29,11 +29,17 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
     }
 
     protected function extractMetadata($source, $boxDir) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting metadata.json from box file...");
-        $pd = new \PharData($source) ;
-        $pd->extractTo($boxDir."metadata.json", "metadata.json", true) ;
+        $boxFile = $source ;
+        $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
+        chdir($boxDir) ;
+         // $boxFile = str_replace(BASE_TEMP_DIR, "", $boxFile) ;
+        $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
+        self::executeAndOutput($command);
+        $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
+        $command = "del ".BASE_TEMP_DIR."metadata.json" ;
+        self::executeAndOutput($command);
+        $fdo = json_decode($fData) ;
+        return $fdo ;
     }
 
     protected function findOVA($source) {
