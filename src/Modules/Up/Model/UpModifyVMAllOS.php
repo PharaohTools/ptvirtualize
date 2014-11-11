@@ -28,13 +28,13 @@ class UpModifyVMAllOS extends BaseLinuxApp {
         foreach ($this->phlagrantfile->config["vm"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
-                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
+                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey \"$configValue\"" ;
                 $this->executeAndOutput($command); } }
         $this->setAvailableNetworkModifications();
         foreach ($this->phlagrantfile->config["network"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableNetworkModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
-                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey $configValue" ;
+                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey \"$configValue\"" ;
                 $this->executeAndOutput($command); } }
         $this->setSharedFolders();
     }

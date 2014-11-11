@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class PhlagrantfileBase {
+class PhlagrantfileBase extends BaseLinuxApp {
 
     public $config ;
 
@@ -36,7 +36,7 @@ class PhlagrantfileBase {
         # Default Network Settings
         $config["network"]["nic1"] = "nat" ;
         $config["network"]["nic2"] = "hostonly" ;
-        $config["network"]["hostonlyadapter2"] = "vboxnet0" ;
+        $config["network"]["hostonlyadapter2"] = $this->getDefaultHostNetworkName() ;
 
         // @todo waiting config vars
         //$config["vm"]["box_check_update"] - If true, Vagrant will check for updates to the configured box on every vagrant up. If an update is found, Vagrant will tell the user. By default this is true. Updates will only be checked for boxes that properly support updates (boxes from Vagrant Cloud or some other versioned box).
@@ -51,6 +51,23 @@ class PhlagrantfileBase {
 
         $this->config = $config ;
 
+    }
+
+    protected function getDefaultHostNetworkName() {
+
+        $command = VBOXMGCOMM." list hostonlyifs " ;
+
+        $out = $this->executeAndLoad($command);
+        $outLines = explode("\n", $out);
+        $outStr = "" ;
+        foreach ($outLines as $outLine) {
+            if (strpos($outLine, "Name:") !== false) {
+                $outStr .= $outLine."\n" ;
+                break; } }
+        $vmInfo = $outStr;
+        var_dump($vmInfo) ;
+
+        return "vboxnet0" ;
     }
 
 }
