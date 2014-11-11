@@ -39,9 +39,11 @@ class BoxWindows extends BoxUbuntu {
     protected function extractMetadata() {
         $boxFile = $this->source ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
+        $command = "cd ".BASE_TEMP_DIR ;
+        self::executeAndOutput($command);
         $td = str_replace("C:", "", BASE_TEMP_DIR) ;
         $command = "$tarExe -tvf \"$boxFile\"" ;
-        $command = "$tarExe --extract --file=\"$boxFile\" -C \"".$td."\" ./metadata.json" ;
+        $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
         var_dump($command) ;
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
