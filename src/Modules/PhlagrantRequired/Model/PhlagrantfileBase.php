@@ -64,12 +64,10 @@ class PhlagrantfileBase extends BaseLinuxApp {
             if (strpos($outLine, "Name:") !== false) {
                 $outStr .= $outLine."\n" ;
                 break; } }
-        var_dump($outStr);
         $lpos = strrpos($outStr, "  ") + 2 ;
         $name = substr($outStr, $lpos, strlen($outStr)-1) ;
         $name = str_replace("\n", "", $name) ;
         $name = str_replace("\r", "", $name) ;
-        var_dump($name);
         return $name ;
     }
 
