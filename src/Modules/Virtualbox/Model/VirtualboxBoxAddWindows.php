@@ -48,7 +48,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $logging->log("Finding ova file name from box file...") ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         chdir("C:\\Temp") ;
-        $boxFile = str_replace("C:\\Temp\\", "", $this->source) ;
+        $boxFile = str_replace("C:\\Temp\\", "", $source) ;
         $command = "$tarExe -tvf \"$boxFile\"" ;
         var_dump($command);
         $eachFileRay = explode("\n", self::executeAndLoad($command));
