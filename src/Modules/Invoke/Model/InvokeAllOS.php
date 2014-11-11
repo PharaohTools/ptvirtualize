@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class InvokeAllLinux extends Base {
+class InvokeAllOS extends Base {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -154,8 +154,8 @@ class InvokeAllLinux extends Base {
             return null; }
         else {
             if (!class_exists('Net_SSH2')) {
-                $srcFolder =  str_replace("/Model", "", dirname(__FILE__) ) ;
-                $ssh2File = $srcFolder.DS."Libraries/seclib/Net/SSH2.php" ;
+                $srcFolder =  str_replace(DS."Model", "", dirname(__FILE__) ) ;
+                $ssh2File = $srcFolder.DS."Libraries".DS."seclib".DS."Net".DS."SSH2.php" ;
                 require_once($ssh2File) ;}
             $ssh = new \Net_SSH2($server["target"], $this->params["port"], $this->params["timeout"]);
             $pword = $this->getKeyIfAvailable($pword);
@@ -169,8 +169,8 @@ class InvokeAllLinux extends Base {
             $pword = str_replace('~', $home, $pword) ; }
         if (file_exists($pword)) {
             if (!class_exists('Crypt_RSA')) {
-                $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $rsaFile = $srcFolder.DS."seclib/Crypt/RSA.php" ;
+                $srcFolder =  str_replace(DS."Model", DS."Libraries", dirname(__FILE__) ) ;
+                $rsaFile = $srcFolder.DS."seclib".DS."Crypt".DS."RSA.php" ;
                 require_once($rsaFile) ; }
             $key = new \Crypt_RSA();
             $key->loadKey(file_get_contents($pword));

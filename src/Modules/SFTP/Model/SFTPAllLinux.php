@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class SFTPAllLinux extends Base {
+class SFTPAllOS extends Base {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -195,12 +195,12 @@ class SFTPAllLinux extends Base {
         else {
             if (!class_exists('Net_SSH2')) {
                 // Always load SSH2 class from here as SFTP class tries to load it wrongly
-                $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $ssh2File = $srcFolder.DS."seclib/Net/SSH2.php" ;
+                $srcFolder =  str_replace(DS."Model", DS."Libraries", dirname(__FILE__) ) ;
+                $ssh2File = $srcFolder.DS."seclib".DS."Net".DS."SSH2.php" ;
                 require_once($ssh2File) ; }
             if (!class_exists('Net_SFTP')) {
-                $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $sftpFile = $srcFolder.DS."seclib/Net/SFTP.php" ;
+                $srcFolder =  str_replace(DS."Model", DS."Libraries", dirname(__FILE__) ) ;
+                $sftpFile = $srcFolder.DS."seclib".DS."Net".DS."SFTP.php" ;
                 require_once($sftpFile) ; }
             $sftp = new \Net_SFTP($server["target"], $this->params["port"], $this->params["timeout"]);
             $pword = (isset($server["pword"])) ? $server["pword"] : false ;
@@ -216,8 +216,8 @@ class SFTPAllLinux extends Base {
             $pword = str_replace('~', $home, $pword) ; }
         if (file_exists($pword)) {
             if (!class_exists('Crypt_RSA')) {
-                $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
-                $rsaFile = $srcFolder.DS."seclib/Crypt/RSA.php" ;
+                $srcFolder =  str_replace(DS."Model", DS."Libraries", dirname(__FILE__) ) ;
+                $rsaFile = $srcFolder.DS."seclib".DS."Crypt".DS."RSA.php" ;
                 require_once($rsaFile) ; }
             $key = new \Crypt_RSA();
             $key->loadKey(file_get_contents($pword));
