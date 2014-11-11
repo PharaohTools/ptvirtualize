@@ -64,6 +64,7 @@ class PhlagrantfileBase extends BaseLinuxApp {
             if (strpos($outLine, "Name:") !== false) {
                 $outStr .= $outLine."\n" ;
                 break; } }
+        var_dump($outStr);
         $lpos = strrpos($outStr, " ") + 2 ;
         $name = substr($outStr, $lpos) ;
         var_dump($name);
