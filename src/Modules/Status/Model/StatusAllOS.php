@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class StatusAllLinux extends BaseLinuxApp {
+class StatusAllOS extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
