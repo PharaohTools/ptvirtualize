@@ -168,11 +168,9 @@ class ShellProvision extends BaseShellAllOS {
             $out = $this->executeAndLoad($command);
             $outLines = explode("\n", $out);
             $outStr = "" ;
-            var_dump(count($outLines)) ;
             foreach ($outLines as $outLine) {
                 if (strpos($outLine, "V4/IP") !== false) {
-                    $outStr .= $outLine."\n" ;
-                    break; } }
+                    $outStr .= $outLine."\n" ; } }
 
             $vmInfo = $outStr;
             for ($i=0;$i<30;$i++) { //for up to 30 ifaces
@@ -204,7 +202,6 @@ class ShellProvision extends BaseShellAllOS {
         while ($t < $totalTime) {
             foreach ($ips as $ip) {
                 $command = CLEOCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
-                var_dump($command) ;
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
                     $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
