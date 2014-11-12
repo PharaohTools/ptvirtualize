@@ -29,7 +29,7 @@ class HaltAllOS extends BaseLinuxApp {
         if ($this->currentStateIsHaltable() == false) { return ; }
         $logging->log("Checking current state...") ;
         $logging->log("Attempting soft power off by button...") ;
-        $logging->log("Waiting up to {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
+        $logging->log("Waiting at least {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
         $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
         $this->executeAndOutput($command);
         if ($this->waitForStatus("powered off", $this->phlagrantfile->config["vm"]["graceful_halt_timeout"], "3")==true) {
@@ -58,7 +58,7 @@ class HaltAllOS extends BaseLinuxApp {
             $ssh->performInvokeSSHData() ;
 
             $logging->log("Attempting shutdown by SSH...") ;
-            $logging->log("Waiting up to {$this->phlagrantfile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...") ;
+            $logging->log("Waiting at least {$this->phlagrantfile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...") ;
 
             if ($this->waitForStatus("powered off", $this->phlagrantfile->config["vm"]["ssh_halt_timeout"], "3")==true) {
                 $logging->log("Successful power off SSH Shutdown...") ;
