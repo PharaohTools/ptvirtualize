@@ -24,9 +24,13 @@ class StatusAllLinux extends BaseLinuxApp {
 
     public function statusShow() {
         $this->loadFiles();
-        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" | grep \"State:\"  " ;
-        $status = $this->executeAndLoad($command) ;
-        return $status ;
+        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\"  " ;
+        $out = $this->executeAndLoad($command);
+        $outLines = explode("\n", $out);
+        foreach ($outLines as $outLine) {
+            if (strpos($outLine, "State:") !== false) {
+                return $outLine."\n" ; } }
+        return null ;
     }
 
     public function statusFull() {
