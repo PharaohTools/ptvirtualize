@@ -22,6 +22,6 @@ else if (in_array(PHP_OS, array("Linux", "Solaris", "FreeBSD", "OpenBSD", "Darwi
     define('CLEOCOMM', "cleopatra ") ;
     define('DAPPCOMM', "dapperstrano ") ;
     define('PHLCOMM', "phlagrant") ;
-    define('BOXDIR', '/opt/phlagrant/boxes'.'\\') ;
+    define('BOXDIR', '/opt/phlagrant/boxes') ;
     define('DS', "/");
     define('BASE_TEMP_DIR', '/tmp/'); }
