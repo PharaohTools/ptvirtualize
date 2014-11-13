@@ -63,13 +63,13 @@ class ProvisionDefaultLinux extends Base {
                         foreach ($hookDirFiles as $hookDirFile) {
                             // echo "dave a6\n" ;
                             if (substr($hookDirFile, strlen($hookDirFile)-4) == ".php") {
-                                $logging->log("Phlagrant hook file $dir/$hookDirFile found") ;
+                                $logging->log("Phlagrant hook file $dir".DS."$hookDirFile found") ;
                                 $provisionerSettings =
                                     array(
                                         "provisioner" => $provisioner,
                                         "tool" => $tool,
                                         "target" => $target,
-                                        "script" => "$dir/$hookDirFile"
+                                        "script" => "$dir".DS."$hookDirFile"
                                     );
                                 $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ;
                                 $logging->log("Executing $hookDirFile with $tool") ; } } } } } }
