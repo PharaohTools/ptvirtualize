@@ -48,8 +48,9 @@ class DestroyAllOS extends BaseLinuxApp {
     protected function currentStateIsDestroyable() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $status = $this->isVMInStatus("powered off") ;
-        if ($status == true) {
+        $s1 = $this->isVMInStatus("aborted") ;
+        $s2 = $this->isVMInStatus("powered off") ;
+        if ($s1 == true || $s2 == true) {
             $logging->log("This VM is in a Destroyable state...") ;
             return true ; }
         $logging->log("This VM is not in a Destroyable state...") ;
