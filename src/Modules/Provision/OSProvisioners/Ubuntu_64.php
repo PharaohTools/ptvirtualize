@@ -10,7 +10,7 @@ class OSProvisioner extends ProvisionDefaultLinux {
         $sshData = <<<"SSHDATA"
 echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S apt-get update -y
 echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S apt-get install -y php5 git
-git clone http://git.pharaohtools.com/git/phpengine/cleopatra.git
+git clone https://github.com/PharaohTools/cleopatra.git
 echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S php cleopatra/install-silent
 SSHDATA;
         return $sshData ;
