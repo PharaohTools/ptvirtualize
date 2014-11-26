@@ -4,6 +4,8 @@
  * Pharaoh Tools Constants
  */
 
+define('PHARAOH_APP', "phlagrant") ;
+
 if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     $pf = getenv('ProgramFiles') ;
     $pf = str_replace(" (x86)", "", $pf) ;
