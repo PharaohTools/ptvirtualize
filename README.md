@@ -20,7 +20,7 @@ Currently, Phlagrant works smoothly Windows and Ubuntu.
 ## Installation
 
 The preferred way to install any of the Pharaoh apps (including this) is through cleopatra. If you install cleopatra
-on your machine (http://github.com/PharaohTools//cleopatra), then you can install phlagrant using the following:
+on your machine (http://github.com/PharaohTools/cleopatra), then you can install phlagrant using the following:
 
 sudo cleopatra phlagrant install --yes --guess
 
@@ -31,11 +31,11 @@ To install phlagrant cli on your machine without cleopatra do the following:
 
 sudo apt-get install php5 git
 
-git clone http://github.com/PharaohTools//phlagrant && sudo php phlagrant/install-silent
+git clone http://github.com/PharaohTools/phlagrant && sudo php phlagrant/install-silent
 
 or...
 
-git clone http://github.com/PharaohTools//phlagrant && sudo php phlagrant/install
+git clone http://github.com/PharaohTools/phlagrant && sudo php phlagrant/install
 (if you want to choose the install location)
 
 ... that's it, now the phlagrant command should be available at the command line for you.
