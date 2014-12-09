@@ -7,12 +7,12 @@ class OSProvisioner extends ProvisionDefaultLinux {
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
     public function getCleopatraInitSSHData($provisionFile) {
-        $sshData = <<<"SSHDATA"
-echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S apt-get update -y
-echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S apt-get install -y php5 git
-git clone https://github.com/PharaohTools/cleopatra.git
-echo {$this->phlagrantfile->config["ssh"]["password"]} | sudo -S php cleopatra/install-silent
-SSHDATA;
+		$sshData = "" ;
+        $sshData .= "echo ".$this->phlagrantfile->config["ssh"]["password"]." | sudo -S apt-get update -y\n" ;
+        $sshData .= "echo ".$this->phlagrantfile->config["ssh"]["password"]." | sudo -S apt-get install -y php5 git\n" ;
+        $sshData .= "echo ".$this->phlagrantfile->config["ssh"]["password"]." | sudo -S rm -rf cleopatra\n" ;
+        $sshData .= "echo ".$this->phlagrantfile->config["ssh"]["password"]." | sudo -S git clone https://github.com/PharaohTools/cleopatra.git\n" ;
+        $sshData .= "echo ".$this->phlagrantfile->config["ssh"]["password"]." | sudo -S php cleopatra/install-silent\n" ;
         return $sshData ;
     }
 
