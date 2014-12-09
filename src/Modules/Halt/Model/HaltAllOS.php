@@ -65,7 +65,7 @@ class HaltAllOS extends BaseLinuxApp {
                 return true ; } }
         if (isset($this->params["fail-hard"])) {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
-                " parameter --fail-hard to do hard power off now." ;
+                "--fail-hard flag to do hard power off now." ;
             $logging->log($lmsg) ;
             $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
             $this->executeAndOutput($command);
