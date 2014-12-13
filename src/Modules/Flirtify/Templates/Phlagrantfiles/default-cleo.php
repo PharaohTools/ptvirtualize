@@ -19,6 +19,7 @@ class Phlagrantfile extends PhlagrantfileBase {
             array(
                 "name" => "host_www",
                 "host_path" => getcwd().DS,
+                "guest_path" => getcwd().DS,
             ) ;
         # Provisioning
         $this->config["vm"]["provision"][] =
