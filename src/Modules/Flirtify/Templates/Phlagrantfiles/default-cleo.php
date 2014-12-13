@@ -13,7 +13,7 @@ class Phlagrantfile extends PhlagrantfileBase {
     private function setConfig() {
         $this->setDefaultConfig();
         # $this->config["vm"]["gui_mode"] = "gui" ;
-        $this->config["vm"]["box"] = "vanillabuntu" ;
+        $this->config["vm"]["box"] = "vanillaubuntu1404amd64" ;
         # Shared folder - This should map to the workstation environment vhost path parent...
         $this->config["vm"]["shared_folders"][] =
             array(
