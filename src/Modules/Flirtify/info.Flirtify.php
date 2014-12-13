@@ -27,20 +27,20 @@ class FlirtifyInfo extends Base {
 
   Flirtify, flirt, flirtify, phlirt, phlirtify
 
-        - default-php
+        - default-cleo
         Create a Phlagrantfile for your project, with default Configuration Management for a PHP Application
-        example: phlagrant flirt default-php
+        example: phlagrant flirt default-cleo
 
-        - default-php-dapper
+        - default-cleo-dapper
         Create a Phlagrantfile for your project, with default Configuration Management for a PHP Application and
         Dapperstrano Application
-        example: phlagrant flirt default-php-dapper
+        example: phlagrant flirt default-cleo-dapper
             --host-dapperfile=*relative/path/to/dapperfile/"
             # guess will use build/config/dapperstrano/dapperfy/autopilots/generated/
 
-        - custom-php-dapper
+        - custom-cleo-dapper
         Create a Phlagrantfile for your project
-        example: phlagrant flirt custom-php-dapper
+        example: phlagrant flirt custom-cleo-dapper
 
 HELPDATA;
       return $help ;
