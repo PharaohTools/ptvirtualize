@@ -33,6 +33,8 @@ class Box extends Base {
             return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
 
         if ($action=="list") {
+            $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, "Listing") ;
+            if (is_array($thisModel)) { return $this->failDependencies($pageVars, $this->content, $thisModel) ; }
             $this->content["result"] = $thisModel->askInstall();
             $this->content["appName"] = $thisModel->programNameInstaller;
             return array ("type"=>"view", "view"=>"box", "pageVars"=>$this->content); }
