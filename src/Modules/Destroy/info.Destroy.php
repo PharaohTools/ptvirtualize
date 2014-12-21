@@ -27,7 +27,9 @@ class DestroyInfo extends CleopatraBase {
   Destroy, destroy
 
         - now
-        Destroy a box now
+        Destroy a box. This will delete all of the hardware of your virtual machine, including any storage on it.
+        If you have shared folders between guest and host, that data stays on the host. Your Virtual Machine must be
+        in a stopped or aborted state to destroy it.
         example: phlagrant destroy now
 
 HELPDATA;
