@@ -4,7 +4,7 @@ Namespace Info;
 
 class LoggingInfo extends CleopatraBase {
 
-    public $hidden = false;
+    public $hidden = true;
 
     public $name = "Logging - Output errors to the logging";
 
