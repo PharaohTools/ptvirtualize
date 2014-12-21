@@ -4,7 +4,7 @@ Namespace Info;
 
 class TemplatingInfo extends Base {
 
-    public $hidden = false;
+    public $hidden = true;
 
     public $name = "Templating";
 
