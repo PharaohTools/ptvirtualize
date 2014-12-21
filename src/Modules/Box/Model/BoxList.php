@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxUbuntu extends BaseLinuxApp {
+class BoxList extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("Linux") ;
@@ -12,7 +12,7 @@ class BoxUbuntu extends BaseLinuxApp {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("Default", "BoxAdd") ;
+    public $modelGroup = array("Listing") ;
     protected $actionsToMethods ;
 
     protected $source ;
@@ -37,111 +37,20 @@ class BoxUbuntu extends BaseLinuxApp {
 
     protected function setActionsToMethods() {
         return array(
-            "add" => "performBoxAdd"
+            "list" => "performBoxList"
         ) ;
     }
 
-    public function performBoxAdd() {
-        // box add
-        // get the .pbox file (if remote) --
-        // get save location --
-        // untar the single metadata.json file out of it
-        // check the provider
-        // load the provider and invoke the add box method there
-        // - vbix module
-        //  - untar it there
-        //  - import it
-        $this->source = $this->getOriginalBoxLocation();
+    public function performBoxList() {
+        // box list
+        // get the box directory  +
+        // get list of contents
+        // get list of directories containing a metadata.json and box.ova
+        // load each metadata.json into an array
+        // send the array of objects back or false
         $this->target = $this->getTargetBoxLocation();
-        $this->name = $this->getBoxNewName();
-        if ($this->downloadIfRemote() == false) {
-            return false; }
-        $this->metadata = $this->extractMetadata();
-        $this->findProvider() ;
-        $this->attemptBoxAdd() ;
-        # vbox module
-        return true;
-    }
-
-    public function performBoxRemove() {
-        $this->target = $this->getTargetBoxLocation();
-        $this->name = $this->getBoxNewName();
-        $this->metadata = $this->getMetadataFromFS();
-        $this->findProvider("BoxRemove") ;
-        $this->attemptBoxRemove() ;
-        # vbox module
-        return true;
-    }
-
-    public function performBoxPackage() {
-        $this->metadata = new \StdClass() ;
-        $this->name = $this->getBoxNewName();
-        $this->metadata->provider = $this->askForProvider();
-        $this->metadata->name = $this->name;
-        $this->metadata->description = $this->askForDescription();
-        $this->metadata->group = $this->askForGroup();
-        $this->metadata->slug = $this->askForSlug();
-        $this->metadata->home_location = $this->askForHomeLocation();
-        $this->target = $this->getTargetBoxLocation();
-        $this->vmname = $this->getVmName();
-        $this->findProvider("BoxPackage") ;
-        $this->attemptBoxPackage() ;
-        return true;
-    }
-
-    protected function askForProvider() {
-        if (isset($this->params["provider"])) { return $this->params["provider"]; }
-        else if (isset($this->params["guess"])) { return "virtualbox"; }
-        else {
-            $source = self::askForInput("Enter Provider Name for Box Metadata:", true);
-            return $source ; }
-    }
-
-    protected function askForDescription() {
-        if (isset($this->params["description"])) { return $this->params["description"]; }
-        else {
-            $source = self::askForInput("Enter Description for Box Metadata:", true);
-            return $source ; }
-    }
-
-    protected function askForGroup() {
-        if (isset($this->params["group"])) { return $this->params["group"]; }
-        else {
-            $source = self::askForInput("Enter Group for Box Metadata:", true);
-            return $source ; }
-    }
-
-    protected function askForSlug() {
-        if (isset($this->params["slug"])) { return $this->params["slug"]; }
-        else if (isset($this->params["guess"])) { return $this->formatSlug($this->params["name"]); }
-        else {
-            $source = self::askForInput("Enter Slug for Box Metadata:", true);
-            return $source ; }
-    }
-
-    protected function formatSlug($slug) {
-        $slug = str_replace(" ", "", $slug);
-        $slug = str_replace(".", "", $slug);
-        $slug = str_replace("_", "", $slug);
-        $slug = strtolower($slug);
-        return $slug ;
-    }
-
-    protected function askForHomeLocation() {
-        if (isset($this->params["home-location"])) {
-            return $this->ensureTrailingSlash($this->params["home-location"]); }
-        else if (isset($this->params["guess"])) { return "http://www.phlagrantboxes.co.uk/"; }
-        else {
-            $source = self::askForInput("Enter Home Location:", true);
-            return $this->ensureTrailingSlash($source) ; }
-    }
-
-    protected function getOriginalBoxLocation() {
-        if (isset($this->params["source"])) {
-            return $this->params["source"]; }
-        else {
-            $source = self::askForInput("Enter Box Source Path:", true);
-            return $source ; }
+        $boxList = $this->getBoxList();
+        return $boxList;
     }
 
     protected function getTargetBoxLocation() {
@@ -154,38 +63,6 @@ class BoxUbuntu extends BaseLinuxApp {
         else {
             $target = self::askForInput("Enter Box Target Path:", true);
             return $this->ensureTrailingSlash($target) ; }
-    }
-
-    protected function getBoxNewName() {
-        if (isset($this->params["name"])) { return $this->params["name"]; }
-        else {
-            $name = self::askForInput("Enter Box Name:", true);
-            return $name ;}
-    }
-
-    protected function getVmName() {
-        if (isset($this->params["vmname"])) { return $this->params["vmname"]; }
-        else {
-            $name = self::askForInput("Enter VM Name (or ID) to Export:", true);
-            return $name ;}
-    }
-
-    protected function extractMetadata() {
-        $boxFile = $this->source ;
-        $command = "tar --extract --file=$boxFile -C ".BASE_TEMP_DIR." .".DS."metadata.json" ;
-        self::executeAndOutput($command);
-        $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
-        $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
-        self::executeAndOutput($command);
-        $fdo = json_decode($fData) ;
-        return $fdo ;
-    }
-
-    protected function getMetadataFromFS() {
-        $file = "{$this->target}{$this->name}".DS."metadata.json" ;
-        $string = file_get_contents($file) ;
-        $fdo = json_decode($string) ;
-        return $fdo ;
     }
 
     protected function findProvider($modGroup = "BoxAdd") {
@@ -216,53 +93,36 @@ class BoxUbuntu extends BaseLinuxApp {
         return false ;
     }
 
-    protected function attemptBoxAdd() {
+    protected function getBoxList() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (is_object($this->provider)) {
-            $logging->log("Attempting to add box via provider {$this->metadata->provider}...");
-            $this->provider->addBox($this->source, $this->target, $this->name) ; }
+        if (is_dir($this->target)) {
+            if (is_readable($this->target)) {
+                $allcontents = scandir($this->target) ;
+                $boxObjectArray = $this->getBoxObjects($allcontents) ;
+                return $boxObjectArray ; }
+            else {
+                $logging->log("The specified box path is not readable", $this->getModuleName()); }}
         else {
-            $logging->log("No Provider available, will not attempt to add box."); }
+            $logging->log("The specified box path is not a directory", $this->getModuleName()); }
+        return false ;
     }
 
-    protected function downloadIfRemote() {
+    private function getBoxObjects($allcontents) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (substr($this->source, 0, 7) == "http://" || substr($this->source, 0, 8) == "https://") {
-            $this->source = $this->ensureTrailingSlash($this->source);
-            $logging->log("Box is remote not local, will download to temp directory before adding...");
-            set_time_limit(0); // unlimited max execution time
-            $tmpFile = BASE_TEMP_DIR.'file.box' ;
-            $logging->log("Downloading File ...");
-            if (substr($this->source, strlen($this->source)-1, 1) == '/') {
-                $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
-            // @todo error return false
-            self::executeAndOutput("wget -O $tmpFile {$this->source}") ;
-            $this->source = $tmpFile ;
-            $logging->log("Download complete ...");
-            return true ;}
-        return true ;
-    }
-
-    protected function attemptBoxRemove() {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        if (is_object($this->provider)) {
-            $logging->log("Attempting to remove box via provider {$this->metadata->provider}...");
-            $this->provider->removeBox($this->target, $this->name) ; }
-        else {
-            $logging->log("No Provider available, will not attempt to remove box."); }
-    }
-
-    protected function attemptBoxPackage() {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        if (is_object($this->provider)) {
-            $logging->log("Attempting to package box via provider {$this->metadata->provider}...");
-            $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
-        else {
-            $logging->log("No Provider available, will not attempt to package box."); }
+        $objs = array();
+        foreach ($allcontents as $onecontent) {
+            if (!in_array($onecontent, array(".", ".."))) { // ignore dotfiles
+                if (is_dir($this->target.$onecontent)) { // its a dir
+                    $mdf = $this->target.$onecontent.DS."metadata.json" ;
+                    $logging->log("Looking for metadata.json at ".$mdf, $this->getModuleName());
+                    if (file_exists($mdf)) {
+                        $logging->log("Found metadata.json at ".$mdf, $this->getModuleName());
+                        $objs[] = json_decode(file_get_contents($mdf)) ; }
+                    else {
+                        $logging->log("No metadata.json at ".$mdf, $this->getModuleName()); } } } }
+        return $objs ;
     }
 
 }
