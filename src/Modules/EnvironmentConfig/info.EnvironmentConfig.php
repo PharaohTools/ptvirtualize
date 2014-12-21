@@ -4,7 +4,7 @@ Namespace Info;
 
 class EnvironmentConfigInfo extends Base {
 
-    public $hidden = false;
+    public $hidden = true;
 
     public $name = "Environment Configuration - Configure Environments for a project";
 
