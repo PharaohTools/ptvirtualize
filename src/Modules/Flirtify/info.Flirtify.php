@@ -23,7 +23,8 @@ class FlirtifyInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  With Flirtify you can create Phlagrant files for your project from predefined templates.
+  With Flirtify you can create Phlagrant files for your project from predefined templates. This will enable you to
+  create default Virtual machine hardware and provisioning configurations for your project in a single command.
 
   Flirtify, flirt, flirtify, phlirt, phlirtify
 
