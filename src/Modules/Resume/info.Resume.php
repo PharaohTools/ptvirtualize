@@ -22,7 +22,8 @@ class ResumeInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to resume a phlagrant box, which is paused/suspended
+  This command allows you to resume a phlagrant box, which has been paused/suspended.
+  This will start the box and will not attempt to modify or provision it.
 
   Resume, resume
 
