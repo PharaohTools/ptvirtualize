@@ -3,7 +3,7 @@
 Namespace Model;
 
 // @todo shouldnt this extend base templater? is it missing anything?
-class FlirtifyDefaultCleoUbuntu extends Base {
+class FlirtifyDefaultCleoAllOS extends Base {
 
     // Compatibility
     public $os = array("any") ;
