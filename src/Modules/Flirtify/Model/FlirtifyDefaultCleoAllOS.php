@@ -6,11 +6,11 @@ Namespace Model;
 class FlirtifyDefaultCleoUbuntu extends Base {
 
     // Compatibility
-    public $os = array("Linux") ;
-    public $linuxType = array("Debian") ;
-    public $distros = array("Ubuntu") ;
-    public $versions = array("12.04", "12.10", "13.04", "13.10", "14.04") ;
-    public $architectures = array("32", "64") ;
+    public $os = array("any") ;
+    public $linuxType = array("any") ;
+    public $distros = array("any") ;
+    public $versions = array("any") ;
+    public $architectures = array("any") ;
 
     // Model Group
     public $modelGroup = array("Default", "DefaultCleo") ;
@@ -35,8 +35,8 @@ class FlirtifyDefaultCleoUbuntu extends Base {
     }
 
     private function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates/Phlagrantfiles", dirname(__FILE__) ) ;
-        $template = $templatesDir . "/default-cleo.php";
+        $templatesDir = str_replace("Model", "Templates".DS."Phlagrantfiles", dirname(__FILE__) ) ;
+        $template = $templatesDir . DS."default-cleo.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
         $targetLocation = "Phlagrantfile" ;
