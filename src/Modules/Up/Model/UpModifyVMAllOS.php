@@ -38,6 +38,8 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     }
 
     public function removeShares() {
+        $this->loadFiles();
+        $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Removing shared folders") ;
@@ -50,6 +52,7 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     }
 
     protected function setAvailableNetworkModifications() {
+        $this->availableModifications = $this->provider->getAvailableModifications();
 
         for ($i = 0; $i<10; $i++) {
             $this->availableNetworkModifications[] = "nic$i" ;
@@ -67,6 +70,8 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     }
 
     protected function setSharedFolders() {
+        $this->loadFiles();
+        $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->phlagrantfile->config["vm"]["shared_folders"]) && count($this->phlagrantfile->config["vm"]["shared_folders"])>0 ) {
@@ -88,6 +93,8 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     }
 
     protected function modifyHardDisks() {
+        $this->loadFiles();
+        $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Phlagrantfile specifies Resizing HD for VM {$this->phlagrantfile->config["vm"]["name"]}") ;
