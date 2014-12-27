@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxHalt extends BaseVirtualboxAllOS {
+class BoxResume extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -14,23 +14,13 @@ class BoxHalt extends BaseVirtualboxAllOS {
     // Model Group
     public $modelGroup = array("BoxHalt") ;
 
-    public function haltSoft($name) {
-        $command = VBOXMGCOMM." controlvm {$name} acpipowerbutton" ;
+    public function resume($name) {
+        $command = VBOXMGCOMM." controlvm {$name} resume" ;
         $this->executeAndOutput($command);
     }
 
-    public function haltPause($name) {
-        $command = VBOXMGCOMM." controlvm {$name} pause" ;
-        $this->executeAndOutput($command);
-    }
-
-    public function haltHard($name) {
-        $command = VBOXMGCOMM." controlvm {$name} poweroff" ;
-        $this->executeAndOutput($command);
-    }
-
-    public function getHaltableStates() {
-        return array("running") ;
+    public function getResumableStates() {
+        return array("paused") ;
     }
 
 }
