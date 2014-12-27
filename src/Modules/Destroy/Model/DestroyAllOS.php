@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class DestroyAllOS extends BaseLinuxApp {
+class DestroyAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -13,10 +13,6 @@ class DestroyAllOS extends BaseLinuxApp {
 
     // Model Group
     public $modelGroup = array("Default") ;
-
-    protected $phlagrantfile;
-    protected $papyrus ;
-    protected $provider ;
 
     public function __construct($params) {
         parent::__construct($params);
@@ -74,48 +70,6 @@ class DestroyAllOS extends BaseLinuxApp {
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $provision->provisionHook("destroy", $type);
-    }
-
-    protected function loadFiles() {
-        $this->phlagrantfile = $this->loadPhlagrantFile();
-        $this->papyrus = $this->loadPapyrusLocal();
-    }
-
-    protected function loadPhlagrantFile() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
-        return $phlagrantFileLoader->load() ;
-    }
-
-    protected function loadPapyrusLocal() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->phlagrantfile) ;
-    }
-
-    protected function findProvider($modGroup = "BoxDestroy") {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->phlagrantfile->config["vm"]["provider"])) {
-            $logging->log("Provider {$this->phlagrantfile->config["vm"]["provider"]} found in Phlagrantfile") ;
-            $this->provider = $this->getProvider($this->phlagrantfile->config["vm"]["provider"], $modGroup) ; }
-        else {
-            $logging->log("No Provider configured in Phlagrantfile."); }
-    }
-
-    protected function getProvider($provider, $modGroup) {
-        $infoObjects = \Core\AutoLoader::getInfoObjects();
-        $allProviders = array();
-        foreach($infoObjects as $infoObject) {
-            if ( method_exists($infoObject, "vmProviderName") ) {
-                $allProviders[] = $infoObject->vmProviderName(); } }
-        foreach($allProviders as $oneProvider) {
-            if ( $provider == $oneProvider ) {
-                $className = '\Model\\'.ucfirst($oneProvider) ;
-                $providerFactory = new $className();
-                $provider = $providerFactory->getModel($this->params, $modGroup);
-                return $provider ; } }
-        return false ;
     }
 
 }
