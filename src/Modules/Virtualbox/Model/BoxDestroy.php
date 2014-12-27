@@ -15,7 +15,6 @@ class BoxDestroy extends BaseVirtualboxAllOS {
     public $modelGroup = array("BoxDestroy") ;
 
     public function destroyVM($name) {
-        $this->provider->destroyVM();
         $command = VBOXMGCOMM." unregistervm {$name} --delete" ;
         $this->executeAndOutput($command);
     }
