@@ -14,9 +14,9 @@ class BaseFunctionModel extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $phlagrantfile;
-    protected $papyrus ;
-    protected $provider ;
+    public $phlagrantfile;
+    public $papyrus ;
+    public $provider ;
 
     public function __construct($params) {
         parent::__construct($params);
