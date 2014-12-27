@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class ProvisionAllOS extends BaseLinuxApp {
+class ProvisionAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -14,8 +14,6 @@ class ProvisionAllOS extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $phlagrantfile;
-    protected $papyrus ;
     protected $osProvisioner ;
 
     public function __construct($params) {
@@ -31,24 +29,6 @@ class ProvisionAllOS extends BaseLinuxApp {
     public function provisionHook($hook, $type) {
         $this->loadFiles();
         $this->osProvisioner->provisionHook($hook, $type);
-    }
-
-    protected function loadFiles() {
-        $this->phlagrantfile = $this->loadPhlagrantFile();
-        $this->papyrus = $this->loadPapyrusLocal();
-        $this->osProvisioner = $this->loadOSProvisioner() ;
-    }
-
-    protected function loadPhlagrantFile() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
-        return $phlagrantFileLoader->load() ;
-    }
-
-    protected function loadPapyrusLocal() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->phlagrantfile) ;
     }
 
     protected function loadOSProvisioner() {
