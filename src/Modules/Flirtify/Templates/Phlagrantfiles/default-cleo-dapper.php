@@ -17,7 +17,7 @@ class Phlagrantfile extends PhlagrantfileBase {
         # Shared folder - This should map to the workstation environment vhost path parent...
         $this->config["vm"]["shared_folders"][] =
             array(
-                "name" => "host_web_path",
+                "name" => "host_www",
                 "host_path" => getcwd().DS,
                 "guest_path" => "/var/www/hostshare/",
             ) ;
@@ -41,14 +41,14 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "host",
-                "script" => getcwd().DS."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-host.php"
+                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Phlagrant".DS."cleofy-cm-phlagrant-host.php"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
-                "script" => getcwd().DS."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-box.php"
+                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Phlagrant".DS."cleofy-cm-phlagrant-box.php"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
