@@ -13,13 +13,13 @@ class Phlagrantfile extends PhlagrantfileBase {
     private function setConfig() {
         $this->setDefaultConfig();
         # $this->config["vm"]["gui_mode"] = "gui" ;
-        $this->config["vm"]["box"] = "vanillaubuntu1404amd64" ;
+        $this->config["vm"]["box"] = "pharaohubuntu14041amd64" ;
         # Shared folder - This should map to the workstation environment vhost path parent...
         $this->config["vm"]["shared_folders"][] =
             array(
                 "name" => "host_www",
                 "host_path" => getcwd().DS,
-                "guest_path" => getcwd().DS,
+                "guest_path" => "/var/www/hostshare/",
             ) ;
         # Provisioning
         $this->config["vm"]["provision"][] =
@@ -41,7 +41,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
-                "script" => getcwd().DS."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-box.php"
+                "script" => $this->config["vm"]["shared_folders"][0]["guest_path"]."build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant-box.php"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box is configured to be " .
             "provisioned by Cleopatra's default Phlagrant provisioning.";
