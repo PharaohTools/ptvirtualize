@@ -16,6 +16,7 @@ class DestroyAllOS extends BaseLinuxApp {
 
     protected $phlagrantfile;
     protected $papyrus ;
+    protected $provider ;
 
     public function __construct($params) {
         parent::__construct($params);
@@ -24,11 +25,11 @@ class DestroyAllOS extends BaseLinuxApp {
 
     public function destroyNow() {
         $this->loadFiles();
+        $this->findProvider();
         if ($this->currentStateIsDestroyable() == false) { return ; }
         $this->runHook("pre") ;
         $this->removeShares();
-        $command = VBOXMGCOMM." unregistervm {$this->phlagrantfile->config["vm"]["name"]} --delete" ;
-        $this->executeAndOutput($command);
+        $this->doDestruction();
         $this->runHook("post") ;
         $this->deleteFromPapyrus() ;
     }
@@ -45,29 +46,19 @@ class DestroyAllOS extends BaseLinuxApp {
         $modifyVM->removeShares() ;
     }
 
+    protected function doDestruction() {
+        $this->provider->destroyVM($this->phlagrantfile->config["vm"]["name"]);
+    }
+
     protected function currentStateIsDestroyable() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $s1 = $this->isVMInStatus("aborted") ;
-        $s2 = $this->isVMInStatus("powered off") ;
-        if ($s1 == true || $s2 == true) {
+        $destroyables = $this->provider->getDestroyableStates();
+        if ($this->provider->isVMInStatus($this->phlagrantfile->config["vm"]["name"], $destroyables) == true) {
             $logging->log("This VM is in a Destroyable state...") ;
             return true ; }
         $logging->log("This VM is not in a Destroyable state...") ;
         return false ;
-    }
-
-    protected function isVMInStatus($statusRequested) {
-        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" " ;
-        $out = $this->executeAndLoad($command);
-        $outLines = explode("\n", $out);
-        $outStr = "" ;
-        foreach ($outLines as $outLine) {
-            if (strpos($outLine, "State:") !== false) {
-                $outStr .= $outLine."\n" ;
-                break; } }
-        $isStatusRequested = strpos($outStr, strtolower($statusRequested)) ;
-        return $isStatusRequested ;
     }
 
     protected function runHook($type) {
@@ -100,6 +91,31 @@ class DestroyAllOS extends BaseLinuxApp {
         $prFactory = new \Model\PhlagrantRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
         return $papyrusLocalLoader->load($this->phlagrantfile) ;
+    }
+
+    protected function findProvider($modGroup = "BoxDestroy") {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->phlagrantfile->config["vm"]["provider"])) {
+            $logging->log("Provider {$this->phlagrantfile->config["vm"]["provider"]} found in Phlagrantfile") ;
+            $this->provider = $this->getProvider($this->phlagrantfile->config["vm"]["provider"], $modGroup) ; }
+        else {
+            $logging->log("No Provider configured in Phlagrantfile."); }
+    }
+
+    protected function getProvider($provider, $modGroup) {
+        $infoObjects = \Core\AutoLoader::getInfoObjects();
+        $allProviders = array();
+        foreach($infoObjects as $infoObject) {
+            if ( method_exists($infoObject, "vmProviderName") ) {
+                $allProviders[] = $infoObject->vmProviderName(); } }
+        foreach($allProviders as $oneProvider) {
+            if ( $provider == $oneProvider ) {
+                $className = '\Model\\'.ucfirst($oneProvider) ;
+                $providerFactory = new $className();
+                $provider = $providerFactory->getModel($this->params, $modGroup);
+                return $provider ; } }
+        return false ;
     }
 
 }
