@@ -119,7 +119,9 @@ class BoxList extends BaseLinuxApp {
                     $logging->log("Looking for metadata.json at ".$mdf, $this->getModuleName());
                     if (file_exists($mdf)) {
                         $logging->log("Found metadata.json at ".$mdf, $this->getModuleName());
-                        $objs[] = json_decode(file_get_contents($mdf)) ; }
+                        $ob = json_decode(file_get_contents($mdf)) ;
+                        $ob->loc = "$this->target{$onecontent}" ;
+                        $objs[] = $ob ; }
                     else {
                         $logging->log("No metadata.json at ".$mdf, $this->getModuleName()); } } } }
         return $objs ;
