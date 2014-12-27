@@ -27,8 +27,8 @@ class HaltAllOS extends BaseFunctionModel {
         $this->findProvider("BoxHalt");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        if ($this->currentStateIsHaltable() == false) { return ; }
         $logging->log("Checking current state...") ;
+        if ($this->currentStateIsHaltable() == false) { return ; }
         $logging->log("Attempting soft power off by button...") ;
         $logging->log("Waiting at least {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
         $this->provider->haltSoft($this->phlagrantfile->config["vm"]["name"]);
