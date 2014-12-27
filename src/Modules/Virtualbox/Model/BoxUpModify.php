@@ -111,5 +111,20 @@ class BoxUpModify extends BaseFunctionModel {
         );
     }
 
+    public function availableNetworkModifications() {
+        $netMods = array();
+        for ($i = 0; $i<10; $i++) {
+            $netMods[] = "nic$i" ;
+            $netMods[] = "nictype$i" ;
+            $netMods[] = "cableconnected$i" ;
+            $netMods[] = "nictrace$i" ;
+            $netMods[] = "nictracefile$i" ;
+            $netMods[] = "bridgeadapter$i" ;
+            $netMods[] = "hostonlyadapter$i" ;
+            $netMods[] = "intnet$i" ;
+            $netMods[] = "macaddress$i" ;
+            $netMods[] = "natpf$i" ; }
+        return $netMods ;
+    }
 
 }
