@@ -47,19 +47,6 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     /// @todo can we pull this information from vboxmanage, then we dont have to udate this method when vboxmanage changes
     protected function setAvailableModifications() {
         $this->availableModifications = $this->provider->getAvailableModifications();
-            array(
-            "name", "ostype", "memory", "vram", "cpus", "cpuexecutioncap", "boot", "graphicscontroller", "monitorcount",
-            "draganddrop", "usb", "usbehci", "snapshotfolder", "autostart-enabled", "autostart-delay", "groups",
-            "iconfile", "pagefusion", "acpi", "ioapic", "hpet", "triplefaultreset", "hwvirtex", "nestedpaging",
-            "largepages", "vtxvpid", "vtxux", "pae", "longmode", "synthcpu", "cpuidset", "cpuidremove",
-            "cpuidremoveall", "hardwareuuid", "cpuhotplug", "plugcpu", "unplugcpu", "rtcuseutc", "accelerate3d",
-            "firmware", "chipset", "bioslogofadein", "bioslogofadeout", "bioslogodisplaytime", "bioslogoimagepath",
-            "biosbootmenu", "biossystemtimeoffset", "biospxedebug", "mouse", "keyboard", "guestmemoryballoon", "audio",
-            "audiocontroller", "clipboard", "vrde", "vrdeextpack", "vrdeproperty", "vrdeport", "vrdeaddress",
-            "vrdeauthtype", "vrdeauthlibrary", "vrdemulticon", "vrdereusecon", "vrdevideochannel",
-            "vrdevideochannelquality", "teleporter", "teleporterport", "teleporteraddress", "teleporterpassword",
-            "teleporterpasswordfile", "tracing-enabled", "tracing-config", "tracing-allow-vm-access", "defaultfrontend"
-        );
     }
 
     protected function setAvailableNetworkModifications() {
