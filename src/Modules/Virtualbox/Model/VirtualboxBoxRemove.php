@@ -27,6 +27,7 @@ class VirtualboxBoxRemove extends BaseVirtualboxAllOS {
         return self::askYesOrNo($question);
     }
 
+    // @todo this wont work on windows
     protected function removeBoxDirectory($target, $name) {
         $boxdir = $target . $name ;
         $loggingFactory = new \Model\Logging();
