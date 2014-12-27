@@ -23,6 +23,7 @@ class UpAllOS extends BaseFunctionModel {
 
     public function doUp() {
         $this->loadFiles();
+        $this->findProvider("UpOther");
         $this->setLogSource();
         $o = $this->phlagrantfile ;
         if (property_exists($o, "files")) { $this->doMultiUp() ; }
@@ -31,6 +32,7 @@ class UpAllOS extends BaseFunctionModel {
 
     public function setLogSource() {
         $this->loadFiles();
+        $this->findProvider("UpOther");
         $this->source = (isset($this->params["pfile"]) && $this->params["pfile"] != "Phlagrantfile" ) ? $this->params["pfile"] : "" ;
     }
 
@@ -97,23 +99,6 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("{$this->phlagrantfile->config["vm"]["post_up_message"]}", $this->source);
-    }
-
-    protected function loadFiles() {
-        $this->phlagrantfile = $this->loadPhlagrantFile() ;
-        $this->papyrus = $this->loadPapyrusLocal() ;
-    }
-
-    protected function loadPhlagrantFile() {
-        $prFactory = new \Model\PhlagrantRequired() ;
-        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
-        return $phlagrantFileLoader->load() ;
-    }
-
-    protected function loadPapyrusLocal() {
-        $prFactory = new \Model\PhlagrantRequired() ;
-        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->phlagrantfile) ;
     }
 
     protected function completeBuildUp() {
