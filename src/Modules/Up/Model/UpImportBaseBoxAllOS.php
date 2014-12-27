@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class UpImportBaseBoxAllOS extends BaseLinuxApp {
+class UpImportBaseBoxAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -14,9 +14,6 @@ class UpImportBaseBoxAllOS extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("ImportBaseBox") ;
 
-    public $papyrus;
-    public $phlagrantfile;
-
     public function performImport() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
@@ -25,7 +22,6 @@ class UpImportBaseBoxAllOS extends BaseLinuxApp {
         // if its null, we don't have the box yet, so box add it
         if (is_null($baseBoxPath)) {
             $logging->log("Base Box {$this->phlagrantfile->config["vm"]["box"]} doesn't exist locally, adding...") ;
-            // @lol simpsons below
             $boxFactory = new \Model\Box();
             $boxParams = $this->params ;
             $boxParams["source"] = $this->getRemoteSource() ;
@@ -97,10 +93,9 @@ class UpImportBaseBoxAllOS extends BaseLinuxApp {
     }
 
     protected function doImport($ovaFile) {
-        $command  = VBOXMGCOMM." import {$ovaFile} --vsys 0 --ostype {$this->phlagrantfile->config["vm"]["ostype"]}" ;
-        $command .= " --vmname {$this->phlagrantfile->config["vm"]["name"]}" ;
-        $this->executeAndOutput($command);
-        return true ;
+        $this->loadFiles();
+        $this->findProvider("UpImport");
+        return $this->provider->import($ovaFile, $this->phlagrantfile->config["vm"]["ostype"], $this->phlagrantfile->config["vm"]["name"]);
     }
 
 }
