@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class UpModifyVMAllOS extends BaseLinuxApp {
+class UpModifyVMAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -14,12 +14,12 @@ class UpModifyVMAllOS extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("ModifyVM") ;
 
-    public $papyrus;
-    public $phlagrantfile;
     protected $availableModifications;
     protected $availableNetworkModifications;
 
     public function performModifications() {
+        $this->loadFiles();
+        $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $this->setAvailableModifications();
@@ -28,14 +28,12 @@ class UpModifyVMAllOS extends BaseLinuxApp {
         foreach ($this->phlagrantfile->config["vm"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
-                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey \"$configValue\"" ;
-                $this->executeAndOutput($command); } }
+                $this->provider->modify($this->phlagrantfile->config["vm"]["name"], $configKey, $configValue); } }
         $this->setAvailableNetworkModifications();
         foreach ($this->phlagrantfile->config["network"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableNetworkModifications)) {
                 $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
-                $command = VBOXMGCOMM." modifyvm {$this->phlagrantfile->config["vm"]["name"]} --$configKey \"$configValue\"" ;
-                $this->executeAndOutput($command); } }
+                $this->provider->modify($this->phlagrantfile->config["vm"]["name"], $configKey, $configValue); } }
         $this->setSharedFolders();
     }
 
@@ -48,7 +46,8 @@ class UpModifyVMAllOS extends BaseLinuxApp {
 
     /// @todo can we pull this information from vboxmanage, then we dont have to udate this method when vboxmanage changes
     protected function setAvailableModifications() {
-        $this->availableModifications = array(
+        $this->availableModifications = $this->provider->getAvailableModifications();
+            array(
             "name", "ostype", "memory", "vram", "cpus", "cpuexecutioncap", "boot", "graphicscontroller", "monitorcount",
             "draganddrop", "usb", "usbehci", "snapshotfolder", "autostart-enabled", "autostart-delay", "groups",
             "iconfile", "pagefusion", "acpi", "ioapic", "hpet", "triplefaultreset", "hwvirtex", "nestedpaging",
@@ -87,13 +86,7 @@ class UpModifyVMAllOS extends BaseLinuxApp {
             $this->destroyExistingShares();
             foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
                 $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
-                $command  = VBOXMGCOMM." sharedfolder add {$this->phlagrantfile->config["vm"]["name"]} --name {$sharedFolder["name"]} " ;
-                $command .= " --hostpath {$sharedFolder["host_path"]}" ;
-                $flags = array("transient", "readonly", "automount") ;
-                foreach ($flags as $flag) {
-                    if (isset($sharedFolder[$flag])) {
-                        $command .= " --$flag" ; } }
-                $this->executeAndOutput($command); } }
+                $this->provider->addShare($this->phlagrantfile->config["vm"]["name"], $sharedFolder); } }
     }
 
 
@@ -101,30 +94,10 @@ class UpModifyVMAllOS extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding existing shares") ;
-        $command  = VBOXMGCOMM." showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
-        $out = $this->executeAndLoad($command);
-        $lines = explode("\n", $out) ;
-        $names = array() ;
-        foreach ($lines as $oneline) {
-            if (strpos($oneline, "Shared folders")===0) {
-                $cstill = 1;
-                continue ; } // skip a line
-            else {
-                if (isset($cstill) && $cstill == 1) {
-                    $cstill = 2;
-                    continue ;  } // skip a line
-                else if (isset($cstill) && $cstill == 2) {
-                    if (strpos($oneline, "Name: '")===0) {
-                        $end = str_replace("Name: '", "", $oneline) ;
-                        $names[] = substr($end, 0, strpos($end, "'")) ; }
-                    else {
-                        break ;  } } } }
-
-        foreach ($names as $name) {
-            $logging->log("Removing Shared Folder named {$name} from VM {$this->phlagrantfile->config["vm"]["name"]}") ;
-            $command  = VBOXMGCOMM." sharedfolder remove {$this->phlagrantfile->config["vm"]["name"]} --name {$name} " ;
-            $this->executeAndOutput($command); }
-
+        $names = $this->provider->getShares($this->phlagrantfile->config["vm"]["name"]);
+        foreach ($names as $share) {
+            $logging->log("Removing Shared Folder named {$share} from VM {$this->phlagrantfile->config["vm"]["name"]}") ;
+            $this->provider->removeShare($this->phlagrantfile->config["vm"]["name"], $share); }
     }
 
     protected function modifyHardDisks() {
@@ -132,17 +105,10 @@ class UpModifyVMAllOS extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Phlagrantfile specifies Resizing HD for VM {$this->phlagrantfile->config["vm"]["name"]}") ;
         $logging->log("Finding existing hard disks") ;
-        $command  = VBOXMGCOMM." showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
-        $out = $this->executeAndLoad($command);
-        $lines = explode("\n", $out) ;
-        foreach ($lines as $oneline) {
-            if (strpos($oneline, "SATA (0, 0): ")===0) {
-                $start = strpos($oneline, '(UUID: ')+6 ;
-                $end = strpos($oneline, ')') ;
-                $uuid = substr($oneline, $start, $end) ;
-                $logging->log("Modifying HD $uuid system by changing size to {$this->phlagrantfile->config["vm"]["hd_resize"]}") ;
-                $command = VBOXMGCOMM." modifyhd $uuid --resize {$this->phlagrantfile->config["vm"]["hd_resize"]}" ;
-                $this->executeAndOutput($command); } }
+        $disks = $this->provider->getDisks($this->phlagrantfile->config["vm"]["name"]);
+        foreach ($disks as $disk) {
+            $logging->log("Modifying HD $disk system by changing size to {$this->phlagrantfile->config["vm"]["hd_resize"]}") ;
+            $this->provider->modifyDisk($disk, $this->phlagrantfile->config["vm"]["hd_resize"]); }
     }
 
 }
