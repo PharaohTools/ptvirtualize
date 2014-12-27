@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class ResumeAllLinux extends BaseLinuxApp {
+class ResumeAllLinux extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -14,9 +14,6 @@ class ResumeAllLinux extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $phlagrantfile;
-    protected $papyrus ;
-
     public function __construct($params) {
         parent::__construct($params);
         $this->initialize();
@@ -24,25 +21,24 @@ class ResumeAllLinux extends BaseLinuxApp {
 
     public function resumeNow() {
         $this->loadFiles();
-        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} resume" ;
-        $this->executeAndOutput($command);
+        $this->findProvider("BoxResume");
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Checking current state...") ;
+        if ($this->currentStateIsResumable() == false) { return ; }
+        $logging->log("Attempting Resume...") ;
+        $this->provider->resume($this->phlagrantfile->config["vm"]["name"]);
     }
 
-    protected function loadFiles() {
-        $this->phlagrantfile = $this->loadPhlagrantFile();
-        $this->papyrus = $this->loadPapyrusLocal();
-    }
-
-    protected function loadPhlagrantFile() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
-        return $phlagrantFileLoader->load() ;
-    }
-
-    protected function loadPapyrusLocal() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->phlagrantfile) ;
+    protected function currentStateIsResumable() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $resumables = $this->provider->getResumableStates();
+        if ($this->provider->isVMInStatus($this->phlagrantfile->config["vm"]["name"], $resumables) == true) {
+            $logging->log("This VM is in a Resumable state...") ;
+            return true ; }
+        $logging->log("This VM is not in a Resumable state...") ;
+        return false ;
     }
 
 }
