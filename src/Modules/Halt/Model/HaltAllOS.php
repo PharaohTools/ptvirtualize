@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class HaltAllOS extends BaseLinuxApp {
+class HaltAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -24,14 +24,14 @@ class HaltAllOS extends BaseLinuxApp {
 
     public function haltNow() {
         $this->loadFiles();
+        $this->findProvider("BoxHalt");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         if ($this->currentStateIsHaltable() == false) { return ; }
         $logging->log("Checking current state...") ;
         $logging->log("Attempting soft power off by button...") ;
         $logging->log("Waiting at least {$this->phlagrantfile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
-        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} acpipowerbutton" ;
-        $this->executeAndOutput($command);
+        $this->provider->haltSoft($this->phlagrantfile->config["vm"]["name"]);
         if ($this->waitForStatus("powered off", $this->phlagrantfile->config["vm"]["graceful_halt_timeout"], "3")==true) {
             $logging->log("Successful soft power off by button...") ;
             return true ; }
@@ -67,8 +67,7 @@ class HaltAllOS extends BaseLinuxApp {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 "--fail-hard flag to do hard power off now." ;
             $logging->log($lmsg) ;
-            $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
-            $this->executeAndOutput($command);
+            $this->provider->haltHard($this->phlagrantfile->config["vm"]["name"]);
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
             "phlagrant halt hard. You can also use the parameter --fail-hard to do this automatically." ;
@@ -79,21 +78,21 @@ class HaltAllOS extends BaseLinuxApp {
 
     public function haltPause() {
         $this->loadFiles();
-        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} pause" ;
-        $this->executeAndOutput($command);
+        $this->findProvider("BoxHalt");
+        $this->provider->haltPause($this->phlagrantfile->config["vm"]["name"]);
     }
 
     public function haltHard() {
         $this->loadFiles();
-        $command = VBOXMGCOMM." controlvm {$this->phlagrantfile->config["vm"]["name"]} poweroff" ;
-        $this->executeAndOutput($command);
+        $this->findProvider("BoxHalt");
+        $this->provider->haltHard($this->phlagrantfile->config["vm"]["name"]);
     }
 
     protected function currentStateIsHaltable() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $status = $this->isVMInStatus("running") ;
-        if ($status == true) {
+        $haltables = $this->provider->getHaltableStates();
+        if ($this->provider->isVMInStatus($this->phlagrantfile->config["vm"]["name"], $haltables) == true) {
             $logging->log("This VM is in a Haltable state...") ;
             return true ; }
         $logging->log("This VM is not in a Haltable state...") ;
@@ -103,42 +102,12 @@ class HaltAllOS extends BaseLinuxApp {
     # @todo in_array or something to check a sane status was requested
     protected function waitForStatus($statusRequested, $total_time, $interval) {
         for ($i=0; $i<$total_time; $i=$i+$interval) {
-            if($this->isVMInStatus($statusRequested)) {
+            if($this->provider->isVMInStatus($this->phlagrantfile->config["vm"]["name"], $statusRequested)) {
                 return true ; }
             echo "." ;
             sleep($interval); }
         echo "\n" ;
         return false ;
-    }
-
-    protected function isVMInStatus($statusRequested) {
-        $command = VBOXMGCOMM." showvminfo \"{$this->phlagrantfile->config["vm"]["name"]}\" " ;
-        $out = $this->executeAndLoad($command);
-        $outLines = explode("\n", $out);
-        $outStr = "" ;
-        foreach ($outLines as $outLine) {
-            if (strpos($outLine, "State:") !== false) {
-                $outStr .= $outLine."\n" ;
-                break; } }
-        $isStatusRequested = strpos($outStr, strtolower($statusRequested)) ;
-        return $isStatusRequested ;
-    }
-
-    protected function loadFiles() {
-        $this->phlagrantfile = $this->loadPhlagrantFile();
-        $this->papyrus = $this->loadPapyrusLocal();
-    }
-
-    protected function loadPhlagrantFile() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
-        return $phlagrantFileLoader->load() ;
-    }
-
-    protected function loadPapyrusLocal() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->phlagrantfile) ;
     }
 
 }
