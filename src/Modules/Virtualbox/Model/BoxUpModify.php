@@ -95,7 +95,7 @@ class BoxUpModify extends BaseFunctionModel {
     }
 
     /// @todo can we pull this information from vboxmanage, then we dont have to udate this method when vboxmanage changes
-    protected function getAvailableModifications() {
+    public function getAvailableModifications() {
         return array(
             "name", "ostype", "memory", "vram", "cpus", "cpuexecutioncap", "boot", "graphicscontroller", "monitorcount",
             "draganddrop", "usb", "usbehci", "snapshotfolder", "autostart-enabled", "autostart-delay", "groups",
