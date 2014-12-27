@@ -108,6 +108,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         else if ($provisionerSettings["target"] == "host") {
             $logging->log("Provisioning Host with Cleopatra...") ;
             $command = "cleopatra auto x --af={$provisionerSettings["script"]}" ;
+            var_dump("comm", $command) ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
