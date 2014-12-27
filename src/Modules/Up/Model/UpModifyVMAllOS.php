@@ -52,21 +52,7 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     }
 
     protected function setAvailableNetworkModifications() {
-        $this->availableModifications = $this->provider->getAvailableModifications();
-
-        for ($i = 0; $i<10; $i++) {
-            $this->availableNetworkModifications[] = "nic$i" ;
-            $this->availableNetworkModifications[] = "nictype$i" ;
-            $this->availableNetworkModifications[] = "cableconnected$i" ;
-            $this->availableNetworkModifications[] = "nictrace$i" ;
-            $this->availableNetworkModifications[] = "nictracefile$i" ;
-            $this->availableNetworkModifications[] = "bridgeadapter$i" ;
-            $this->availableNetworkModifications[] = "hostonlyadapter$i" ;
-            $this->availableNetworkModifications[] = "intnet$i" ;
-            $this->availableNetworkModifications[] = "macaddress$i" ;
-            $this->availableNetworkModifications[] = "natpf$i" ;
-        }
-
+        $this->availableNetworkModifications = $this->provider->availableNetworkModifications();
     }
 
     protected function setSharedFolders() {
