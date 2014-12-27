@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class UpAllOS extends BaseLinuxApp {
+class UpAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -14,8 +14,6 @@ class UpAllOS extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $phlagrantfile;
-    protected $papyrus ;
     protected $source ;
 
     public function __construct($params) {
@@ -134,15 +132,11 @@ class UpAllOS extends BaseLinuxApp {
     }
 
     protected function vmExistsInProvider() {
-        $out = $this->executeAndLoad(VBOXMGCOMM." list vms");
-        if (strpos($out, $this->phlagrantfile->config["vm"]["name"])!= false) { return true ; }
-        return false ;
+        return $this->provider->vmExists($this->phlagrantfile->config["vm"]["name"]);
     }
 
     protected function vmIsRunning() {
-        $out = $this->executeAndLoad(VBOXMGCOMM." list runningvms");
-        if (strpos($out, $this->phlagrantfile->config["vm"]["name"] ) != false ) { return true ; }
-        return false ;
+        return $this->provider->vmIsRunning($this->phlagrantfile->config["vm"]["name"]);
     }
 
     protected function importBaseBox() {
