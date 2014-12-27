@@ -3,6 +3,7 @@
        $i = 0;
        foreach ($pageVars["result"] as $box) {
            echo "Box $i:\n";
+           echo "  Path: {$box->loc}\n";
            echo "  Provider: {$box->provider}\n";
            echo "  Name: {$box->name}\n";
            echo "  Description: {$box->description}\n";
