@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxDestroy extends BaseVirtualboxAllOS {
+class BoxHalt extends BaseVirtualboxAllOS {
 
     // Compatibility
     public $os = array("any") ;
@@ -12,16 +12,25 @@ class BoxDestroy extends BaseVirtualboxAllOS {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("BoxDestroy") ;
+    public $modelGroup = array("BoxHalt") ;
 
-    public function destroyVM($name) {
-        $this->provider->destroyVM();
-        $command = VBOXMGCOMM." unregistervm {$name} --delete" ;
+    public function haltSoft($name) {
+        $command = VBOXMGCOMM." controlvm {$name} acpipowerbutton" ;
         $this->executeAndOutput($command);
     }
 
-    public function getDestroyableStates() {
-        return array("aborted", "powered off") ;
+    public function haltPause($name) {
+        $command = VBOXMGCOMM." controlvm {$name} pause" ;
+        $this->executeAndOutput($command);
+    }
+
+    public function haltHard($name) {
+        $command = VBOXMGCOMM." controlvm {$name} poweroff" ;
+        $this->executeAndOutput($command);
+    }
+
+    public function getHaltableStates() {
+        return array("running") ;
     }
 
 }
