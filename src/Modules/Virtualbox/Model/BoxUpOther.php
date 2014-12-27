@@ -14,13 +14,13 @@ class BoxUpOther extends BaseFunctionModel {
     // Model Group
     public $modelGroup = array("UpOther") ;
 
-    protected function vmExists($name) {
+    public function vmExists($name) {
         $out = $this->executeAndLoad(VBOXMGCOMM." list vms");
         if (strpos($out, $name)!= false) { return true ; }
         return false ;
     }
 
-    protected function vmIsRunning($name) {
+    public function vmIsRunning($name) {
         $out = $this->executeAndLoad(VBOXMGCOMM." list runningvms");
         if (strpos($out, $name ) != false ) { return true ; }
         return false ;
