@@ -14,9 +14,6 @@ class HaltAllOS extends BaseFunctionModel {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $phlagrantfile;
-    protected $papyrus ;
-
     public function __construct($params) {
         parent::__construct($params);
         $this->initialize();
