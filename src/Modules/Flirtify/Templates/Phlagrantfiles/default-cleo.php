@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class Virtualizerfile extends VirtualizerfileBase {
+class Virtualizefile extends VirtualizefileBase {
 
     public $config ;
 
@@ -41,10 +41,10 @@ class Virtualizerfile extends VirtualizerfileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
-                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualizer".DS."cleofy-cm-virtualizer-box.php"
+                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualize".DS."cleofy-cm-virtualize-box.php"
             ) ;
-        $this->config["vm"]["post_up_message"] = "Your Virtualizer Box has been brought up. This box is configured to be " .
-            "provisioned by Cleopatra's default Virtualizer provisioning.";
+        $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box is configured to be " .
+            "provisioned by Cleopatra's default Virtualize provisioning.";
     }
 
 }

@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class Virtualizerfile extends VirtualizerfileBase {
+class Virtualizefile extends VirtualizefileBase {
 
     public $config ;
 
@@ -49,7 +49,7 @@ class Virtualizerfile extends VirtualizerfileBase {
                 "tool" => "cleopatra",
                 "target" => "guest",
                 "script" => getcwd().DS."<%tpl.php%>cleofile-guest</%tpl.php%>"
-                // build/config/cleopatra/cleofy/autopilots/generic/Virtualizer/cleofy-cm-virtualizer.php
+                // build/config/cleopatra/cleofy/autopilots/generic/Virtualize/cleofy-cm-virtualize.php
             ) ;
         $this->config["vm"]["provision"][] =
             array(
@@ -72,7 +72,7 @@ class Virtualizerfile extends VirtualizerfileBase {
                 "target" => "host",
                 "script" => getcwd().DS."<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
             ) ;
-        $this->config["vm"]["post_up_message"] = "Your Virtualizer Box has been brought up. This box was configured to be " .
+        $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano. Your application should now be accessible.";
     }
 

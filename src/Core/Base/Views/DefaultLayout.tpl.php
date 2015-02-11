@@ -1,5 +1,5 @@
 ******************************
-Pharaoh Tools - Virtualizer
+Pharaoh Tools - Virtualize
 ******************************
 
 <?php echo $this->renderMessages($pageVars); ?>

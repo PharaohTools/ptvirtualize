@@ -14,7 +14,7 @@ class BaseFunctionModel extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    public $virtualizerfile;
+    public $virtualizefile;
     public $papyrus ;
     public $provider ;
 
@@ -24,30 +24,30 @@ class BaseFunctionModel extends BaseLinuxApp {
     }
 
     protected function loadFiles() {
-        $this->virtualizerfile = $this->loadVirtualizerFile();
+        $this->virtualizefile = $this->loadVirtualizeFile();
         $this->papyrus = $this->loadPapyrusLocal();
     }
 
-    protected function loadVirtualizerFile() {
-        $prFactory = new \Model\VirtualizerRequired();
-        $virtualizerFileLoader = $prFactory->getModel($this->params, "VirtualizerFileLoader") ;
-        return $virtualizerFileLoader->load() ;
+    protected function loadVirtualizeFile() {
+        $prFactory = new \Model\VirtualizeRequired();
+        $virtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
+        return $virtualizeFileLoader->load() ;
     }
 
     protected function loadPapyrusLocal() {
-        $prFactory = new \Model\VirtualizerRequired();
+        $prFactory = new \Model\VirtualizeRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->virtualizerfile) ;
+        return $papyrusLocalLoader->load($this->virtualizefile) ;
     }
 
     protected function findProvider($modGroup = "BoxDestroy") {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->virtualizerfile->config["vm"]["provider"])) {
-            $logging->log("Provider {$this->virtualizerfile->config["vm"]["provider"]} found in Virtualizerfile") ;
-            $this->provider = $this->getProvider($this->virtualizerfile->config["vm"]["provider"], $modGroup) ; }
+        if (isset($this->virtualizefile->config["vm"]["provider"])) {
+            $logging->log("Provider {$this->virtualizefile->config["vm"]["provider"]} found in Virtualizefile") ;
+            $this->provider = $this->getProvider($this->virtualizefile->config["vm"]["provider"], $modGroup) ; }
         else {
-            $logging->log("No Provider configured in Virtualizerfile."); }
+            $logging->log("No Provider configured in Virtualizefile."); }
     }
 
     protected function getProvider($provider, $modGroup) {

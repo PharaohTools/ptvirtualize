@@ -1,9 +1,9 @@
-Virtualizer by Golden Contact Computing
+Virtualize by Golden Contact Computing
 -------------------
 
 About:
 -----------------
-Virtualizer is for controlling Virtual Machines in Development Environments.
+Virtualize is for controlling Virtual Machines in Development Environments.
 
 -------------------------------------------------------------
 

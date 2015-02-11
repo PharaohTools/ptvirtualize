@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Virtualizer AutoSSH
+In Virtualize AutoSSH

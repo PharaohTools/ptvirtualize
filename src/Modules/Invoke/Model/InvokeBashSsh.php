@@ -15,7 +15,7 @@ class InvokeBashSsh {
     public $modelGroup = array("DriverBashSSH");
 
 	/**
-	 * @var Server
+	 * @var \Model\InvokeServer
 	 */
 	protected $server;
 
@@ -37,26 +37,19 @@ class InvokeBashSsh {
 	public function connect()
 	{
 		if(file_exists($this->server->password)){
-			$launcher = 'ssh -o PubkeyAuthentication=no -i '.escapeshellarg($this->server->password);
-		} else{
-			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -o PubkeyAuthentication=no';
-		}
-
-
+			$launcher = 'ssh -o PubkeyAuthentication=no -i '.escapeshellarg($this->server->password); }
+        else{
+			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -o PubkeyAuthentication=no'; }
 		$this->commandsPipe = tempnam(null, 'ssh');
-
 		$launcher .= " -T -p {$this->server->port} ";
 		$launcher .= escapeshellarg($this->server->username.'@'.$this->server->host);
-
 		$pipe = "tail -f {$this->commandsPipe}";
 		if(!pcntl_fork()){
 			$fp = popen("$pipe | $launcher" ,"r");
 			while (!feof($fp)) {
-				echo fgets($fp, 4096);
-			}
+				echo fgets($fp, 4096); }
 			pclose($fp);
-			exit;
-		}
+			exit; }
 	}
 
 	/**
@@ -65,7 +58,6 @@ class InvokeBashSsh {
 	 */
 	public function exec($command)
 	{
-        error_log("wtf") ;
 		file_put_contents($this->commandsPipe, $command.PHP_EOL, FILE_APPEND);
 	}
 }

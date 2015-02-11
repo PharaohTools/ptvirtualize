@@ -26,7 +26,7 @@ class ShellInfo extends CleopatraBase {
 
     public function helpDefinition() {
        $help = <<<"HELPDATA"
-    This extension provides integration with Shell as a Virtualizer Provisioner. It provides code
+    This extension provides integration with Shell as a Virtualize Provisioner. It provides code
     functionality, but no extra commands.
 
     Shell

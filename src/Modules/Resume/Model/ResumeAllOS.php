@@ -27,14 +27,14 @@ class ResumeAllLinux extends BaseFunctionModel {
         $logging->log("Checking current state...") ;
         if ($this->currentStateIsResumable() == false) { return ; }
         $logging->log("Attempting Resume...") ;
-        $this->provider->resume($this->virtualizerfile->config["vm"]["name"]);
+        $this->provider->resume($this->virtualizefile->config["vm"]["name"]);
     }
 
     protected function currentStateIsResumable() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $resumables = $this->provider->getResumableStates();
-        if ($this->provider->isVMInStatus($this->virtualizerfile->config["vm"]["name"], $resumables) == true) {
+        if ($this->provider->isVMInStatus($this->virtualizefile->config["vm"]["name"], $resumables) == true) {
             $logging->log("This VM is in a Resumable state...") ;
             return true ; }
         $logging->log("This VM is not in a Resumable state...") ;

@@ -26,7 +26,7 @@ class PharaohToolsInfo extends CleopatraBase {
 
     public function helpDefinition() {
        $help = <<<"HELPDATA"
-    This extension provides integration with PharaohTools as a Virtualizer Provisioner. It provides code
+    This extension provides integration with PharaohTools as a Virtualize Provisioner. It provides code
     functionality, but no extra commands.
 
     Pharaoh Tools

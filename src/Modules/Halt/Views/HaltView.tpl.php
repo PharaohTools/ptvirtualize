@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Virtualizer Halt
+In Virtualize Halt

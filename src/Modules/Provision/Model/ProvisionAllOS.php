@@ -32,33 +32,33 @@ class ProvisionAllOS extends BaseLinuxApp {
     }
 
     public function loadFiles() {
-        $this->virtualizerfile = $this->loadVirtualizerFile();
+        $this->virtualizefile = $this->loadVirtualizeFile();
         $this->papyrus = $this->loadPapyrusLocal();
         $this->osProvisioner = $this->loadOSProvisioner() ;
     }
 
-    protected function loadVirtualizerFile() {
-        $prFactory = new \Model\VirtualizerRequired();
-        $virtualizerFileLoader = $prFactory->getModel($this->params, "VirtualizerFileLoader") ;
-        return $virtualizerFileLoader->load() ;
+    protected function loadVirtualizeFile() {
+        $prFactory = new \Model\VirtualizeRequired();
+        $virtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
+        return $virtualizeFileLoader->load() ;
     }
 
     protected function loadPapyrusLocal() {
-        $prFactory = new \Model\VirtualizerRequired();
+        $prFactory = new \Model\VirtualizeRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->virtualizerfile) ;
+        return $papyrusLocalLoader->load($this->virtualizefile) ;
     }
 
     protected function loadOSProvisioner() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $provFile = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR."OSProvisioners".DIRECTORY_SEPARATOR.
-            $this->virtualizerfile->config["vm"]["ostype"].".php" ;
+            $this->virtualizefile->config["vm"]["ostype"].".php" ;
         if (file_exists($provFile)) {
             require_once ($provFile) ;
-            $logging->log("OS Provisioner found for {$this->virtualizerfile->config["vm"]["ostype"]}") ;
+            $logging->log("OS Provisioner found for {$this->virtualizefile->config["vm"]["ostype"]}") ;
             $osp = new \Model\OSProvisioner($this->params) ;
-            $osp->virtualizerfile = $this->virtualizerfile;
+            $osp->virtualizefile = $this->virtualizefile;
             $osp->papyrus = $this->papyrus;
             return $osp ; }
         $logging->log("No suitable OS Provisioner found");

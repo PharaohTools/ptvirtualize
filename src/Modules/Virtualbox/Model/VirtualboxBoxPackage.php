@@ -36,13 +36,13 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
     }
 
     protected function saveMetadataToFS($metadata) {
-        $file = "/tmp/virtualizer/{$metadata->slug}/metadata.json" ;
+        $file = "/tmp/virtualize/{$metadata->slug}/metadata.json" ;
         $string = json_encode($metadata) ;
         file_put_contents($file, $string) ;
     }
 
     protected function createTempDirectory($metadata) {
-        $boxdir = BASE_TEMP_DIR.'virtualizer'.DS . $metadata->slug ;
+        $boxdir = BASE_TEMP_DIR.'virtualize'.DS . $metadata->slug ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (file_exists($boxdir) && !is_writable($boxdir)) {
@@ -70,7 +70,7 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...");
-        $command = VBOXMGCOMM." export {$vmName} --output=/tmp/virtualizer/{$metadata->slug}/box.ova" ;
+        $command = VBOXMGCOMM." export {$vmName} --output=/tmp/virtualize/{$metadata->slug}/box.ova" ;
         self::executeAndOutput($command);
         $logging->log("Export complete...");
     }
@@ -79,7 +79,7 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Creating box file from ova file and json file...");
-        $command = "tar -cvf $target$metadata->slug.box -C /tmp/virtualizer/{$metadata->slug} . " ;
+        $command = "tar -cvf $target$metadata->slug.box -C /tmp/virtualize/{$metadata->slug} . " ;
         self::executeAndOutput($command);
         $logging->log("Created box file $target{$metadata->slug}.box...");
         return true ;

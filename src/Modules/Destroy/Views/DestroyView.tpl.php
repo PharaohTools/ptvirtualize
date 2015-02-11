@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Virtualizer Destroy
+In Virtualize Destroy

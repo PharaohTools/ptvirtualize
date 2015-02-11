@@ -13,5 +13,5 @@
            $i++; } }
 ?>
 ----------------
-In Virtualizer Box List
+In Virtualize Box List
 

@@ -2,18 +2,18 @@
 
 Namespace Info;
 
-class VirtualizerRequiredInfo extends Base {
+class VirtualizeRequiredInfo extends Base {
 
     public $hidden = true;
 
-    public $name = "Virtualizer Required Models";
+    public $name = "Virtualize Required Models";
 
     public function __construct() {
       parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "VirtualizerRequired" =>  array_merge(parent::routesAvailable() ) );
+      return array( "VirtualizeRequired" =>  array_merge(parent::routesAvailable() ) );
     }
 
     public function routeAliases() {
@@ -22,7 +22,7 @@ class VirtualizerRequiredInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This module provides no commands, but is required for Virtualizer. It provides Models which are required for Virtualizer.
+  This module provides no commands, but is required for Virtualize. It provides Models which are required for Virtualize.
 
 
 HELPDATA;

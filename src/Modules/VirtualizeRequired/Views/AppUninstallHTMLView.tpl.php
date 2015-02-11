@@ -2,7 +2,7 @@
 
 <head>
   <title>
-    GC Virtualizer
+    GC Virtualize
   </title>
 </head>
 
