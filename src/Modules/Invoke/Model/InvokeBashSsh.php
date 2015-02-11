@@ -37,9 +37,10 @@ class InvokeBashSsh {
 	public function connect()
 	{
 		if(file_exists($this->server->password)){
-			$launcher = 'ssh -i '.escapeshellarg($this->server->password);
+			$launcher = 'ssh -o PubkeyAuthentication=no -i '.escapeshellarg($this->server->password);
 		} else{
-			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh';
+			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -o PubkeyAuthentication=no';
+            error_log($launcher) ;
 		}
 
 
@@ -65,6 +66,7 @@ class InvokeBashSsh {
 	 */
 	public function exec($command)
 	{
+        error_log("wtf") ;
 		file_put_contents($this->commandsPipe, $command.PHP_EOL, FILE_APPEND);
 	}
 }

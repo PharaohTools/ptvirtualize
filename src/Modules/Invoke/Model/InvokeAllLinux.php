@@ -2,11 +2,6 @@
 
 Namespace Model;
 
-use Invoke\Drivers\BashSsh;
-use Invoke\Drivers\PhpSecLib;
-use Invoke\Drivers\Ssh2;
-use Invoke\Server;
-
 class InvokeAllLinux extends Base
 {
 
@@ -176,13 +171,14 @@ class InvokeAllLinux extends Base
 			}
 			$attempt = $this->attemptSSH2Connection($server);
 			if ($attempt == null) {
-				$logging->log("Connection to Server {$server["target"]} failed.");
-			} else {
+				$logging->log("Connection to Server {$server["target"]} failed."); }
+            else {
 				$server["ssh2Object"] = $attempt;
 				$logging->log("Connection to Server {$server["target"]} successful.");
 				if (!isset($this->isNativeSSH) || (isset($this->isNativeSSH) && $this->isNativeSSH != true)) {
 //					echo $this->changeBashPromptToPharaoh($server["ssh2Object"]);
 				}
+                echo "bout to do\n" ;
 				echo $this->doSSHCommand($server["ssh2Object"],
 					'echo "Pharaoh Remote SSH on ...' . $server["target"] . '"', true);
 			}
@@ -195,24 +191,26 @@ class InvokeAllLinux extends Base
 	{
 		$pword = (isset($server["pword"])) ? $server["pword"] : false;
 		$pword = (isset($server["password"])) ? $server["password"] : $pword;
+        $invokeFactory = new \Model\Invoke() ;
+        $serverObj = $invokeFactory->getModel($this->params, "Server") ;
+        $serverObj->init($server['target'], $server['user'], $pword, isset($server['port']) ? $server['port'] : 22);
+		// $server = new \Invoke\Server();
+		$driverString = isset($this->params["driver"]) ? $this->params["driver"] : 'os';
+        $options = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
+        $driverString = $options[$driverString] ;
 
-		$server = new Server($server['target'], $server['user'], $pword, isset($server['port']) ? $server['port'] : 22);
-
-		$driver = isset($this->params["ssh-driver"]) ? $this->params["ssh-driver"] : 'BashSsh';
-		$driver = 'Invoke\\Drivers\\'.$driver;
-		$server->setDriver(new $driver($server));
-		$server->connect();
-
-		return $server;
+        $driver = $invokeFactory->getModel($this->params, $driverString) ;
+        $driver->setServer($serverObj);
+        $serverObj->setDriver($driver);
+        $serverObj->connect();
+		return $serverObj;
 	}
 
 	private function askForSSHShellExecute()
 	{
 		if (isset($this->params["yes"]) && $this->params["yes"] == true) {
-			return true;
-		}
+			return true; }
 		$question = 'Invoke SSH Shell on Server group?';
-
 		return self::askYesOrNo($question);
 	}
 
@@ -368,7 +366,7 @@ QUESTION;
 		return $sshObject->exec("$command\n");
 	}
 
-	private function doSSHCommand(Server $sshObject, $command, $first = null)
+	private function doSSHCommand($sshObject, $command, $first = null)
 	{
 		return $sshObject->exec($command);
 	}

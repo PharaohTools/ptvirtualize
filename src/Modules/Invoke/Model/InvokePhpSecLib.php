@@ -2,7 +2,7 @@
 
 namespace Model ;
 
-class PhpSecLib {
+class InvokePhpSecLib {
 
     // Compatibility
     public $os = array("any");
@@ -34,6 +34,11 @@ class PhpSecLib {
 
 	public function connect()
 	{
+        if (!class_exists('Net_SSH2')) {
+            // Always load SSH2 class from here as SFTP class tries to load it wrongly
+            $srcFolder =  str_replace(DS."Model", DS."Libraries", dirname(__FILE__) ) ;
+            $ssh2File = $srcFolder.DS."seclib".DS."Net".DS."SSH2.php" ;
+            require_once($ssh2File) ; }
 		$this->connection = new \Net_SSH2($this->server->host, $this->server->port);
 		if( ! $this->connection->login($this->server->username, $this->server->password) ){
 			throw new \Exception("Login failed!");

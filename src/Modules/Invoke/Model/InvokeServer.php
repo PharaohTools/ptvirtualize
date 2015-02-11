@@ -1,9 +1,18 @@
-<?php namespace Invoke;
+<?php
 
-use Invoke\Drivers\BashSsh;
-use Invoke\Drivers\Driver;
+namespace Model;
 
-class Server {
+class InvokeServer {
+
+    // Compatibility
+    public $os = array("any");
+    public $linuxType = array("any");
+    public $distros = array("any");
+    public $versions = array("any");
+    public $architectures = array("any");
+
+    // Model Group
+    public $modelGroup = array("Server");
 
 	public $host;
 	public $username;
@@ -15,13 +24,13 @@ class Server {
 	 */
 	protected $driver;
 
-	function __construct($host, $user, $password, $port = 22)
+	public function init($host, $user, $password, $port = 22)
 	{
 		$this->host = $host;
 		$this->username = $user;
 		$this->password = $this->formatPassword($password);
 		$this->port = $port;
-		$this->setDriver(new BashSsh($this));
+		// $this->setDriver(new BashSsh($this));
 	}
 
 	public function formatPassword($password)

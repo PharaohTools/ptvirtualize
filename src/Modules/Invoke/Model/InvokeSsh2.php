@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class Ssh2 {
+class InvokeSsh2 {
 
     // Compatibility
     public $os = array("any");
