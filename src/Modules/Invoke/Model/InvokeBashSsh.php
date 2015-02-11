@@ -40,7 +40,6 @@ class InvokeBashSsh {
 			$launcher = 'ssh -o PubkeyAuthentication=no -i '.escapeshellarg($this->server->password);
 		} else{
 			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -o PubkeyAuthentication=no';
-            error_log($launcher) ;
 		}
 
 
