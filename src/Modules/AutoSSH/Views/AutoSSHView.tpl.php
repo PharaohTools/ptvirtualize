@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Phlagrant AutoSSH
+In Virtualizer AutoSSH

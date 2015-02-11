@@ -29,7 +29,7 @@ class TemplatingInfo extends Base {
 
         - install
         Installs a template
-        example: phlagrant template install
+        example: virtualizer template install
 
 HELPDATA;
       return $help ;

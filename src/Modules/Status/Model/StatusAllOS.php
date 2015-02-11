@@ -22,13 +22,13 @@ class StatusAllOS extends BaseFunctionModel {
     public function statusShow() {
         $this->loadFiles();
         $this->findProvider("BoxStatus");
-        return $this->provider->statusShow($this->phlagrantfile->config["vm"]["name"]);
+        return $this->provider->statusShow($this->virtualizerfile->config["vm"]["name"]);
     }
 
     public function statusFull() {
         $this->loadFiles();
         $this->findProvider("BoxStatus");
-        return $this->provider->statusFull($this->phlagrantfile->config["vm"]["name"]);
+        return $this->provider->statusFull($this->virtualizerfile->config["vm"]["name"]);
     }
 
 }

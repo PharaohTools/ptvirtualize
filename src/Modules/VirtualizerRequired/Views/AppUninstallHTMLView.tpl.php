@@ -2,7 +2,7 @@
 
 <head>
   <title>
-    GC Phlagrant
+    GC Virtualizer
   </title>
 </head>
 

@@ -71,7 +71,7 @@ class BoxUpModify extends BaseFunctionModel {
 
     //@todo need windows version
     public function getDisks($name) {
-        $command  = VBOXMGCOMM." showvminfo {$this->phlagrantfile->config["vm"]["name"]}" ;
+        $command  = VBOXMGCOMM." showvminfo {$this->virtualizerfile->config["vm"]["name"]}" ;
         $out = $this->executeAndLoad($command);
         $lines = explode("\n", $out) ;
 

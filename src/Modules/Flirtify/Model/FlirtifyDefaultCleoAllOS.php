@@ -35,11 +35,11 @@ class FlirtifyDefaultCleoAllOS extends Base {
     }
 
     private function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates".DS."Phlagrantfiles", dirname(__FILE__) ) ;
+        $templatesDir = str_replace("Model", "Templates".DS."Virtualizerfiles", dirname(__FILE__) ) ;
         $template = $templatesDir . DS."default-cleo.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
-        $targetLocation = "Phlagrantfile" ;
+        $targetLocation = "Virtualizerfile" ;
         $templator->template(
             file_get_contents($template),
             array(

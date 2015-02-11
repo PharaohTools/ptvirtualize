@@ -1,9 +1,9 @@
-Phlagrant by Golden Contact Computing
+Virtualizer by Golden Contact Computing
 -------------------
 
 About:
 -----------------
-Phlagrant is for controlling Virtual Machines in Development Environments.
+Virtualizer is for controlling Virtual Machines in Development Environments.
 
 -------------------------------------------------------------
 

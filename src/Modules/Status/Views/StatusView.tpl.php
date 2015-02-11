@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Phlagrant Status
+In Virtualizer Status

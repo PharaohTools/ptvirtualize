@@ -1,5 +1,5 @@
 ******************************
-Pharaoh Tools - Phlagrant
+Pharaoh Tools - Virtualizer
 ******************************
 
 <?php echo $this->renderMessages($pageVars); ?>

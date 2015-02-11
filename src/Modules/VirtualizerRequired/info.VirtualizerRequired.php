@@ -2,18 +2,18 @@
 
 Namespace Info;
 
-class PhlagrantRequiredInfo extends Base {
+class VirtualizerRequiredInfo extends Base {
 
     public $hidden = true;
 
-    public $name = "Phlagrant Required Models";
+    public $name = "Virtualizer Required Models";
 
     public function __construct() {
       parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "PhlagrantRequired" =>  array_merge(parent::routesAvailable() ) );
+      return array( "VirtualizerRequired" =>  array_merge(parent::routesAvailable() ) );
     }
 
     public function routeAliases() {
@@ -22,7 +22,7 @@ class PhlagrantRequiredInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This module provides no commands, but is required for Phlagrant. It provides Models which are required for Phlagrant.
+  This module provides no commands, but is required for Virtualizer. It provides Models which are required for Virtualizer.
 
 
 HELPDATA;

@@ -6,7 +6,7 @@ class ResumeInfo extends CleopatraBase {
 
   public $hidden = false;
 
-  public $name = "Resume - Stop a Phlagrant Box";
+  public $name = "Resume - Stop a Virtualizer Box";
 
   public function __construct() {
     parent::__construct();
@@ -22,14 +22,14 @@ class ResumeInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to resume a phlagrant box, which has been paused/suspended.
+  This command allows you to resume a virtualizer box, which has been paused/suspended.
   This will start the box and will not attempt to modify or provision it.
 
   Resume, resume
 
         - now
         Resume a box now
-        example: phlagrant resume now
+        example: virtualizer resume now
 
 HELPDATA;
     return $help ;

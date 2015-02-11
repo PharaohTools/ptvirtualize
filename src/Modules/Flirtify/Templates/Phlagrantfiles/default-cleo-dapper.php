@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class Phlagrantfile extends PhlagrantfileBase {
+class Virtualizerfile extends VirtualizerfileBase {
 
     public $config ;
 
@@ -41,14 +41,14 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "host",
-                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Phlagrant".DS."cleofy-cm-phlagrant-host.php"
+                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualizer".DS."cleofy-cm-virtualizer-host.php"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "cleopatra",
                 "target" => "guest",
-                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Phlagrant".DS."cleofy-cm-phlagrant-box.php"
+                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualizer".DS."cleofy-cm-virtualizer-box.php"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
@@ -71,7 +71,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "target" => "host",
                 "script" => getcwd().DS."<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
             ) ;
-        $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This guest was configured to be " .
+        $this->config["vm"]["post_up_message"] = "Your Virtualizer Box has been brought up. This guest was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano, and the host also by Dapperstrano. Your application " .
             "should now be accessible by browser.";
     }

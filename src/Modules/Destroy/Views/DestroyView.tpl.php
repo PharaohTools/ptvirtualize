@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Phlagrant Destroy
+In Virtualizer Destroy

@@ -31,26 +31,26 @@ class DestroyAllOS extends BaseFunctionModel {
     }
 
     protected function deleteFromPapyrus() {
-        \Model\AppConfig::deleteProjectVariable($this->phlagrantfile->config["vm"]["name"], null, null, true) ;
+        \Model\AppConfig::deleteProjectVariable($this->virtualizerfile->config["vm"]["name"], null, null, true) ;
     }
 
     protected function removeShares() {
         $upFactory = new \Model\Up();
         $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
         $modifyVM->papyrus = $this->papyrus ;
-        $modifyVM->phlagrantfile = $this->phlagrantfile ;
+        $modifyVM->virtualizerfile = $this->virtualizerfile ;
         $modifyVM->removeShares() ;
     }
 
     protected function doDestruction() {
-        $this->provider->destroyVM($this->phlagrantfile->config["vm"]["name"]);
+        $this->provider->destroyVM($this->virtualizerfile->config["vm"]["name"]);
     }
 
     protected function currentStateIsDestroyable() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $destroyables = $this->provider->getDestroyableStates();
-        if ($this->provider->isVMInStatus($this->phlagrantfile->config["vm"]["name"], $destroyables) == true) {
+        if ($this->provider->isVMInStatus($this->virtualizerfile->config["vm"]["name"], $destroyables) == true) {
             $logging->log("This VM is in a Destroyable state...") ;
             return true ; }
         $logging->log("This VM is not in a Destroyable state...") ;

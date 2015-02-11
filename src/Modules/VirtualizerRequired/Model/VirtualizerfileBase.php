@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class PhlagrantfileBase extends BaseLinuxApp {
+class VirtualizerfileBase extends BaseLinuxApp {
 
     public $config ;
 
@@ -10,28 +10,28 @@ class PhlagrantfileBase extends BaseLinuxApp {
         // @todo I need to create an array, or includes or something of $defaultConfigType, to set different defaults
         $config = array() ;
         # Default System Settings
-        $config["vm"]["name"] = "phlagrant-box" ;
+        $config["vm"]["name"] = "virtualizer-box" ;
         $config["vm"]["provider"] = "virtualbox" ; # @todo I'm not sure if we're actually using this
         $config["vm"]["ostype"] = "Ubuntu_64" ;
         $config["vm"]["gui_mode"] = "headless" ;
-        $config["vm"]["ip_find_timeout"] = 180 ; # The time in seconds Phlagrant will allow for Guest Additions to find IP's
-        $config["vm"]["ssh_find_timeout"] = 300 ; # The time in seconds that Phlagrant will wait for the machine SSH port to accept connections.
+        $config["vm"]["ip_find_timeout"] = 180 ; # The time in seconds Virtualizer will allow for Guest Additions to find IP's
+        $config["vm"]["ssh_find_timeout"] = 300 ; # The time in seconds that Virtualizer will wait for the machine SSH port to accept connections.
         $config["vm"]["box"] = "vanillabuntu" ; # This configures what box the machine will be brought up against. The value here should be the name of an installed box or @todo  a shorthand name of a box in Vagrant Cloud.
         // @todo config.vm.box_url - If $config ["vm"]["box"] is an installed box you can ignore this. Otherwise point to a url it can be downloaded from
         $config["vm"]["cpus"] = 1 ;
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp/' ; # this should be correct for the ostype
-        $config["vm"]["graceful_halt_timeout"] = 15 ; # The time in seconds that Phlagrant wait for the machine to gracefully halt by soft power under phlagrant halt now. Defaults to 120 seconds.
-        $config["vm"]["ssh_halt_timeout"] = 20 ; # The time in seconds that Phlagrant will wait for the machine to shutdown via SSH when phlagrant halt now is called, if still running after soft power down. Defaults to 60 seconds.
-        $config["vm"]["post_up_message"] = "Your default Phlagrant post_up_message..." ; # A message to show after Phlagrant Up/Reload.
+        $config["vm"]["graceful_halt_timeout"] = 15 ; # The time in seconds that Virtualizer wait for the machine to gracefully halt by soft power under virtualizer halt now. Defaults to 120 seconds.
+        $config["vm"]["ssh_halt_timeout"] = 20 ; # The time in seconds that Virtualizer will wait for the machine to shutdown via SSH when virtualizer halt now is called, if still running after soft power down. Defaults to 60 seconds.
+        $config["vm"]["post_up_message"] = "Your default Virtualizer post_up_message..." ; # A message to show after Virtualizer Up/Reload.
         # Default Provisioning
         $this->config["vm"]["provision"] = array() ;
         # Default Shared Folders
         $this->config["vm"]["shared_folders"] = array() ;
         # Default SSH Settings
-        $config["ssh"]["user"] = "phlagrant" ;
-        $config["ssh"]["password"] = "phlagrant" ;
+        $config["ssh"]["user"] = "virtualizer" ;
+        $config["ssh"]["password"] = "virtualizer" ;
         $config["ssh"]["timeout"] = "30" ;
         # Default Network Settings
         $config["network"]["nic1"] = "nat" ;

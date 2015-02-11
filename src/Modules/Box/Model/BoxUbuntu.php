@@ -130,7 +130,7 @@ class BoxUbuntu extends BaseLinuxApp {
     protected function askForHomeLocation() {
         if (isset($this->params["home-location"])) {
             return $this->ensureTrailingSlash($this->params["home-location"]); }
-        else if (isset($this->params["guess"])) { return "http://www.phlagrantboxes.co.uk/"; }
+        else if (isset($this->params["guess"])) { return "http://www.virtualizerboxes.co.uk/"; }
         else {
             $source = self::askForInput("Enter Home Location:", true);
             return $this->ensureTrailingSlash($source) ; }

@@ -6,7 +6,7 @@ class StatusInfo extends CleopatraBase {
 
   public $hidden = false;
 
-  public $name = "Status - Stop a Phlagrant Box";
+  public $name = "Status - Stop a Virtualizer Box";
 
   public function __construct() {
     parent::__construct();
@@ -22,17 +22,17 @@ class StatusInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to status a phlagrant box
+  This command allows you to status a virtualizer box
 
   Status, status
 
         - show
-        Show execution status information of your Phlagrant VM
-        example: phlagrant status show
+        Show execution status information of your Virtualizer VM
+        example: virtualizer status show
 
         - full
-        Show full status information of your Phlagrant VM
-        example: phlagrant status full
+        Show full status information of your Virtualizer VM
+        example: virtualizer status full
 
 HELPDATA;
     return $help ;

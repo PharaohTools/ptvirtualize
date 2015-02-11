@@ -14,7 +14,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $phlagrantfile;
+    protected $virtualizerfile;
     protected $papyrus ;
 
     public function __construct($params) {
@@ -30,7 +30,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
         if ($sshWorks == true) {
             $sshParams = $this->params ;
-            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            // try papyrus first. if box specified in virtualizerfile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -63,7 +63,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
         // @todo need to set the SSH Data we're sending
         if ($sshWorks == true) {
             $sshParams = $this->params ;
-            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            // try papyrus first. if box specified in virtualizerfile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -95,7 +95,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
         if ($sshWorks == true) {
             $sftpParams = $this->params ;
-            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            // try papyrus first. if box specified in virtualizerfile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -129,7 +129,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
         if ($sshWorks == true) {
             $sftpParams = $this->params ;
-            // try papyrus first. if box specified in phlagrantfile exists there, try its connection details.
+            // try papyrus first. if box specified in virtualizerfile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -155,28 +155,28 @@ class AutoSSHAllOS extends BaseLinuxApp {
     }
 
     protected function loadFiles() {
-        $this->phlagrantfile = $this->loadPhlagrantFile();
+        $this->virtualizerfile = $this->loadVirtualizerFile();
         $this->papyrus = $this->loadPapyrusLocal();
     }
 
-    protected function loadPhlagrantFile() {
-        $prFactory = new \Model\PhlagrantRequired();
-        $phlagrantFileLoader = $prFactory->getModel($this->params, "PhlagrantFileLoader") ;
-        return $phlagrantFileLoader->load() ;
+    protected function loadVirtualizerFile() {
+        $prFactory = new \Model\VirtualizerRequired();
+        $virtualizerFileLoader = $prFactory->getModel($this->params, "VirtualizerFileLoader") ;
+        return $virtualizerFileLoader->load() ;
     }
 
     protected function loadPapyrusLocal() {
-        $prFactory = new \Model\PhlagrantRequired();
+        $prFactory = new \Model\VirtualizerRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->phlagrantfile) ;
+        return $papyrusLocalLoader->load($this->virtualizerfile) ;
     }
 
     // @todo provisioners should have their own modules, and the pharaohtools code should go there
     // @todo this should get port module probably do it within app
     protected function waitForSsh($ip, $thisPort=22) {
         $t = 0;
-        $totalTime = (isset($this->phlagrantfile->config["vm"]["ssh_find_timeout"]))
-            ? $this->phlagrantfile->config["vm"]["ssh_find_timeout"] : 300 ;
+        $totalTime = (isset($this->virtualizerfile->config["vm"]["ssh_find_timeout"]))
+            ? $this->virtualizerfile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...") ;

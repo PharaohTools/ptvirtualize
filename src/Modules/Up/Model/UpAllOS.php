@@ -25,7 +25,7 @@ class UpAllOS extends BaseFunctionModel {
         $this->loadFiles();
         $this->findProvider("UpOther");
         $this->setLogSource();
-        $o = $this->phlagrantfile ;
+        $o = $this->virtualizerfile ;
         if (property_exists($o, "files")) { $this->doMultiUp() ; }
         else { $this->doSingleUp() ; }
     }
@@ -33,7 +33,7 @@ class UpAllOS extends BaseFunctionModel {
     public function setLogSource() {
         $this->loadFiles();
         $this->findProvider("UpOther");
-        $this->source = (isset($this->params["pfile"]) && $this->params["pfile"] != "Phlagrantfile" ) ? $this->params["pfile"] : "" ;
+        $this->source = (isset($this->params["pfile"]) && $this->params["pfile"] != "Virtualizerfile" ) ? $this->params["pfile"] : "" ;
     }
 
     protected function doSingleUp() {
@@ -44,7 +44,7 @@ class UpAllOS extends BaseFunctionModel {
                 if ($this->vmIsRunning()) {
                     $logging->log("This VM is already up and running.", $this->source);
                     return; }
-                $logging->log("Phlagrant will start and optionally modify and provision your existing VM.", $this->source);
+                $logging->log("Virtualizer will start and optionally modify and provision your existing VM.", $this->source);
                 $this->runHook("up", "pre") ;
                 $this->modifyVm(true);
                 $this->startVm();
@@ -52,7 +52,7 @@ class UpAllOS extends BaseFunctionModel {
                 $this->runHook("up", "post") ;
                 $this->postUpMessage();
                 return ;}
-            $logging->log("This VM has been deleted outside of Phlagrant. Re-creating from scratch.", $this->source);
+            $logging->log("This VM has been deleted outside of Virtualizer. Re-creating from scratch.", $this->source);
             $this->deleteFromPapyrus();
             $this->completeBuildUp();
             return ; }
@@ -63,7 +63,7 @@ class UpAllOS extends BaseFunctionModel {
     protected function doMultiUp() {
         $loggingFactory = new \Model\Logging() ;
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Using multiple Phlagrantfile setup", $this->source);
+        $logging->log("Using multiple Virtualizerfile setup", $this->source);
         // Please enter the following...
         // All boxes ?
         if (!isset($this->params["up-all"])) {
@@ -71,14 +71,14 @@ class UpAllOS extends BaseFunctionModel {
             $this->params["up-all"] = self::askYesOrNo($question) ; }
         // Which boxes? (if yes above ignore this)
         if ($this->params["up-all"] == false && !isset($this->params["pfiles"])) {
-            $question = "Which Phlagrantfile/s should I execute (Comma-Separated)?" ;
+            $question = "Which Virtualizerfile/s should I execute (Comma-Separated)?" ;
             $this->params["pfiles"] = self::askForInput($question) ; }
-        if ($this->params["up-all"] == true) { $pfilesToExecute = $this->phlagrantfile->files ; }
+        if ($this->params["up-all"] == true) { $pfilesToExecute = $this->virtualizerfile->files ; }
         else { $pfilesToExecute = $this->params["pfiles"] ; }
         $cleoCommand = "cleopatra parallax cli --yes --guess " ;
         for ($i = 0; $i < count($pfilesToExecute); $i++) {
             $cnum = $i + 1 ;
-            $cleoCommand .= "--command-{$cnum}=\"phlagrant up now --yes --guess --pfile={$this->phlagrantfile->files[$i]} \" " ; }
+            $cleoCommand .= "--command-{$cnum}=\"virtualizer up now --yes --guess --pfile={$this->virtualizerfile->files[$i]} \" " ; }
         echo $cleoCommand."\n" ;
         self::executeAndOutput($cleoCommand) ;
     }
@@ -98,7 +98,7 @@ class UpAllOS extends BaseFunctionModel {
     protected function postUpMessage() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("{$this->phlagrantfile->config["vm"]["post_up_message"]}", $this->source);
+        $logging->log("{$this->virtualizerfile->config["vm"]["post_up_message"]}", $this->source);
     }
 
     protected function completeBuildUp() {
@@ -117,18 +117,18 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     protected function vmExistsInProvider() {
-        return $this->provider->vmExists($this->phlagrantfile->config["vm"]["name"]);
+        return $this->provider->vmExists($this->virtualizerfile->config["vm"]["name"]);
     }
 
     protected function vmIsRunning() {
-        return $this->provider->vmIsRunning($this->phlagrantfile->config["vm"]["name"]);
+        return $this->provider->vmIsRunning($this->virtualizerfile->config["vm"]["name"]);
     }
 
     protected function importBaseBox() {
         $upFactory = new \Model\Up();
         $importBox = $upFactory->getModel($this->params, "ImportBaseBox") ;
         $importBox->papyrus = $this->papyrus ;
-        $importBox->phlagrantfile = $this->phlagrantfile ;
+        $importBox->virtualizerfile = $this->virtualizerfile ;
         $importBox->performImport() ;
     }
 
@@ -142,16 +142,16 @@ class UpAllOS extends BaseFunctionModel {
         $upFactory = new \Model\Up();
         $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
         $modifyVM->papyrus = $this->papyrus ;
-        $modifyVM->phlagrantfile = $this->phlagrantfile ;
+        $modifyVM->virtualizerfile = $this->virtualizerfile ;
         $modifyVM->performModifications() ;
     }
 
     protected function startVm() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->phlagrantfile->config["vm"]["gui_mode"])) {
-            $logging->log("Using {$this->phlagrantfile->config["vm"]["gui_mode"]} GUI mode specified in Phlagrantfile", $this->source);
-            $guiMode = $this->phlagrantfile->config["vm"]["gui_mode"] ; }
+        if (isset($this->virtualizerfile->config["vm"]["gui_mode"])) {
+            $logging->log("Using {$this->virtualizerfile->config["vm"]["gui_mode"]} GUI mode specified in Virtualizerfile", $this->source);
+            $guiMode = $this->virtualizerfile->config["vm"]["gui_mode"] ; }
         else {
             if (isset($this->params["guess"])) {
                 $logging->log("No GUI mode explicitly set, Guess parameter set, defaulting to headless GUI mode...", $this->source);
@@ -159,7 +159,7 @@ class UpAllOS extends BaseFunctionModel {
             else {
                 $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->source);
                 $guiMode = "headless" ; } }
-        $command = VBOXMGCOMM." startvm {$this->phlagrantfile->config["vm"]["name"]} --type $guiMode" ;
+        $command = VBOXMGCOMM." startvm {$this->virtualizerfile->config["vm"]["name"]} --type $guiMode" ;
         $this->executeAndOutput($command);
         return true ;
     }
@@ -177,7 +177,7 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     protected function deleteFromPapyrus() {
-        \Model\AppConfig::deleteProjectVariable($this->phlagrantfile->config["vm"]["name"], null, null, true) ;
+        \Model\AppConfig::deleteProjectVariable($this->virtualizerfile->config["vm"]["name"], null, null, true) ;
     }
 
     protected function runHook($hook, $type) {

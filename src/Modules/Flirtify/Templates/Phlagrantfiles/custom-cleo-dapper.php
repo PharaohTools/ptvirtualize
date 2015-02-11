@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class Phlagrantfile extends PhlagrantfileBase {
+class Virtualizerfile extends VirtualizerfileBase {
 
     public $config ;
 
@@ -49,7 +49,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "tool" => "cleopatra",
                 "target" => "guest",
                 "script" => getcwd().DS."<%tpl.php%>cleofile-guest</%tpl.php%>"
-                // build/config/cleopatra/cleofy/autopilots/generic/Phlagrant/cleofy-cm-phlagrant.php
+                // build/config/cleopatra/cleofy/autopilots/generic/Virtualizer/cleofy-cm-virtualizer.php
             ) ;
         $this->config["vm"]["provision"][] =
             array(
@@ -72,7 +72,7 @@ class Phlagrantfile extends PhlagrantfileBase {
                 "target" => "host",
                 "script" => getcwd().DS."<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
             ) ;
-        $this->config["vm"]["post_up_message"] = "Your Phlagrant Box has been brought up. This box was configured to be " .
+        $this->config["vm"]["post_up_message"] = "Your Virtualizer Box has been brought up. This box was configured to be " .
             "provisioned by both Cleopatra and Dapperstrano. Your application should now be accessible.";
     }
 

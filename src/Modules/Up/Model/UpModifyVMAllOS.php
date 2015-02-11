@@ -23,17 +23,17 @@ class UpModifyVMAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $this->setAvailableModifications();
-        if (isset($this->phlagrantfile->config["vm"]["hd_resize"])) {
+        if (isset($this->virtualizerfile->config["vm"]["hd_resize"])) {
             $this->modifyHardDisks(); }
-        foreach ($this->phlagrantfile->config["vm"] as $configKey => $configValue) {
+        foreach ($this->virtualizerfile->config["vm"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableModifications)) {
-                $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
-                $this->provider->modify($this->phlagrantfile->config["vm"]["name"], $configKey, $configValue); } }
+                $logging->log("Modifying VM {$this->virtualizerfile->config["vm"]["name"]} system by changing $configKey to $configValue") ;
+                $this->provider->modify($this->virtualizerfile->config["vm"]["name"], $configKey, $configValue); } }
         $this->setAvailableNetworkModifications();
-        foreach ($this->phlagrantfile->config["network"] as $configKey => $configValue) {
+        foreach ($this->virtualizerfile->config["network"] as $configKey => $configValue) {
             if (in_array($configKey, $this->availableNetworkModifications)) {
-                $logging->log("Modifying VM {$this->phlagrantfile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
-                $this->provider->modify($this->phlagrantfile->config["vm"]["name"], $configKey, $configValue); } }
+                $logging->log("Modifying VM {$this->virtualizerfile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
+                $this->provider->modify($this->virtualizerfile->config["vm"]["name"], $configKey, $configValue); } }
         $this->setSharedFolders();
     }
 
@@ -60,11 +60,11 @@ class UpModifyVMAllOS extends BaseFunctionModel {
         $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->phlagrantfile->config["vm"]["shared_folders"]) && count($this->phlagrantfile->config["vm"]["shared_folders"])>0 ) {
+        if (isset($this->virtualizerfile->config["vm"]["shared_folders"]) && count($this->virtualizerfile->config["vm"]["shared_folders"])>0 ) {
             $this->destroyExistingShares();
-            foreach ($this->phlagrantfile->config["vm"]["shared_folders"] as $sharedFolder) {
-                $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->phlagrantfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
-                $this->provider->addShare($this->phlagrantfile->config["vm"]["name"], $sharedFolder); } }
+            foreach ($this->virtualizerfile->config["vm"]["shared_folders"] as $sharedFolder) {
+                $logging->log("Adding Shared Folder named {$sharedFolder["name"]} to VM {$this->virtualizerfile->config["vm"]["name"]} to Host path {$sharedFolder["host_path"]}") ;
+                $this->provider->addShare($this->virtualizerfile->config["vm"]["name"], $sharedFolder); } }
     }
 
 
@@ -72,10 +72,10 @@ class UpModifyVMAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding existing shares") ;
-        $names = $this->provider->getShares($this->phlagrantfile->config["vm"]["name"]);
+        $names = $this->provider->getShares($this->virtualizerfile->config["vm"]["name"]);
         foreach ($names as $share) {
-            $logging->log("Removing Shared Folder named {$share} from VM {$this->phlagrantfile->config["vm"]["name"]}") ;
-            $this->provider->removeShare($this->phlagrantfile->config["vm"]["name"], $share); }
+            $logging->log("Removing Shared Folder named {$share} from VM {$this->virtualizerfile->config["vm"]["name"]}") ;
+            $this->provider->removeShare($this->virtualizerfile->config["vm"]["name"], $share); }
     }
 
     protected function modifyHardDisks() {
@@ -83,12 +83,12 @@ class UpModifyVMAllOS extends BaseFunctionModel {
         $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Phlagrantfile specifies Resizing HD for VM {$this->phlagrantfile->config["vm"]["name"]}") ;
+        $logging->log("Virtualizerfile specifies Resizing HD for VM {$this->virtualizerfile->config["vm"]["name"]}") ;
         $logging->log("Finding existing hard disks") ;
-        $disks = $this->provider->getDisks($this->phlagrantfile->config["vm"]["name"]);
+        $disks = $this->provider->getDisks($this->virtualizerfile->config["vm"]["name"]);
         foreach ($disks as $disk) {
-            $logging->log("Modifying HD $disk system by changing size to {$this->phlagrantfile->config["vm"]["hd_resize"]}") ;
-            $this->provider->modifyDisk($disk, $this->phlagrantfile->config["vm"]["hd_resize"]); }
+            $logging->log("Modifying HD $disk system by changing size to {$this->virtualizerfile->config["vm"]["hd_resize"]}") ;
+            $this->provider->modifyDisk($disk, $this->virtualizerfile->config["vm"]["hd_resize"]); }
     }
 
 }
