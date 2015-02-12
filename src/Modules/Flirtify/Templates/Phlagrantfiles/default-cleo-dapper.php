@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class Virtualizefile extends VirtualizefileBase {
+class Virtufile extends VirtufileBase {
 
     public $config ;
 

@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class VirtualizefileBase extends BaseLinuxApp {
+class VirtufileBase extends BaseLinuxApp {
 
     public $config ;
 

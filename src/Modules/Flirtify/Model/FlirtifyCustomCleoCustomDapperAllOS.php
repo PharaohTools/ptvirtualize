@@ -35,11 +35,11 @@ class FlirtifyCustomCleoCustomDapperAllOS extends Base {
     }
 
     protected function doFlirtify() {
-        $templatesDir = str_replace("Model", "Templates".DS."Virtualizefiles", dirname(__FILE__) ) ;
+        $templatesDir = str_replace("Model", "Templates".DS."Virtufiles", dirname(__FILE__) ) ;
         $template = $templatesDir . DS."custom-cleo-dapper.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
-        $targetLocation = "Virtualizefile" ;
+        $targetLocation = "Virtufile" ;
         $templator->template(
             file_get_contents($template),
             array(

@@ -4,14 +4,14 @@ Namespace Model ;
 
 class ProvisionDefaultLinux extends Base {
 
-    public $virtualizefile;
+    public $virtufile;
     public $papyrus ;
     protected $provisionModel ;
 
     public function provision($hook = "") {
         $provisionOuts = array() ;
         if ($hook != "") {$hook = "_$hook" ; }
-        foreach ($this->virtualizefile->config["vm"]["provision$hook"] as $provisionerSettings) {
+        foreach ($this->virtufile->config["vm"]["provision$hook"] as $provisionerSettings) {
             $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; }
         return $provisionOuts ;
     }
@@ -19,18 +19,18 @@ class ProvisionDefaultLinux extends Base {
     public function provisionHook($hook, $type) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Provisioning from Virtualizefile settings if available for $hook $type") ;
-        $provisionOuts = $this->provisionVirtualizefile($hook, $type) ;
+        $logging->log("Provisioning from Virtufile settings if available for $hook $type") ;
+        $provisionOuts = $this->provisionVirtufile($hook, $type) ;
         $logging->log("Provisioning from hook directories if available for $hook $type") ;
         $provisionOuts = array_merge($provisionOuts, $this->provisionHookDirs($hook, $type)) ;
         return $provisionOuts ;
     }
 
-    protected function provisionVirtualizefile($hook, $type) {
+    protected function provisionVirtufile($hook, $type) {
         $provisionOuts = array() ;
-        if (isset($this->virtualizefile->config["vm"]["provision_{$hook}_{$type}"]) &&
-            count($this->virtualizefile->config["vm"]["provision_{$hook}_{$type}"])>0){
-            foreach ($this->virtualizefile->config["vm"]["provision_{$hook}_{$type}"] as $provisionerSettings) {
+        if (isset($this->virtufile->config["vm"]["provision_{$hook}_{$type}"]) &&
+            count($this->virtufile->config["vm"]["provision_{$hook}_{$type}"])>0){
+            foreach ($this->virtufile->config["vm"]["provision_{$hook}_{$type}"] as $provisionerSettings) {
                 $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; } }
         return $provisionOuts ;
     }
@@ -86,7 +86,7 @@ class ProvisionDefaultLinux extends Base {
         else if (in_array($provisionerSettings["provisioner"], array("shell", "bash", "Shell", "Bash"))) {
             $provisionObjectFactory = new \Model\Shell() ; }
         $provisionObject = $provisionObjectFactory->getModel($this->params, "Provision");
-        $provisionObject->virtualizefile = $this->virtualizefile;
+        $provisionObject->virtufile = $this->virtufile;
         $provisionObject->papyrus = $this->papyrus;
         return $provisionObject->provision($provisionerSettings, $this) ;
     }

@@ -195,10 +195,9 @@ class InvokeAllLinux extends Base
         $serverObj = $invokeFactory->getModel($this->params, "Server") ;
         $serverObj->init($server['target'], $server['user'], $pword, isset($server['port']) ? $server['port'] : 22);
 		// $server = new \Invoke\Server();
-		$driverString = isset($this->params["driver"]) ? $this->params["driver"] : 'os';
+		$driverString = isset($this->params["driver"]) ? $this->params["driver"] : 'seclib';
         $options = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
         $driverString = $options[$driverString] ;
-
         $driver = $invokeFactory->getModel($this->params, $driverString) ;
         $driver->setServer($serverObj);
         $serverObj->setDriver($driver);

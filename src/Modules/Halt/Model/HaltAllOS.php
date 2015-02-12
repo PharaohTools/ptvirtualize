@@ -27,9 +27,9 @@ class HaltAllOS extends BaseFunctionModel {
         $logging->log("Checking current state...") ;
         if ($this->currentStateIsHaltable() == false) { return ; }
         $logging->log("Attempting soft power off by button...") ;
-        $logging->log("Waiting at least {$this->virtualizefile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
-        $this->provider->haltSoft($this->virtualizefile->config["vm"]["name"]);
-        if ($this->waitForStatus("powered off", $this->virtualizefile->config["vm"]["graceful_halt_timeout"], "3")==true) {
+        $logging->log("Waiting at least {$this->virtufile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
+        $this->provider->haltSoft($this->virtufile->config["vm"]["name"]);
+        if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["graceful_halt_timeout"], "3")==true) {
             $logging->log("Successful soft power off by button...") ;
             return true ; }
         else {
@@ -44,27 +44,27 @@ class HaltAllOS extends BaseFunctionModel {
             $sshParams["yes"] = true ;
             $sshParams["guess"] = true ;
             $sshParams["servers"] = serialize(array($srv)) ;
-            $sshParams["ssh-data"] = "echo {$this->virtualizefile->config["ssh"]["password"]} | sudo -S shutdown now\n";
+            $sshParams["ssh-data"] = "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S shutdown now\n";
 
-            if (isset($this->virtualizefile->config["ssh"]["port"])) {
-                $sshParams["port"] = $this->virtualizefile->config["ssh"]["port"] ; }
-            if (isset($this->virtualizefile->config["ssh"]["timeout"])) {
-                $sshParams["timeout"] = $this->virtualizefile->config["ssh"]["timeout"] ; }
+            if (isset($this->virtufile->config["ssh"]["port"])) {
+                $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
+            if (isset($this->virtufile->config["ssh"]["timeout"])) {
+                $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
             $sshFactory = new \Model\Invoke();
             $ssh = $sshFactory->getModel($sshParams) ;
             $ssh->performInvokeSSHData() ;
 
             $logging->log("Attempting shutdown by SSH...") ;
-            $logging->log("Waiting at least {$this->virtualizefile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...") ;
+            $logging->log("Waiting at least {$this->virtufile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...") ;
 
-            if ($this->waitForStatus("powered off", $this->virtualizefile->config["vm"]["ssh_halt_timeout"], "3")==true) {
+            if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["ssh_halt_timeout"], "3")==true) {
                 $logging->log("Successful power off SSH Shutdown...") ;
                 return true ; } }
         if (isset($this->params["fail-hard"])) {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 "--fail-hard flag to do hard power off now." ;
             $logging->log($lmsg) ;
-            $this->provider->haltHard($this->virtualizefile->config["vm"]["name"]);
+            $this->provider->haltHard($this->virtufile->config["vm"]["name"]);
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
             "virtualize halt hard. You can also use the parameter --fail-hard to do this automatically." ;
@@ -76,20 +76,20 @@ class HaltAllOS extends BaseFunctionModel {
     public function haltPause() {
         $this->loadFiles();
         $this->findProvider("BoxHalt");
-        $this->provider->haltPause($this->virtualizefile->config["vm"]["name"]);
+        $this->provider->haltPause($this->virtufile->config["vm"]["name"]);
     }
 
     public function haltHard() {
         $this->loadFiles();
         $this->findProvider("BoxHalt");
-        $this->provider->haltHard($this->virtualizefile->config["vm"]["name"]);
+        $this->provider->haltHard($this->virtufile->config["vm"]["name"]);
     }
 
     protected function currentStateIsHaltable() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $haltables = $this->provider->getHaltableStates();
-        if ($this->provider->isVMInStatus($this->virtualizefile->config["vm"]["name"], $haltables) == true) {
+        if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $haltables) == true) {
             $logging->log("This VM is in a Haltable state...") ;
             return true ; }
         $logging->log("This VM is not in a Haltable state...") ;
@@ -99,7 +99,7 @@ class HaltAllOS extends BaseFunctionModel {
     # @todo in_array or something to check a sane status was requested
     protected function waitForStatus($statusRequested, $total_time, $interval) {
         for ($i=0; $i<$total_time; $i=$i+$interval) {
-            if($this->provider->isVMInStatus($this->virtualizefile->config["vm"]["name"], $statusRequested)) {
+            if($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $statusRequested)) {
                 return true ; }
             echo "." ;
             sleep($interval); }

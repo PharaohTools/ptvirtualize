@@ -14,7 +14,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     // Model Group
     public $modelGroup = array("Provision") ;
 
-    public $virtualizefile;
+    public $virtufile;
     public $papyrus ;
 
     public function provision($provisionerSettings, $osProvisioner) {
@@ -40,17 +40,17 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         if ($provisionerSettings["target"] == "guest") {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params);
-            // get target ip from virtualizefile if its there
+            // get target ip from virtufile if its there
             // if not check for guest additions installed
             $pflocal = $this->loadPapyrusLocal() ;
 
             $ips = array() ;
-            if (isset($pflocal[$this->virtualizefile->config["vm"]["name"]]["target"])) {
-                $logging->log("Using papyrusfilelocal defined ssh target of {$pflocal[$this->virtualizefile->config["vm"]["name"]]["target"]}... ") ;
-                $ips[] = $pflocal[$this->virtualizefile->config["vm"]["name"]]["target"] ; }
-            else if (isset($this->virtualizefile->config["ssh"]["target"])) {
-                $logging->log("Using Virtualizefile defined ssh target of {$this->virtualizefile->config["ssh"]["target"]}... ") ;
-                $ips[] = $this->virtualizefile->config["ssh"]["target"] ; }
+            if (isset($pflocal[$this->virtufile->config["vm"]["name"]]["target"])) {
+                $logging->log("Using papyrusfilelocal defined ssh target of {$pflocal[$this->virtufile->config["vm"]["name"]]["target"]}... ") ;
+                $ips[] = $pflocal[$this->virtufile->config["vm"]["name"]]["target"] ; }
+            else if (isset($this->virtufile->config["ssh"]["target"])) {
+                $logging->log("Using Virtufile defined ssh target of {$this->virtufile->config["ssh"]["target"]}... ") ;
+                $ips[] = $this->virtufile->config["ssh"]["target"] ; }
             else if ($this->checkForGuestAdditions()==true) {
                 $logging->log("Guest additions found on VM, finding target from it...") ;
                 $wug = $this->waitUntilGetIP() ;
@@ -64,8 +64,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $ips = array_merge($ips, $gdi) ;
                 $logging->log("Using default ip list of $gdi") ;  }
 
-            if (isset($this->virtualizefile->config["ssh"]["port"])) {
-                $thisPort = $this->virtualizefile->config["ssh"]["port"] ; }
+            if (isset($this->virtufile->config["ssh"]["port"])) {
+                $thisPort = $this->virtufile->config["ssh"]["port"] ; }
             else {
                 $thisPort = 22 ; }
 
@@ -74,14 +74,14 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $chosenIp = $ip ; }
 
             $encodedBox = serialize(array(array(
-                "user" => "{$this->virtualizefile->config["ssh"]["user"]}",
-                "password" => "{$this->virtualizefile->config["ssh"]["password"]}",
+                "user" => "{$this->virtufile->config["ssh"]["user"]}",
+                "password" => "{$this->virtufile->config["ssh"]["password"]}",
                 "target" => "$chosenIp"
             ))) ;
 
-            $this->storeInPapyrus($this->virtualizefile->config["ssh"]["user"], $this->virtualizefile->config["ssh"]["password"], $chosenIp) ;
+            $this->storeInPapyrus($this->virtufile->config["ssh"]["user"], $this->virtufile->config["ssh"]["password"], $chosenIp) ;
 
-            $provisionFile = $this->virtualizefile->config["vm"]["default_tmp_dir"]."provision.php" ;
+            $provisionFile = $this->virtufile->config["vm"]["default_tmp_dir"]."provision.php" ;
 
             $ray = array() ;
             $ray["provision_file"] = $provisionFile ;
@@ -146,10 +146,10 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $sftpParams["servers"] = $init["encoded_box"] ;
         $sftpParams["source"] = $provisionerSettings["script"] ;
         $sftpParams["target"] = $init["provision_file"] ;
-        if (isset($this->virtualizefile->config["ssh"]["port"])) {
-            $sftpParams["port"] = $this->virtualizefile->config["ssh"]["port"] ; }
-        if (isset($this->virtualizefile->config["ssh"]["timeout"])) {
-            $sftpParams["timeout"] = $this->virtualizefile->config["ssh"]["timeout"] ; }
+        if (isset($this->virtufile->config["ssh"]["port"])) {
+            $sftpParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
+        if (isset($this->virtufile->config["ssh"]["timeout"])) {
+            $sftpParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
         $sftp->performSFTPPut();
@@ -184,23 +184,23 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
         $sshParams["servers"] = $init["encoded_box"] ;
-        if (isset($this->virtualizefile->config["ssh"]["port"])) {
-            $sshParams["port"] = $this->virtualizefile->config["ssh"]["port"] ; }
-        if (isset($this->virtualizefile->config["ssh"]["timeout"])) {
-            $sshParams["timeout"] = $this->virtualizefile->config["ssh"]["timeout"] ; }
+        if (isset($this->virtufile->config["ssh"]["port"])) {
+            $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
+        if (isset($this->virtufile->config["ssh"]["timeout"])) {
+            $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
         $sshFactory = new \Model\Invoke();
         $ssh = $sshFactory->getModel($sshParams) ;
         $ssh->performInvokeSSHData() ;
     }
 
     protected function waitUntilGetIP() {
-        $totalTime = (isset($this->virtualizefile->config["vm"]["ip_find_timeout"]))
-            ? $this->virtualizefile->config["vm"]["ip_find_timeout"] : 180 ;
+        $totalTime = (isset($this->virtufile->config["vm"]["ip_find_timeout"]))
+            ? $this->virtufile->config["vm"]["ip_find_timeout"] : 180 ;
         $ips = array() ;
         //while ($t < $totalTime) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $command = VBOXMGCOMM." guestproperty enumerate {$this->virtualizefile->config["vm"]["name"]} " ;
+        $command = VBOXMGCOMM." guestproperty enumerate {$this->virtufile->config["vm"]["name"]} " ;
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
 
@@ -232,8 +232,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
 
     protected function waitForSsh($ips, $thisPort) {
         $t = 0;
-        $totalTime = (isset($this->virtualizefile->config["vm"]["ssh_find_timeout"]))
-            ? $this->virtualizefile->config["vm"]["ssh_find_timeout"] : 300 ;
+        $totalTime = (isset($this->virtufile->config["vm"]["ssh_find_timeout"]))
+            ? $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...") ;
@@ -254,23 +254,23 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     protected function loadPapyrusLocal() {
         $prFactory = new \Model\VirtualizeRequired() ;
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->virtualizefile) ;
+        return $papyrusLocalLoader->load($this->virtufile) ;
     }
 
     protected function storeInPapyrus($user, $pass, $target) {
         $virtualizeBox = array() ;
-        $virtualizeBox["name"] = $this->virtualizefile->config["vm"]["name"] ;
+        $virtualizeBox["name"] = $this->virtufile->config["vm"]["name"] ;
         $virtualizeBox["username"] = $user ;
         $virtualizeBox["password"] = $pass ;
         $virtualizeBox["target"] = $target ;
         $virtualizeBox = array_merge($this->papyrus, $virtualizeBox) ;
-        \Model\AppConfig::setProjectVariable($this->virtualizefile->config["vm"]["name"], $virtualizeBox, null, null, true) ;
+        \Model\AppConfig::setProjectVariable($this->virtufile->config["vm"]["name"], $virtualizeBox, null, null, true) ;
     }
 
     protected function countNICs() {
         $count = 0;
         for ($i=0; $i<100; $i++) {
-            if (isset($this->virtualizefile->config["network"]["nic$i"])) {
+            if (isset($this->virtufile->config["network"]["nic$i"])) {
                 $count++ ; } }
         return $count ;
     }

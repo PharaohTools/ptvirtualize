@@ -14,7 +14,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    protected $virtualizefile;
+    protected $virtufile;
     protected $papyrus ;
 
     public function __construct($params) {
@@ -30,7 +30,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
         if ($sshWorks == true) {
             $sshParams = $this->params ;
-            // try papyrus first. if box specified in virtualizefile exists there, try its connection details.
+            // try papyrus first. if box specified in virtufile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -63,7 +63,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
         // @todo need to set the SSH Data we're sending
         if ($sshWorks == true) {
             $sshParams = $this->params ;
-            // try papyrus first. if box specified in virtualizefile exists there, try its connection details.
+            // try papyrus first. if box specified in virtufile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -95,7 +95,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
         if ($sshWorks == true) {
             $sftpParams = $this->params ;
-            // try papyrus first. if box specified in virtualizefile exists there, try its connection details.
+            // try papyrus first. if box specified in virtufile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -129,7 +129,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
         if ($sshWorks == true) {
             $sftpParams = $this->params ;
-            // try papyrus first. if box specified in virtualizefile exists there, try its connection details.
+            // try papyrus first. if box specified in virtufile exists there, try its connection details.
             $srv = array(
                 "user" => $this->papyrus["username"] ,
                 "password" => $this->papyrus["password"] ,
@@ -155,7 +155,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
     }
 
     protected function loadFiles() {
-        $this->virtualizefile = $this->loadVirtualizeFile();
+        $this->virtufile = $this->loadVirtualizeFile();
         $this->papyrus = $this->loadPapyrusLocal();
     }
 
@@ -168,15 +168,15 @@ class AutoSSHAllOS extends BaseLinuxApp {
     protected function loadPapyrusLocal() {
         $prFactory = new \Model\VirtualizeRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->virtualizefile) ;
+        return $papyrusLocalLoader->load($this->virtufile) ;
     }
 
     // @todo provisioners should have their own modules, and the pharaohtools code should go there
     // @todo this should get port module probably do it within app
     protected function waitForSsh($ip, $thisPort=22) {
         $t = 0;
-        $totalTime = (isset($this->virtualizefile->config["vm"]["ssh_find_timeout"]))
-            ? $this->virtualizefile->config["vm"]["ssh_find_timeout"] : 300 ;
+        $totalTime = (isset($this->virtufile->config["vm"]["ssh_find_timeout"]))
+            ? $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...") ;

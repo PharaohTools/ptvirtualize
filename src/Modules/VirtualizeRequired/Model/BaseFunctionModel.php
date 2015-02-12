@@ -14,7 +14,7 @@ class BaseFunctionModel extends BaseLinuxApp {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    public $virtualizefile;
+    public $virtufile;
     public $papyrus ;
     public $provider ;
 
@@ -24,7 +24,7 @@ class BaseFunctionModel extends BaseLinuxApp {
     }
 
     protected function loadFiles() {
-        $this->virtualizefile = $this->loadVirtualizeFile();
+        $this->virtufile = $this->loadVirtualizeFile();
         $this->papyrus = $this->loadPapyrusLocal();
     }
 
@@ -37,17 +37,17 @@ class BaseFunctionModel extends BaseLinuxApp {
     protected function loadPapyrusLocal() {
         $prFactory = new \Model\VirtualizeRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->virtualizefile) ;
+        return $papyrusLocalLoader->load($this->virtufile) ;
     }
 
     protected function findProvider($modGroup = "BoxDestroy") {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->virtualizefile->config["vm"]["provider"])) {
-            $logging->log("Provider {$this->virtualizefile->config["vm"]["provider"]} found in Virtualizefile") ;
-            $this->provider = $this->getProvider($this->virtualizefile->config["vm"]["provider"], $modGroup) ; }
+        if (isset($this->virtufile->config["vm"]["provider"])) {
+            $logging->log("Provider {$this->virtufile->config["vm"]["provider"]} found in Virtufile") ;
+            $this->provider = $this->getProvider($this->virtufile->config["vm"]["provider"], $modGroup) ; }
         else {
-            $logging->log("No Provider configured in Virtualizefile."); }
+            $logging->log("No Provider configured in Virtufile."); }
     }
 
     protected function getProvider($provider, $modGroup) {

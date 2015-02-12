@@ -29,11 +29,11 @@ class UpInfo extends CleopatraBase {
         - now
         Bring up a box now
         example: virtualize up now
-        example: virtualize up now --modify # modify the hardware settings to match the Virtualizefile during the up phase.
+        example: virtualize up now --modify # modify the hardware settings to match the Virtufile during the up phase.
             Without it, the machine will be brought up with its previous settings. On creating new machines this will
             happen automatically regardless of the parameter.
         example: virtualize up now --provision # provision an existing machine with the configuration scripts specified
-            in the Virtualizefile. Without it, the machine will be brought up with its previous config. On creating
+            in the Virtufile. Without it, the machine will be brought up with its previous config. On creating
             new machines this will happen automatically regardless of the parameter.
         example: virtualize up now --modify --provision # modify and provision an existing box during the up phase
 

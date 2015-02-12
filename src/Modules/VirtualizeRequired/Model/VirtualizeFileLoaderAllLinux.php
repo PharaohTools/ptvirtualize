@@ -21,38 +21,38 @@ class VirtualizeFileLoaderAllLinux extends BaseLinuxApp {
     }
 
     public function loadClass() {
-        $virtualizefilename = $this->getPfile() ;
+        $virtufilename = $this->getPfile() ;
         $cname = (isset($this->params["classname"])) ?
             $this->params["classname"] :
-            str_replace(".php", "", $virtualizefilename) ;
+            str_replace(".php", "", $virtufilename) ;
         $cname = '\Model\\'.$cname  ;
         $virtualize = (class_exists($cname)) ? new $cname($this->params) : null ;
         return $virtualize;
     }
 
     private function getPfile() {
-        $virtualizefile = "Virtualizefile" ;
-        $virtualizefile = (isset($this->params["pfile"])) ? $this->params["pfile"] : $virtualizefile ;
-        $virtualizefile = (isset($this->params["virtualizefile"])) ? $this->params["virtualizefile"] : $virtualizefile ;
-        return $virtualizefile;
+        $virtufile = "Virtufile" ;
+        $virtufile = (isset($this->params["pfile"])) ? $this->params["pfile"] : $virtufile ;
+        $virtufile = (isset($this->params["virtufile"])) ? $this->params["virtufile"] : $virtufile ;
+        return $virtufile;
     }
 
     protected function findFile() {
-        $virtualizefile = $this->getPfile() ;
-        if (file_exists(getcwd().DS."$virtualizefile") && is_file(getcwd().DS."$virtualizefile")) {
-            require_once(getcwd().DS."$virtualizefile"); }
-        else if (file_exists($virtualizefile)) {
-            require_once($virtualizefile); }
-        else if (!is_null($virtualizefile)) {
-            require_once(getcwd().DS."Virtualizefile"); }
-        else if (file_exists(getcwd().DS."Virtualizefile")) {
-            require_once(getcwd().DS."Virtualizefile"); }
-        else if (file_exists(getcwd().DS."virtualizefile")) {
-            require_once(getcwd().DS."virtualizefile"); }
-        else if (file_exists(getcwd().DS."build/config/virtualize/Virtualizefile")) {
-            require_once(getcwd().DS."build/config/virtualize/Virtualizefile"); }
-        else if (file_exists(getcwd().DS."build/config/virtualize/virtualizefile")) {
-            require_once(getcwd().DS."build/config/virtualize/virtualizefile"); }
+        $virtufile = $this->getPfile() ;
+        if (file_exists(getcwd().DS."$virtufile") && is_file(getcwd().DS."$virtufile")) {
+            require_once(getcwd().DS."$virtufile"); }
+        else if (file_exists($virtufile)) {
+            require_once($virtufile); }
+        else if (!is_null($virtufile)) {
+            require_once(getcwd().DS."Virtufile"); }
+        else if (file_exists(getcwd().DS."Virtufile")) {
+            require_once(getcwd().DS."Virtufile"); }
+        else if (file_exists(getcwd().DS."virtufile")) {
+            require_once(getcwd().DS."virtufile"); }
+        else if (file_exists(getcwd().DS."build/config/virtualize/Virtufile")) {
+            require_once(getcwd().DS."build/config/virtualize/Virtufile"); }
+        else if (file_exists(getcwd().DS."build/config/virtualize/virtufile")) {
+            require_once(getcwd().DS."build/config/virtualize/virtufile"); }
     }
 
 }

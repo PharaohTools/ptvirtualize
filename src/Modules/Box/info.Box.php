@@ -48,7 +48,7 @@ class BoxInfo extends Base {
             --group="virtualize"
             --slug="" # guess can generate this based on name field
             --description="A Vanilla install of Ubuntu..."
-            --home_location="http://www.someplace.net/" # guess will set this to http://www.virtualizeboxes.co.uk/
+            --home-location="http://www.virtualizeboxes.co.uk/" # guess will set this to http://www.virtualizeboxes.co.uk/
             --target="/opt/virtualize/boxes" # save location, will guess /opt/virtualize/boxes
 
         - list

@@ -32,7 +32,7 @@ class ProvisionAllOS extends BaseLinuxApp {
     }
 
     public function loadFiles() {
-        $this->virtualizefile = $this->loadVirtualizeFile();
+        $this->virtufile = $this->loadVirtualizeFile();
         $this->papyrus = $this->loadPapyrusLocal();
         $this->osProvisioner = $this->loadOSProvisioner() ;
     }
@@ -46,19 +46,19 @@ class ProvisionAllOS extends BaseLinuxApp {
     protected function loadPapyrusLocal() {
         $prFactory = new \Model\VirtualizeRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
-        return $papyrusLocalLoader->load($this->virtualizefile) ;
+        return $papyrusLocalLoader->load($this->virtufile) ;
     }
 
     protected function loadOSProvisioner() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $provFile = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR."OSProvisioners".DIRECTORY_SEPARATOR.
-            $this->virtualizefile->config["vm"]["ostype"].".php" ;
+            $this->virtufile->config["vm"]["ostype"].".php" ;
         if (file_exists($provFile)) {
             require_once ($provFile) ;
-            $logging->log("OS Provisioner found for {$this->virtualizefile->config["vm"]["ostype"]}") ;
+            $logging->log("OS Provisioner found for {$this->virtufile->config["vm"]["ostype"]}") ;
             $osp = new \Model\OSProvisioner($this->params) ;
-            $osp->virtualizefile = $this->virtualizefile;
+            $osp->virtufile = $this->virtufile;
             $osp->papyrus = $this->papyrus;
             return $osp ; }
         $logging->log("No suitable OS Provisioner found");
