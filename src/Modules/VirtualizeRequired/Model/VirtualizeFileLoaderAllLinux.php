@@ -16,8 +16,8 @@ class VirtualizeFileLoaderAllLinux extends BaseLinuxApp {
 
     public function load() {
         $this->findFile() ;
-        $virtualize = $this->loadClass() ;
-        return $virtualize;
+        $ptvirtualize = $this->loadClass() ;
+        return $ptvirtualize;
     }
 
     public function loadClass() {
@@ -26,8 +26,8 @@ class VirtualizeFileLoaderAllLinux extends BaseLinuxApp {
             $this->params["classname"] :
             str_replace(".php", "", $virtufilename) ;
         $cname = '\Model\\'.$cname  ;
-        $virtualize = (class_exists($cname)) ? new $cname($this->params) : null ;
-        return $virtualize;
+        $ptvirtualize = (class_exists($cname)) ? new $cname($this->params) : null ;
+        return $ptvirtualize;
     }
 
     private function getPfile() {
@@ -49,10 +49,10 @@ class VirtualizeFileLoaderAllLinux extends BaseLinuxApp {
             require_once(getcwd().DS."Virtufile"); }
         else if (file_exists(getcwd().DS."virtufile")) {
             require_once(getcwd().DS."virtufile"); }
-        else if (file_exists(getcwd().DS."build/config/virtualize/Virtufile")) {
-            require_once(getcwd().DS."build/config/virtualize/Virtufile"); }
-        else if (file_exists(getcwd().DS."build/config/virtualize/virtufile")) {
-            require_once(getcwd().DS."build/config/virtualize/virtufile"); }
+        else if (file_exists(getcwd().DS."build/config/ptvirtualize/Virtufile")) {
+            require_once(getcwd().DS."build/config/ptvirtualize/Virtufile"); }
+        else if (file_exists(getcwd().DS."build/config/ptvirtualize/virtufile")) {
+            require_once(getcwd().DS."build/config/ptvirtualize/virtufile"); }
     }
 
 }

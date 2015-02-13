@@ -42,7 +42,7 @@ class SystemDetectionInfo extends Base {
 
         - detect
         Detects the Operating System
-        example: cleopatra system-detection detect
+        example: ptconfigure system-detection detect
 
 HELPDATA;
       return $help ;

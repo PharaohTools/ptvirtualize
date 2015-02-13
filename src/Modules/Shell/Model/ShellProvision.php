@@ -214,13 +214,13 @@ class ShellProvision extends BaseShellAllOS {
     }
 
     protected function storeInPapyrus($user, $pass, $target) {
-        $virtualizeBox = array() ;
-        $virtualizeBox["name"] = $this->virtufile->config["vm"]["name"] ;
-        $virtualizeBox["username"] = $user ;
-        $virtualizeBox["password"] = $pass ;
-        $virtualizeBox["target"] = $target ;
-        $virtualizeBox = array_merge($this->papyrus, $virtualizeBox) ;
-        \Model\AppConfig::setProjectVariable($this->virtufile->config["vm"]["name"], $virtualizeBox, null, null, true) ;
+        $ptvirtualizeBox = array() ;
+        $ptvirtualizeBox["name"] = $this->virtufile->config["vm"]["name"] ;
+        $ptvirtualizeBox["username"] = $user ;
+        $ptvirtualizeBox["password"] = $pass ;
+        $ptvirtualizeBox["target"] = $target ;
+        $ptvirtualizeBox = array_merge($this->papyrus, $ptvirtualizeBox) ;
+        \Model\AppConfig::setProjectVariable($this->virtufile->config["vm"]["name"], $ptvirtualizeBox, null, null, true) ;
     }
 
     protected function countNICs() {

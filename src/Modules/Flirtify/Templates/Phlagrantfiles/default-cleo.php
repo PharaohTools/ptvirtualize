@@ -34,17 +34,17 @@ class Virtufile extends VirtufileBase {
                 "provisioner" => "Shell",
                 "tool" => "shell",
                 "target" => "guest",
-                "default" => "CleopatraInit"
+                "default" => "PTConfigureInit"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
-                "tool" => "cleopatra",
+                "tool" => "ptconfigure",
                 "target" => "guest",
-                "script" => getcwd().DS."build".DS."config".DS."cleopatra".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualize".DS."cleofy-cm-virtualize-box.php"
+                "script" => getcwd().DS."build".DS."config".DS."ptconfigure".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualize".DS."cleofy-cm-ptvirtualize-box.php"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box is configured to be " .
-            "provisioned by Cleopatra's default Virtualize provisioning.";
+            "provisioned by PTConfigure's default Virtualize provisioning.";
     }
 
 }

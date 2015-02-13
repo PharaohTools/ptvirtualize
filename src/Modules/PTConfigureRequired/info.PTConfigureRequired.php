@@ -2,18 +2,18 @@
 
 Namespace Info;
 
-class CleopatraRequiredInfo extends CleopatraBase {
+class PTConfigureRequiredInfo extends PTConfigureBase {
 
     public $hidden = true;
 
-    public $name = "Cleopatra Required Models";
+    public $name = "PTConfigure Required Models";
 
     public function __construct() {
       parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "CleopatraRequired" =>  array_merge(parent::routesAvailable() ) );
+      return array( "PTConfigureRequired" =>  array_merge(parent::routesAvailable() ) );
     }
 
     public function routeAliases() {
@@ -22,7 +22,7 @@ class CleopatraRequiredInfo extends CleopatraBase {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This module provides no commands, but is required for Cleopatra. It provides Models which are required for Cleopatra.
+  This module provides no commands, but is required for PTConfigure. It provides Models which are required for PTConfigure.
 
 
 HELPDATA;

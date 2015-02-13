@@ -30,18 +30,18 @@ class FlirtifyInfo extends Base {
 
         - default-cleo
         Create a Virtufile for your project, with default Configuration Management for a PHP Application
-        example: virtualize flirt default-cleo
+        example: ptvirtualize flirt default-cleo
 
         - default-cleo-dapper
         Create a Virtufile for your project, with default Configuration Management for a PHP Application and
-        Dapperstrano Application
-        example: virtualize flirt default-cleo-dapper
+        PTDeploy Application
+        example: ptvirtualize flirt default-cleo-dapper
             --host-dapperfile=*relative/path/to/dapperfile/"
-            # guess will use build/config/dapperstrano/dapperfy/autopilots/generated/
+            # guess will use build/config/ptdeploy/dapperfy/autopilots/generated/
 
         - custom-cleo-dapper
         Create a Virtufile for your project
-        example: virtualize flirt custom-cleo-dapper
+        example: ptvirtualize flirt custom-cleo-dapper
 
 HELPDATA;
       return $help ;

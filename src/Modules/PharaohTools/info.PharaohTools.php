@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class PharaohToolsInfo extends CleopatraBase {
+class PharaohToolsInfo extends PTConfigureBase {
 
     public $hidden = false;
 

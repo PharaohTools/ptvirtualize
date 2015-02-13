@@ -1,12 +1,12 @@
-Phlagrant Modules to be created
+PTVirtualize Modules to be created
 ---------------------------------------
 
 Bug
-Phlagrant destroy hooks should delete the shared folder, and it should be randomly named so we can have multiple guests
+PTVirtualize destroy hooks should delete the shared folder, and it should be randomly named so we can have multiple guests
 zero config connect to one host share
 
 Bug
-Check the phlagrant default cm log for this. it appears even though the sftp transfer worked
+Check the ptvirtualize default cm log for this. it appears even though the sftp transfer worked
 1NET_SFTP_STATUS_FAILURE:
 
 BUG
@@ -14,11 +14,11 @@ BUG
 Package at command line doesnt allow a user to enter multi word names interaactively. its fine as a parameter so this is parameters only for now
 for the vm name use the id in between the curly brackets from vboxmanage list vms
 
-NOTES even if a phlagrant user has an ssh key, we still should not delete their password as commands like shutdown pipe it
+NOTES even if a ptvirtualize user has an ssh key, we still should not delete their password as commands like shutdown pipe it
 in. you can disallow password based ssh login instead if needed
 
-1) Need to add the ability to fire up multiple boxes in multiple projects, so we generate the box name to phlagrant-box-{$dirname}
-Then we still get our default single box, and can have more than one in a phlangrantfile (as opposed to multiple phlagrantfiles)?
+1) Need to add the ability to fire up multiple boxes in multiple projects, so we generate the box name to ptvirtualize-box-{$dirname}
+Then we still get our default single box, and can have more than one in a phlangrantfile (as opposed to multiple ptvirtualizefiles)?
 or do we want multiple?
 
 2) need to add a destroy hook that run uninstall provisioners, ie remove host file entry
@@ -32,18 +32,18 @@ or do we want multiple?
 
 5) allow a flag to delete bash history when running shell with piped sudo password
 
-6) Phlagrant Hooks. So, we have our Phlagrantfile, which specifies provisioners. We can also leave autopilot files
+6) PTVirtualize Hooks. So, we have our PTVirtualizefile, which specifies provisioners. We can also leave autopilot files
    in a named directory structure :
-   getcwd()."/build/config/phlagrant/hooks/$provisioner/$tool/$hook/$target/$type"
+   getcwd()."/build/config/ptvirtualize/hooks/$provisioner/$tool/$hook/$target/$type"
    $provisioner = "PharaohTools"
-   $tool = "cleopatra" || "dapperstrano"
+   $tool = "ptconfigure" || "ptdeploy"
    $hook = "up"
    $target = "guest"
    $type = "post"
 
 
 
-phlagrant command list
+ptvirtualize command list
 -------------------------
 ssh-config   outputs OpenSSH valid configuration to connect to the machine
  - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
@@ -61,7 +61,7 @@ DONE
 
 ssh DONE auto-ssh cli
 connects to machine via SSH
-             invoke ssh using the ssh params configured during phlagrant up and put into local-papyrus
+             invoke ssh using the ssh params configured during ptvirtualize up and put into local-papyrus
  - get machine connect details from papyrus-local (papyrus commit/push papyrus-local dont)
  - get id from name
  - invokessh with these details
@@ -70,37 +70,37 @@ connects to machine via SSH
 box DONE box add, box remove
     add - manages boxes: installation, removal, etc. download/install/remove a base box
 
-provision DONE phlagrant provision now
+provision DONE ptvirtualize provision now
     now -provisions the vagrant machine, install pharaoh and execute pharaoh autopilots
-reload  DONE phlagrant up reload
+reload  DONE ptvirtualize up reload
     restarts vagrant machine, loads new Vagrantfile configuration
 
-status  DONE phlagrant status full, show
-    phlagrant status full     outputs status of the vagrant machine
-    phlagrant status show     outputs status of the vagrant machine
+status  DONE ptvirtualize status full, show
+    ptvirtualize status full     outputs status of the vagrant machine
+    ptvirtualize status show     outputs status of the vagrant machine
 
-destroy DONE phlagrant destroy now
-    phlagrant destroy now, stops and deletes all traces of the vagrant machine
+destroy DONE ptvirtualize destroy now
+    ptvirtualize destroy now, stops and deletes all traces of the vagrant machine
 
 halt DONE stops the vagrant machine
-    phlagrant halt hard, stops with hard power button
-    phlagrant halt now, stops with ssh shutdown, then soft power button, then hard power button
+    ptvirtualize halt hard, stops with hard power button
+    ptvirtualize halt now, stops with ssh shutdown, then soft power button, then hard power button
 
 help DONE shows the help for a subcommand
-    phlagrant *MODULE* help
+    ptvirtualize *MODULE* help
 
 init DONE is flirt (or init works too, if you must)
-    phlagrant flirt now  initializes a new Vagrant environment by creating a Vagrantfile
+    ptvirtualize flirt now  initializes a new Vagrant environment by creating a Vagrantfile
 
-resume DONE phlagrant resume now
-    phlagrant resume now, resume a suspended vagrant machine, resume the box described in papyruslocal
+resume DONE ptvirtualize resume now
+    ptvirtualize resume now, resume a suspended vagrant machine, resume the box described in papyruslocal
 
 suspend DONE - THIS IS NOW HALT SUSPEND/PAUSE
-   phlagrant halt suspend, suspends the machine
-   phlagrant halt pause, suspends the machine
+   ptvirtualize halt suspend, suspends the machine
+   ptvirtualize halt pause, suspends the machine
 
 up     DONE -
-   phlagrant up now --modify --provision, starts, modifies hardware of and provisions the vagrant environment
+   ptvirtualize up now --modify --provision, starts, modifies hardware of and provisions the vagrant environment
 
 
 
@@ -112,9 +112,9 @@ STUFF TO DOCUMENT
 
 Concepts
 
-Phlagrantfile
-    This file describes how Phlagrant will set up your Virtual Machine. Phlagrantfiles all extend the base
-    PhlagrantfileBase Model, in the PhlagrantRequired Module complete. This base model provides groups of
+PTVirtualizefile
+    This file describes how PTVirtualize will set up your Virtual Machine. PTVirtualizefiles all extend the base
+    PTVirtualizefileBase Model, in the PTVirtualizeRequired Module complete. This base model provides groups of
     default settings for your Virtual Machines. You
 
 Networking
@@ -139,17 +139,17 @@ Command-Line Interface
 
 ------------------------------------------------------------------------------
 
-Phlagrant is (believe it or not) based heavily on ideas made famous in the Ruby tool Vagrant.
+PTVirtualize is (believe it or not) based heavily on ideas made famous in the Ruby tool Vagrant.
 
-Phlagrant is primarily a command line tool, is done through the command-line interface.
-The interface is available using the phlagrant command, and comes installed with Vagrant automatically. The phlagrant
-command in turn has many subcommands, such as phlagrant up, phlagrant destroy, etc.
+PTVirtualize is primarily a command line tool, is done through the command-line interface.
+The interface is available using the ptvirtualize command, and comes installed with Vagrant automatically. The ptvirtualize
+command in turn has many subcommands, such as ptvirtualize up, ptvirtualize destroy, etc.
 
 As with all Pharaoh Tools, running the command with no modules, parameters or actions will display a list, help
 will be displayed showing all available subcommands.
 
-Further, you can run any Phlagrant module with the help action to output help about that module. For example,
-try running phlagrant init -h. The help will output a one
+Further, you can run any PTVirtualize module with the help action to output help about that module. For example,
+try running ptvirtualize init -h. The help will output a one
 sentence synopsis of what the command does as well as a list of all the flags the command accepts. In depth
 documentation and use cases of various Vagrant commands is available by reading the appropriate sub-section available
 in the left navigational area of this site.

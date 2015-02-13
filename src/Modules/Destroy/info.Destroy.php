@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class DestroyInfo extends CleopatraBase {
+class DestroyInfo extends PTConfigureBase {
 
   public $hidden = false;
 
@@ -22,7 +22,7 @@ class DestroyInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to destroy a virtualize box
+  This command allows you to destroy a ptvirtualize box
 
   Destroy, destroy
 
@@ -30,7 +30,7 @@ class DestroyInfo extends CleopatraBase {
         Destroy a box. This will delete all of the hardware of your virtual machine, including any storage on it.
         If you have shared folders between guest and host, that data stays on the host. Your Virtual Machine must be
         in a stopped or aborted state to destroy it.
-        example: virtualize destroy now
+        example: ptvirtualize destroy now
 
 HELPDATA;
     return $help ;

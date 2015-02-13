@@ -25,15 +25,15 @@ class EnvironmentConfigInfo extends Base {
       $help = <<<"HELPDATA"
   This command is part of a default Module and provides you with a method by which you can
   configure environments for your project from the command line. Currently compliant with
-  both Dapperstrano and Cleopatra.
+  both PTDeploy and PTConfigure.
 
 
   EnvironmentConfig, environmentconfig, environment-config, envconfig, env-config
 
         - configure
         Configure the environments for your project to use
-        example: dapperstrano envconfig configure
-        example: cleopatra envconfig configure
+        example: ptdeploy envconfig configure
+        example: ptconfigure envconfig configure
 
 
 HELPDATA;

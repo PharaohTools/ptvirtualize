@@ -75,10 +75,10 @@ class UpAllOS extends BaseFunctionModel {
             $this->params["pfiles"] = self::askForInput($question) ; }
         if ($this->params["up-all"] == true) { $pfilesToExecute = $this->virtufile->files ; }
         else { $pfilesToExecute = $this->params["pfiles"] ; }
-        $cleoCommand = "cleopatra parallax cli --yes --guess " ;
+        $cleoCommand = "ptconfigure parallax cli --yes --guess " ;
         for ($i = 0; $i < count($pfilesToExecute); $i++) {
             $cnum = $i + 1 ;
-            $cleoCommand .= "--command-{$cnum}=\"virtualize up now --yes --guess --pfile={$this->virtufile->files[$i]} \" " ; }
+            $cleoCommand .= "--command-{$cnum}=\"ptvirtualize up now --yes --guess --pfile={$this->virtufile->files[$i]} \" " ; }
         echo $cleoCommand."\n" ;
         self::executeAndOutput($cleoCommand) ;
     }

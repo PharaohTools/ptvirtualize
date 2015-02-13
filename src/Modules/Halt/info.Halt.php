@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class HaltInfo extends CleopatraBase {
+class HaltInfo extends PTConfigureBase {
 
   public $hidden = false;
 
@@ -22,7 +22,7 @@ class HaltInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to halt a virtualize box. When a VM is running, you can use this to turn the machine off -
+  This command allows you to halt a ptvirtualize box. When a VM is running, you can use this to turn the machine off -
   graciously by default, or forcefully if need be.
 
   Halt, halt
@@ -30,17 +30,17 @@ class HaltInfo extends CleopatraBase {
         - now
         Execute a "soft" power off to your Virtualize VM. First, try the soft power button, if that fails we then
         attempt to SSH in to the box and issue a shutdown from the command line
-        example: virtualize halt now
-        example: virtualize halt now --fail-hard # If the soft power of fails, perform a Hard Shutdown (by Power Switch)
+        example: ptvirtualize halt now
+        example: ptvirtualize halt now --fail-hard # If the soft power of fails, perform a Hard Shutdown (by Power Switch)
 
         - hard
         Force power off to your Virtualize VM (by Power Switch)
-        example: virtualize halt hard
+        example: ptvirtualize halt hard
 
         - pause, suspend
         Pause your running Virtualize VM
-        example: virtualize halt pause
-        example: virtualize halt suspend
+        example: ptvirtualize halt pause
+        example: ptvirtualize halt suspend
 
 HELPDATA;
     return $help ;

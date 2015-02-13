@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class StatusInfo extends CleopatraBase {
+class StatusInfo extends PTConfigureBase {
 
   public $hidden = false;
 
@@ -22,17 +22,17 @@ class StatusInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to status a virtualize box
+  This command allows you to status a ptvirtualize box
 
   Status, status
 
         - show
         Show execution status information of your Virtualize VM
-        example: virtualize status show
+        example: ptvirtualize status show
 
         - full
         Show full status information of your Virtualize VM
-        example: virtualize status full
+        example: ptvirtualize status full
 
 HELPDATA;
     return $help ;

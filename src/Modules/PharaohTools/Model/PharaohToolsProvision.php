@@ -20,16 +20,16 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     public function provision($provisionerSettings, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $cleoSpellings = array("Cleopatra", "cleopatra", "Cleo", "cleo") ;
-        $dapperSpellings = array("Dapperstrano", "dapperstrano", "dapper", "Dapper" ) ;
+        $cleoSpellings = array("PTConfigure", "ptconfigure", "Cleo", "cleo") ;
+        $dapperSpellings = array("PTDeploy", "ptdeploy", "dapper", "Dapper" ) ;
         if (in_array($provisionerSettings["tool"], $cleoSpellings)) {
-            $logging->log("Initialising Pharaoh Cleopatra Provision... ") ;
+            $logging->log("Initialising Pharaoh PTConfigure Provision... ") ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
-            return $this->cleopatraProvision($provisionerSettings, $init, $osProvisioner) ; }
+            return $this->ptconfigureProvision($provisionerSettings, $init, $osProvisioner) ; }
         else if (in_array($provisionerSettings["tool"], $dapperSpellings)) {
-            $logging->log("Initialising Pharaoh Dapperstrano Provision... ") ;
+            $logging->log("Initialising Pharaoh PTDeploy Provision... ") ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
-            return $this->dapperstranoProvision($provisionerSettings, $init, $osProvisioner) ; }
+            return $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
             $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified") ;
             return null ; }
@@ -92,22 +92,22 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         return $ray ;
     }
 
-    protected function cleopatraProvision($provisionerSettings, $init, $osProvisioner) {
+    protected function ptconfigureProvision($provisionerSettings, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         if ($provisionerSettings["target"] == "guest") {
             if (isset($provisioner["default"])) {
-                $logging->log("Provisioning VM with Default Cleopatra Autopilot for {$provisioner["default"]}...") ;
+                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...") ;
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
-                $logging->log("Starting Provisioning VM with Cleopatra...") ;
-                $logging->log("SFTP Configuration Management Autopilot to VM for Cleopatra...") ;
+                $logging->log("Starting Provisioning VM with PTConfigure...") ;
+                $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...") ;
                 $this->sftpProvision($provisionerSettings, $init);
-                $logging->log("SSH Execute Provisioning VM with Cleopatra...") ;
+                $logging->log("SSH Execute Provisioning VM with PTConfigure...") ;
                 $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
-            $logging->log("Provisioning Host with Cleopatra...") ;
-            $command = "cleopatra auto x --af={$provisionerSettings["script"]}" ;
+            $logging->log("Provisioning Host with PTConfigure...") ;
+            $command = "ptconfigure auto x --af={$provisionerSettings["script"]}" ;
             var_dump("comm", $command) ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
@@ -116,22 +116,22 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         return true ;
     }
 
-    protected function dapperstranoProvision($provisionerSettings, $init, $osProvisioner) {
+    protected function ptdeployProvision($provisionerSettings, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         if ($provisionerSettings["target"] == "guest") {
             if (isset($provisioner["default"])) {
-                $logging->log("Provisioning VM with Default Cleopatra Autopilot for {$provisioner["default"]}...") ;
+                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...") ;
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
-                $logging->log("Starting Provisioning VM with Dapperstrano...") ;
-                $logging->log("SFTP Application Deployment Autopilot for Dapperstrano...") ;
+                $logging->log("Starting Provisioning VM with PTDeploy...") ;
+                $logging->log("SFTP Application Deployment Autopilot for PTDeploy...") ;
                 $this->sftpProvision($provisionerSettings, $init);
-                $logging->log("SSH Execute Provisioning VM with Dapperstrano...") ;
+                $logging->log("SSH Execute Provisioning VM with PTDeploy...") ;
                 $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
-            $logging->log("Provisioning Host with Dapperstrano...") ;
-            $command = "dapperstrano auto x --af={$provisionerSettings["script"]}" ;
+            $logging->log("Provisioning Host with PTDeploy...") ;
+            $command = "ptdeploy auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
@@ -258,13 +258,13 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     }
 
     protected function storeInPapyrus($user, $pass, $target) {
-        $virtualizeBox = array() ;
-        $virtualizeBox["name"] = $this->virtufile->config["vm"]["name"] ;
-        $virtualizeBox["username"] = $user ;
-        $virtualizeBox["password"] = $pass ;
-        $virtualizeBox["target"] = $target ;
-        $virtualizeBox = array_merge($this->papyrus, $virtualizeBox) ;
-        \Model\AppConfig::setProjectVariable($this->virtufile->config["vm"]["name"], $virtualizeBox, null, null, true) ;
+        $ptvirtualizeBox = array() ;
+        $ptvirtualizeBox["name"] = $this->virtufile->config["vm"]["name"] ;
+        $ptvirtualizeBox["username"] = $user ;
+        $ptvirtualizeBox["password"] = $pass ;
+        $ptvirtualizeBox["target"] = $target ;
+        $ptvirtualizeBox = array_merge($this->papyrus, $ptvirtualizeBox) ;
+        \Model\AppConfig::setProjectVariable($this->virtufile->config["vm"]["name"], $ptvirtualizeBox, null, null, true) ;
     }
 
     protected function countNICs() {

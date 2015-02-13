@@ -67,7 +67,7 @@ class HaltAllOS extends BaseFunctionModel {
             $this->provider->haltHard($this->virtufile->config["vm"]["name"]);
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
-            "virtualize halt hard. You can also use the parameter --fail-hard to do this automatically." ;
+            "ptvirtualize halt hard. You can also use the parameter --fail-hard to do this automatically." ;
         $logging->log($lmsg) ;
         return false ;
 

@@ -6,13 +6,13 @@ class OSProvisioner extends ProvisionDefaultLinux {
 
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
-    public function getCleopatraInitSSHData($provisionFile) {
+    public function getPTConfigureInitSSHData($provisionFile) {
 		$sshData = "" ;
         $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S apt-get update -y\n" ;
         $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S apt-get install -y php5 git\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S rm -rf cleopatra\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S git clone https://github.com/PharaohTools/cleopatra.git\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S php cleopatra/install-silent\n" ;
+        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S rm -rf ptconfigure\n" ;
+        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S git clone https://github.com/PharaohTools/ptconfigure.git\n" ;
+        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S php ptconfigure/install-silent\n" ;
         return $sshData ;
     }
 
@@ -30,20 +30,20 @@ class OSProvisioner extends ProvisionDefaultLinux {
         return $sshData ;
     }
 
-    public function getStandardCleopatraSSHData($provisionFile, $params = array() ) {
+    public function getStandardPTConfigureSSHData($provisionFile, $params = array() ) {
         $paramString = "" ;
         foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
         $sshData = <<<"SSHDATA"
-echo {$this->virtufile->config["ssh"]["password"]} | sudo -S cleopatra auto x --af={$provisionFile}{$paramString}
+echo {$this->virtufile->config["ssh"]["password"]} | sudo -S ptconfigure auto x --af={$provisionFile}{$paramString}
 SSHDATA;
         return $sshData ;
     }
 
-    public function getStandardDapperstranoSSHData($provisionFile, $params = array() ) {
+    public function getStandardPTDeploySSHData($provisionFile, $params = array() ) {
         $paramString = "" ;
         foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
         $sshData = <<<"SSHDATA"
-echo {$this->virtufile->config["ssh"]["password"]} | sudo -S dapperstrano auto x --af={$provisionFile}{$paramString}
+echo {$this->virtufile->config["ssh"]["password"]} | sudo -S ptdeploy auto x --af={$provisionFile}{$paramString}
 SSHDATA;
         return $sshData ;
     }

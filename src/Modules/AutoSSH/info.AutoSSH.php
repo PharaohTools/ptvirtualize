@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class AutoSSHInfo extends CleopatraBase {
+class AutoSSHInfo extends PTConfigureBase {
 
   public $hidden = false;
 
@@ -22,21 +22,21 @@ class AutoSSHInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to autoSSH a virtualize box
+  This command allows you to autoSSH a ptvirtualize box
 
   AutoSSH, auto-ssh, autossh, ssh, SSH
 
         - cli
         Open an SSH Cli to your Virtualize Box
-        example: virtualize auto-ssh cli --yes --guess
+        example: ptvirtualize auto-ssh cli --yes --guess
 
         - sftp-put
         SFTP Put a file on to your Virtualize Box
-        example: virtualize auto-ssh sftp-put --yes --guess --source=/path/to/source --target=/path/to/target
+        example: ptvirtualize auto-ssh sftp-put --yes --guess --source=/path/to/source --target=/path/to/target
 
         - sftp-get
         SFTP Get a file from your Virtualize Box
-        example: virtualize auto-ssh sftp-get --yes --guess --source=/path/to/source --target=/path/to/target
+        example: ptvirtualize auto-ssh sftp-get --yes --guess --source=/path/to/source --target=/path/to/target
 
 HELPDATA;
     return $help ;

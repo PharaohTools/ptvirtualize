@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class ShellInfo extends CleopatraBase {
+class ShellInfo extends PTConfigureBase {
 
     public $hidden = false;
 

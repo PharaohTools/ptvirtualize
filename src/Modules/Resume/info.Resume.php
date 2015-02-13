@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class ResumeInfo extends CleopatraBase {
+class ResumeInfo extends PTConfigureBase {
 
   public $hidden = false;
 
@@ -22,14 +22,14 @@ class ResumeInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to resume a virtualize box, which has been paused/suspended.
+  This command allows you to resume a ptvirtualize box, which has been paused/suspended.
   This will start the box and will not attempt to modify or provision it.
 
   Resume, resume
 
         - now
         Resume a box now
-        example: virtualize resume now
+        example: ptvirtualize resume now
 
 HELPDATA;
     return $help ;

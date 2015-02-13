@@ -30,8 +30,8 @@ class BaseFunctionModel extends BaseLinuxApp {
 
     protected function loadVirtualizeFile() {
         $prFactory = new \Model\VirtualizeRequired();
-        $virtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
-        return $virtualizeFileLoader->load() ;
+        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
+        return $ptvirtualizeFileLoader->load() ;
     }
 
     protected function loadPapyrusLocal() {

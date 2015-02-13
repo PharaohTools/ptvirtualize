@@ -56,24 +56,24 @@ class FlirtifyDefaultCleoCustomDapperAllOS extends Base {
         if ($provisionType == "up") {
             if (isset($this->params["$envType-dapperfile"])) {
                 return $this->params["$envType-dapperfile"] ; }
-            if (isset($this->params["$envType-dapperstrano-autopilot"])) {
-                return $this->params["$envType-dapperstrano-autopilot"] ; }
+            if (isset($this->params["$envType-ptdeploy-autopilot"])) {
+                return $this->params["$envType-ptdeploy-autopilot"] ; }
             if (isset($this->params["guess"]) && ($envType=="guest") ) {
-                $p = ''.DS.'build'.DS.'config'.DS.'dapperstrano'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'virtualize-box-virtualize-install-code-data.php';
+                $p = ''.DS.'build'.DS.'config'.DS.'ptdeploy'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'ptvirtualize-box-ptvirtualize-install-code-data.php';
                 return $p ; }
             if (isset($this->params["guess"]) && ($envType=="host") ) {
-                $p = ''.DS.'build'.DS.'config'.DS.'dapperstrano'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'virtualize-host-virtualize-host-install-host-file-entry.php';
+                $p = ''.DS.'build'.DS.'config'.DS.'ptdeploy'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'ptvirtualize-host-ptvirtualize-host-install-host-file-entry.php';
                 return $p ; } }
         else if ($provisionType == "destroy") {
             if (isset($this->params["$envType-dapperfile-destroy"])) {
                 return $this->params["$envType-dapperfile-destroy"] ; }
-            if (isset($this->params["$envType-dapperstrano-autopilot-destroy"])) {
-                return $this->params["$envType-dapperstrano-autopilot-destroy"] ; }
+            if (isset($this->params["$envType-ptdeploy-autopilot-destroy"])) {
+                return $this->params["$envType-ptdeploy-autopilot-destroy"] ; }
             if (isset($this->params["guess"]) && ($envType=="host") ) {
-                $p = ''.DS.'build'.DS.'config'.DS.'dapperstrano'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'virtualize-host-virtualize-host-uninstall-host-file-entry.php';
+                $p = ''.DS.'build'.DS.'config'.DS.'ptdeploy'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'ptvirtualize-host-ptvirtualize-host-uninstall-host-file-entry.php';
                 return $p ; } }
         $forDestruct = ($provisionType == "destroy") ? " For Destruction" : "" ;
-        $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File$forDestruct" ;
+        $question = "Enter path to your ".ucfirst($envType)." PTDeploy Deployment File$forDestruct" ;
         $df = $this->askForInput($question) ;
         return $df ;
     }
@@ -82,18 +82,18 @@ class FlirtifyDefaultCleoCustomDapperAllOS extends Base {
         $envType = strtolower($envType) ;
         if (isset($this->params["$envType-dapperfile"])) {
             return $this->params["$envType-dapperfile"] ; }
-        if (isset($this->params["$envType-dapperstrano-autopilot"])) {
-            return $this->params["$envType-dapperstrano-autopilot"] ; }
+        if (isset($this->params["$envType-ptdeploy-autopilot"])) {
+            return $this->params["$envType-ptdeploy-autopilot"] ; }
 
         if (isset($this->params["guess"]) && ($envType=="guest") ) {
-            $p = DS.'build'.DS.'config'.DS.'dapperstrano'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'virtualize-box-virtualize-install-code-data.php';
+            $p = DS.'build'.DS.'config'.DS.'ptdeploy'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'ptvirtualize-box-ptvirtualize-install-code-data.php';
             return $p ; }
 
         if (isset($this->params["guess"]) && ($envType=="host") ) {
-            $p = DS.'build'.DS.'config'.DS.'dapperstrano'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'virtualize-host-host-install-host-file-entry.php';
+            $p = DS.'build'.DS.'config'.DS.'ptdeploy'.DS.'dapperfy'.DS.'autopilots'.DS.'generated'.DS.'ptvirtualize-host-host-install-host-file-entry.php';
             return $p ; }
 
-        $question = "Enter path to your ".ucfirst($envType)." Dapperstrano Deployment File" ;
+        $question = "Enter path to your ".ucfirst($envType)." PTDeploy Deployment File" ;
         $df = $this->askForInput($question) ;
         return $df ;
     }

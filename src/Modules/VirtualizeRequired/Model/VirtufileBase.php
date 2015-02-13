@@ -10,28 +10,28 @@ class VirtufileBase extends BaseLinuxApp {
         // @todo I need to create an array, or includes or something of $defaultConfigType, to set different defaults
         $config = array() ;
         # Default System Settings
-        $config["vm"]["name"] = "virtualize-box" ;
+        $config["vm"]["name"] = "ptvirtualize-box" ;
         $config["vm"]["provider"] = "virtualbox" ; # @todo I'm not sure if we're actually using this
         $config["vm"]["ostype"] = "Ubuntu_64" ;
         $config["vm"]["gui_mode"] = "headless" ;
         $config["vm"]["ip_find_timeout"] = 180 ; # The time in seconds Virtualize will allow for Guest Additions to find IP's
         $config["vm"]["ssh_find_timeout"] = 300 ; # The time in seconds that Virtualize will wait for the machine SSH port to accept connections.
-        $config["vm"]["box"] = "vanillabuntu" ; # This configures what box the machine will be brought up against. The value here should be the name of an installed box or @todo  a shorthand name of a box in Vagrant Cloud.
+        $config["vm"]["box"] = "vanillabuntu" ; # This is the name of the box the machine "up" with.
         // @todo config.vm.box_url - If $config ["vm"]["box"] is an installed box you can ignore this. Otherwise point to a url it can be downloaded from
         $config["vm"]["cpus"] = 1 ;
         $config["vm"]["memory"] = 2048 ;
         $config["vm"]["vram"] = 32 ;
         $config["vm"]["default_tmp_dir"] = '/tmp/' ; # this should be correct for the ostype
-        $config["vm"]["graceful_halt_timeout"] = 15 ; # The time in seconds that Virtualize wait for the machine to gracefully halt by soft power under virtualize halt now. Defaults to 120 seconds.
-        $config["vm"]["ssh_halt_timeout"] = 20 ; # The time in seconds that Virtualize will wait for the machine to shutdown via SSH when virtualize halt now is called, if still running after soft power down. Defaults to 60 seconds.
-        $config["vm"]["post_up_message"] = "Your default Virtualize post_up_message..." ; # A message to show after Virtualize Up/Reload.
+        $config["vm"]["graceful_halt_timeout"] = 15 ; # The time in seconds Virtualize should wait for gracefully halt (soft power)
+        $config["vm"]["ssh_halt_timeout"] = 20 ; # The time in seconds Virtualize should wait for SSH shutdown
+        $config["vm"]["post_up_message"] = "Your default Virtualize post_up_message..." ; # A message to show after Virtualize Up.
         # Default Provisioning
         $this->config["vm"]["provision"] = array() ;
         # Default Shared Folders
         $this->config["vm"]["shared_folders"] = array() ;
         # Default SSH Settings
-        $config["ssh"]["user"] = "virtualize" ;
-        $config["ssh"]["password"] = "virtualize" ;
+        $config["ssh"]["user"] = "ptvirtualize" ;
+        $config["ssh"]["password"] = "ptvirtualize" ;
         $config["ssh"]["timeout"] = "30" ;
         # Default Network Settings
         $config["network"]["nic1"] = "nat" ;
@@ -54,7 +54,7 @@ class VirtufileBase extends BaseLinuxApp {
     }
 
     protected function getDefaultHostNetworkName() {
-
+        // @todo this should come from a provider module
         $command = VBOXMGCOMM." list hostonlyifs " ;
 
         $out = $this->executeAndLoad($command);

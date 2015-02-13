@@ -34,46 +34,46 @@ class Virtufile extends VirtufileBase {
                 "provisioner" => "Shell",
                 "tool" => "shell",
                 "target" => "guest",
-                "default" => "CleopatraInit"
+                "default" => "PTConfigureInit"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
-                "tool" => "cleopatra",
+                "tool" => "ptconfigure",
                 "target" => "host",
                 "script" => getcwd().DS."<%tpl.php%>cleofile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
-                "tool" => "cleopatra",
+                "tool" => "ptconfigure",
                 "target" => "guest",
                 "script" => getcwd().DS."<%tpl.php%>cleofile-guest</%tpl.php%>"
-                // build/config/cleopatra/cleofy/autopilots/generic/Virtualize/cleofy-cm-virtualize.php
+                // build/config/ptconfigure/cleofy/autopilots/generic/Virtualize/cleofy-cm-ptvirtualize.php
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
-                "tool" => "dapperstrano",
+                "tool" => "ptdeploy",
                 "target" => "host",
                 "script" => getcwd().DS."<%tpl.php%>dapperfile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
-                "tool" => "dapperstrano",
+                "tool" => "ptdeploy",
                 "target" => "guest",
                 "script" => getcwd().DS."<%tpl.php%>dapperfile-guest</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision_destroy_post"][] =
             array(
                 "provisioner" => "PharaohTools",
-                "tool" => "dapperstrano",
+                "tool" => "ptdeploy",
                 "target" => "host",
                 "script" => getcwd().DS."<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box was configured to be " .
-            "provisioned by both Cleopatra and Dapperstrano. Your application should now be accessible.";
+            "provisioned by both PTConfigure and PTDeploy. Your application should now be accessible.";
     }
 
 }

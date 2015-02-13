@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class VirtualboxInfo extends CleopatraBase {
+class VirtualboxInfo extends PTConfigureBase {
 
     public $hidden = false;
 

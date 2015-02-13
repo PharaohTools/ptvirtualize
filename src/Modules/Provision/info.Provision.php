@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class ProvisionInfo extends CleopatraBase {
+class ProvisionInfo extends PTConfigureBase {
 
   public $hidden = false;
 
@@ -22,13 +22,13 @@ class ProvisionInfo extends CleopatraBase {
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
-  This command allows you to provision a virtualize box
+  This command allows you to provision a ptvirtualize box
 
   Provision, provision
 
         - now
         Provision a box now
-        example: virtualize provision now
+        example: ptvirtualize provision now
 
 HELPDATA;
     return $help ;

@@ -70,7 +70,7 @@ COMPLETION;
     }
 
     protected function executeAsShell($multiLineCommand, $message=null) {
-        $tempFile = $this->tempDir.DS."cleopatra-temp-script-".mt_rand(100, 99999999999).".sh";
+        $tempFile = $this->tempDir.DS."ptconfigure-temp-script-".mt_rand(100, 99999999999).".sh";
         echo "Creating $tempFile\n";
         $fileVar = "";
         if (is_array($multiLineCommand) && count($multiLineCommand)>0) {

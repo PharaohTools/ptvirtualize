@@ -44,12 +44,12 @@ class ProvisionDefaultLinux extends Base {
         foreach ($provisioners as $provisioner) {
             // echo "dave a2\n" ;
             // @todo this will do for now but should be dynamic
-            $tools = array("cleopatra", "dapperstrano", "shell") ;
+            $tools = array("ptconfigure", "ptdeploy", "shell") ;
             foreach ($tools as $tool) {
                 // echo "dave a3\n" ;
                 $targets = array("host", "guest") ;
                 foreach ($targets as $target) {
-                    $dir = getcwd().DS."build".DS."config".DS."virtualize".DS."hooks".DS."$provisioner".DS.
+                    $dir = getcwd().DS."build".DS."config".DS."ptvirtualize".DS."hooks".DS."$provisioner".DS.
                         "$tool".DS."$hook".DS."$target".DS."$type" ;
                     $hookDirectoryExists = file_exists($dir) ;
                     $hookDirectoryIsDir = is_dir($dir) ;
