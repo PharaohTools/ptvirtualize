@@ -367,6 +367,7 @@ QUESTION;
 
 	private function doSSHCommand($sshObject, $command, $first = null)
 	{
+        var_dump($sshObject) ;
 		return $sshObject->exec($command);
 	}
 
