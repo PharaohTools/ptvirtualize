@@ -14,7 +14,7 @@ class Virtufile extends VirtufileBase {
         $this->setDefaultConfig();
         # $this->config["vm"]["gui_mode"] = "gui" ;
         $this->config["vm"]["box"] = "pharaohubuntu14041amd64" ;
-        # Shared folder - This should map to the workstation environment vhost path parent...
+        # Shared folders @todo this is not ready for any OS as it requires
         $this->config["vm"]["shared_folders"][] =
             array(
                 "name" => "host_www",
@@ -41,39 +41,39 @@ class Virtufile extends VirtufileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "ptconfigure",
                 "target" => "host",
-                "script" => getcwd().DS."build".DS."config".DS."ptconfigure".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualize".DS."cleofy-cm-ptvirtualize-host.php"
+                "script" => getcwd().DS."<%tpl.php%>ptconfigurefile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "ptconfigure",
                 "target" => "guest",
-                "script" => getcwd().DS."build".DS."config".DS."ptconfigure".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualize".DS."cleofy-cm-ptvirtualize-box.php"
+                "script" => getcwd().DS."<%tpl.php%>ptconfigurefile-guest</%tpl.php%>"
+                // build/config/ptconfigure/ptconfigurefy/autopilots/generic/Virtualize/ptconfigurefy-cm-ptvirtualize.php
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "ptdeploy",
                 "target" => "host",
-                "script" => getcwd().DS."<%tpl.php%>dapperfile-host</%tpl.php%>"
+                "script" => getcwd().DS."<%tpl.php%>ptdeployfile-host</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "ptdeploy",
                 "target" => "guest",
-                "script" => getcwd().DS."<%tpl.php%>dapperfile-guest</%tpl.php%>"
+                "script" => getcwd().DS."<%tpl.php%>ptdeployfile-guest</%tpl.php%>"
             ) ;
         $this->config["vm"]["provision_destroy_post"][] =
             array(
                 "provisioner" => "PharaohTools",
                 "tool" => "ptdeploy",
                 "target" => "host",
-                "script" => getcwd().DS."<%tpl.php%>dapperfile-host-destroy</%tpl.php%>"
+                "script" => getcwd().DS."<%tpl.php%>ptdeployfile-host-destroy</%tpl.php%>"
             ) ;
-        $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This guest was configured to be " .
-            "provisioned by both PTConfigure and PTDeploy, and the host also by PTDeploy. Your application " .
-            "should now be accessible by browser.";
+        $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box was configured to be " .
+            "provisioned by both PTConfigure and PTDeploy. Your application should now be accessible.";
     }
 
 }

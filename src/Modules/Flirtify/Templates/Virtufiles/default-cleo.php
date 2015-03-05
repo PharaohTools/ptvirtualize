@@ -41,7 +41,7 @@ class Virtufile extends VirtufileBase {
                 "provisioner" => "PharaohTools",
                 "tool" => "ptconfigure",
                 "target" => "guest",
-                "script" => getcwd().DS."build".DS."config".DS."ptconfigure".DS."cleofy".DS."autopilots".DS."generic".DS."Virtualize".DS."cleofy-cm-ptvirtualize-box.php"
+                "script" => getcwd().DS."build".DS."config".DS."ptconfigure".DS."ptconfigurefy".DS."autopilots".DS."generic".DS."Virtualize".DS."ptconfigurefy-cm-ptvirtualize-box.php"
             ) ;
         $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box is configured to be " .
             "provisioned by PTConfigure's default Virtualize provisioning.";
