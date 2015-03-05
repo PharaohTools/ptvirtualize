@@ -20,13 +20,13 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     public function provision($provisionerSettings, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $cleoSpellings = array("PTConfigure", "ptconfigure", "Cleo", "cleo") ;
-        $dapperSpellings = array("PTDeploy", "ptdeploy", "dapper", "Dapper" ) ;
-        if (in_array($provisionerSettings["tool"], $cleoSpellings)) {
+        $ptconfigureSpellings = array("PTConfigure", "ptconfigure", "configure", "Configure") ;
+        $ptdeploySpellings = array("PTDeploy", "ptdeploy", "deploy", "Deploy" ) ;
+        if (in_array($provisionerSettings["tool"], $ptconfigureSpellings)) {
             $logging->log("Initialising Pharaoh PTConfigure Provision... ") ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptconfigureProvision($provisionerSettings, $init, $osProvisioner) ; }
-        else if (in_array($provisionerSettings["tool"], $dapperSpellings)) {
+        else if (in_array($provisionerSettings["tool"], $ptdeploySpellings)) {
             $logging->log("Initialising Pharaoh PTDeploy Provision... ") ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ; }
@@ -204,14 +204,12 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $command = VBOXMGCOMM." guestproperty enumerate {$this->virtufile->config["vm"]["name"]} " ;
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
-
             $out = $this->executeAndLoad($command);
             $outLines = explode("\n", $out);
             $outStr = "" ;
             foreach ($outLines as $outLine) {
                 if (strpos($outLine, "V4/IP") !== false) {
                     $outStr .= $outLine."\n" ; } }
-
             $vmInfo = $outStr;
             for ($i=0;$i<30;$i++) { //for up to 30 ifaces
                 $pattern = "/VirtualBox/GuestInfo/Net/$i/V4/IP" ;
@@ -253,7 +251,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     }
 
     protected function loadPapyrusLocal() {
-        $prFactory = new \Model\VirtualizeRequired() ;
+        $prFactory = new \Model\PTVirtualizeRequired() ;
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
         return $papyrusLocalLoader->load($this->virtufile) ;
     }
