@@ -2,6 +2,6 @@
 
 Namespace Model;
 
-class VirtualizeRequired extends BaseModelFactory {
+class PTVirtualizeRequired extends BaseModelFactory {
 
 }
