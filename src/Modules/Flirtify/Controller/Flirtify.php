@@ -18,8 +18,8 @@ class Flirtify extends Base {
             return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
         $actionsToModelGroups = array(
-            "default-cleo" => "DefaultCleo", "default-cleo-dapper" => "DefaultCleoCustomDapper",
-            "custom-cleo-dapper" => "CustomCleoCustomDapper" ) ;
+            "default-ptconfigure" => "DefaultPTConfigure", "default-ptconfigure-ptdeploy" => "DefaultPTConfigureCustomPTDeploy",
+            "custom-ptconfigure-ptdeploy" => "CustomPTConfigureCustomPTDeploy" ) ;
 
         if (in_array($action, array_keys($actionsToModelGroups))) {
             $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, $actionsToModelGroups[$action]) ;

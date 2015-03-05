@@ -6,15 +6,15 @@ class FlirtifyInfo extends Base {
 
     public $hidden = false;
 
-    public $name = "Virtualize Flirtify - Generate a Phalgrantfile";
+    public $name = "Virtualize Flirtify - Generate a Virtufile";
 
     public function __construct() {
       parent::__construct();
     }
 
     public function routesAvailable() {
-      return array( "Flirtify" =>  array_merge(parent::routesAvailable(), array("default-cleo", "default-cleo-dapper",
-      "custom-cleo-dapper") ) );
+      return array( "Flirtify" =>  array_merge(parent::routesAvailable(), array("default-ptconfigure", "default-ptconfigure-ptdeploy",
+      "custom-ptconfigure-ptdeploy") ) );
     }
 
     public function routeAliases() {
@@ -28,20 +28,20 @@ class FlirtifyInfo extends Base {
 
   Flirtify, flirt, flirtify, phlirt, phlirtify
 
-        - default-cleo
+        - default-ptconfigure
         Create a Virtufile for your project, with default Configuration Management for a PHP Application
-        example: ptvirtualize flirt default-cleo
+        example: ptvirtualize flirt default-ptconfigure
 
-        - default-cleo-dapper
+        - default-ptconfigure-ptdeploy
         Create a Virtufile for your project, with default Configuration Management for a PHP Application and
         PTDeploy Application
-        example: ptvirtualize flirt default-cleo-dapper
-            --host-dapperfile=*relative/path/to/dapperfile/"
-            # guess will use build/config/ptdeploy/dapperfy/autopilots/generated/
+        example: ptvirtualize flirt default-ptconfigure-ptdeploy
+            --host-ptdeployfile=*relative/path/to/ptdeployfile/"
+            # guess will use build/config/ptdeploy/ptdeployfy/autopilots/generated/
 
-        - custom-cleo-dapper
+        - custom-ptconfigure-ptdeploy
         Create a Virtufile for your project
-        example: ptvirtualize flirt custom-cleo-dapper
+        example: ptvirtualize flirt custom-ptconfigure-ptdeploy
 
 HELPDATA;
       return $help ;
