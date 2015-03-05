@@ -77,7 +77,7 @@ $srcFolder =  str_replace("/Net", "", dirname(__FILE__) ) ;
  * Used to do Diffie-Hellman key exchange and DSA/RSA signature verification.
  */
 if (!class_exists('Math_BigInteger')) {
-             require_once($srcFolder.'Math'.DS.'BigInteger.php');
+             require_once($srcFolder.DS.'Math'.DS.'BigInteger.php');
 }
 
 /**
