@@ -52,7 +52,7 @@ class InvokePhpSecLib {
 		return str_replace("PHARAOHPROMPT", '', $output);
 	}
 
-	public function __call($k, $args = [])
+	public function __call($k, $args = array())
 	{
 		return call_user_func_array([$this->connection, $k], $args);
 	}
