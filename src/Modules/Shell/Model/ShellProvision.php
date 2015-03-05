@@ -171,7 +171,6 @@ class ShellProvision extends BaseShellAllOS {
             foreach ($outLines as $outLine) {
                 if (strpos($outLine, "V4/IP") !== false) {
                     $outStr .= $outLine."\n" ; } }
-
             $vmInfo = $outStr;
             for ($i=0;$i<30;$i++) { //for up to 30 ifaces
                 $pattern = "/VirtualBox/GuestInfo/Net/$i/V4/IP" ;
@@ -187,8 +186,6 @@ class ShellProvision extends BaseShellAllOS {
             echo "." ;
             sleep(1) ; }
         echo "\n" ;
-
-        var_dump($outStr) ;
         return $ips ;
     }
 

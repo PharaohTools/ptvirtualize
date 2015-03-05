@@ -64,7 +64,8 @@ class BaseShellAllOS extends Base {
         foreach ($curlParams as $curlParamKey => $curlParamValue) {
             $postQuery .= ($i==0) ? "" : '&' ;
             if(is_object($curlParamValue)) {
-                var_dump($curlParamKey, $curlParamValue) ;  }
+                // var_dump($curlParamKey, $curlParamValue) ;
+            }
             $postQuery .= $curlParamKey."=".$curlParamValue;
             $i++; }
         // echo $curlUrl.'?'.$postQuery ;

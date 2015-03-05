@@ -97,18 +97,19 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $logging = $loggingFactory->getModel($this->params);
         if ($provisionerSettings["target"] == "guest") {
             if (isset($provisioner["default"])) {
-                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...") ;
+                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...", $this->getModuleName()) ;
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
-                $logging->log("Starting Provisioning VM with PTConfigure...") ;
-                $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...") ;
+                $logging->log("Starting Provisioning VM with PTConfigure...", $this->getModuleName()) ;
+                $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...", $this->getModuleName()) ;
                 $this->sftpProvision($provisionerSettings, $init);
-                $logging->log("SSH Execute Provisioning VM with PTConfigure...") ;
+                $logging->log("SSH Execute Provisioning VM with PTConfigure...", $this->getModuleName()) ;
                 $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
-            $logging->log("Provisioning Host with PTConfigure...") ;
+            $logging->log("Provisioning Host with PTConfigure...", $this->getModuleName()) ;
             $command = "ptconfigure auto x --af={$provisionerSettings["script"]}" ;
-            var_dump("comm", $command) ;
+            $logging->log($command, $this->getModuleName()) ;
+            // var_dump("comm", $command) ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
