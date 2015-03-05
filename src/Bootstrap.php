@@ -5,7 +5,7 @@ Namespace Core;
 $bootStrap = new BootStrap();
 
 $argv_or_null = (isset($argv)) ? $argv : null ;
-$bootStrapParams = (isset($_ENV['cleo_bootstrap'])) ? unserialize($_ENV['cleo_bootstrap']) : $argv_or_null ;
+$bootStrapParams = (isset($_ENV['ptconfigure_bootstrap'])) ? unserialize($_ENV['ptconfigure_bootstrap']) : $argv_or_null ;
 $bootStrap->main($bootStrapParams);
 
 class BootStrap {
