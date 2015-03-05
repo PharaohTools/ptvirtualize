@@ -160,13 +160,13 @@ class AutoSSHAllOS extends BaseLinuxApp {
     }
 
     protected function loadVirtualizeFile() {
-        $prFactory = new \Model\VirtualizeRequired();
+        $prFactory = new \Model\PTVirtualizeRequired();
         $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
         return $ptvirtualizeFileLoader->load() ;
     }
 
     protected function loadPapyrusLocal() {
-        $prFactory = new \Model\VirtualizeRequired();
+        $prFactory = new \Model\PTVirtualizeRequired();
         $papyrusLocalLoader = $prFactory->getModel($this->params, "PapyrusLocalLoader") ;
         return $papyrusLocalLoader->load($this->virtufile) ;
     }
