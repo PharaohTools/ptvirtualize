@@ -2,7 +2,7 @@
 
 Namespace Info;
 
-class VirtualizeRequiredInfo extends Base {
+class PTVirtualizeRequiredInfo extends Base {
 
     public $hidden = true;
 
