@@ -2,11 +2,11 @@
 
 Namespace Model;
 
-class InvokeAllLinux extends Base
+class InvokeAllOS extends Base
 {
 
 	// Compatibility
-	public $os = array("Linux");
+	public $os = array("any");
 	public $linuxType = array("any");
 	public $distros = array("any");
 	public $versions = array("any");
@@ -19,51 +19,40 @@ class InvokeAllLinux extends Base
 	private $sshCommands;
 	protected $isNativeSSH;
 
-	public function askWhetherToInvokeSSHShell()
-	{
+	public function askWhetherToInvokeSSHShell() {
 		return $this->performInvokeSSHShell();
 	}
 
-	public function askWhetherToInvokeSSHScript()
-	{
+	public function askWhetherToInvokeSSHScript() {
 		return $this->performInvokeSSHScript();
 	}
 
-	public function askWhetherToInvokeSSHData()
-	{
+	public function askWhetherToInvokeSSHData() {
 		return $this->performInvokeSSHData();
 	}
 
-	public function performInvokeSSHShell()
-	{
+	public function performInvokeSSHShell() {
 		if ($this->askForSSHShellExecute() != true) {
-			return false;
-		}
+			return false; }
 		$this->populateServers();
 		$commandExecution = true;
 		echo "Opening CLI...\n";
 		while ($commandExecution == true) {
 			$command = $this->askForACommand();
 			if ($command == false) {
-				$commandExecution = false;
-			} else {
+				$commandExecution = false; }
+            else {
 				foreach ($this->servers as &$server) {
 					echo "[" . $server["target"] . "] Executing $command...\n";
 					echo $this->doSSHCommand($server["ssh2Object"], $command);
-					echo "[" . $server["target"] . "] $command Completed...\n";
-				}
-			}
-		}
+					echo "[" . $server["target"] . "] $command Completed...\n"; } } }
 		echo "Shell Completed";
-
 		return true;
 	}
 
-	public function performInvokeSSHScript()
-	{
+	public function performInvokeSSHScript() {
 		if ($this->askForSSHScriptExecute() != true) {
-			return false;
-		}
+			return false; }
 		$scriptLoc = $this->askForScriptLocation();
 		$this->populateServers();
 		$this->sshCommands = explode("\n", file_get_contents($scriptLoc));
@@ -72,22 +61,17 @@ class InvokeAllLinux extends Base
 				if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
 					echo "[" . $server["target"] . "] Executing $sshCommand...\n";
 					echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
-					echo "[" . $server["target"] . "] $sshCommand Completed...\n";
-				} else {
-					echo "[" . $server["target"] . "]Connection failure. Will not execute commands on this box..\n";
-				}
-			}
-		}
+					echo "[" . $server["target"] . "] $sshCommand Completed...\n"; }
+                else {
+					echo "[" . $server["target"] . "]Connection failure. Will not execute commands on this box..\n"; } } }
 		echo "Script by SSH Completed";
 
 		return true;
 	}
 
-	public function performInvokeSSHData()
-	{
+	public function performInvokeSSHData() {
 		if ($this->askForSSHDataExecute() != true) {
-			return false;
-		}
+			return false; }
 		$data = $this->askForSSHData();
 		$this->populateServers();
 		$this->sshCommands = explode("\n", $data);
@@ -96,12 +80,9 @@ class InvokeAllLinux extends Base
 				if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
 					echo "[" . $server["target"] . "] Executing $sshCommand...\n";
 					echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
-					echo "[" . $server["target"] . "] $sshCommand Completed...\n";
-				} else {
-					echo "[" . $server["target"] . "]Connection failure. Will not execute commands on this box..\n";
-				}
-			}
-		}
+					echo "[" . $server["target"] . "] $sshCommand Completed...\n"; }
+                else {
+					echo "[" . $server["target"] . "]Connection failure. Will not execute commands on this box..\n"; } } }
 		echo "Data by SSH Completed\n";
 
 		return true;
@@ -176,7 +157,7 @@ class InvokeAllLinux extends Base
 				$server["ssh2Object"] = $attempt;
 				$logging->log("Connection to Server {$server["target"]} successful.");
 				if (!isset($this->isNativeSSH) || (isset($this->isNativeSSH) && $this->isNativeSSH != true)) {
-//					echo $this->changeBashPromptToPharaoh($server["ssh2Object"]);
+					echo $this->changeBashPromptToPharaoh($server["ssh2Object"]);
 				}
                 echo "bout to do\n" ;
 				echo $this->doSSHCommand($server["ssh2Object"],
