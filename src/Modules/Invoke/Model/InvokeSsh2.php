@@ -38,7 +38,10 @@ class InvokeSsh2 {
 	public function connect()
 	{
 		if (!($this->connection = ssh2_connect($this->server->host, $this->server->port))) {
-			throw new \Exception('Cannot connect to server');
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $logging->log('Cannot connect to server') ;
+            \Core\BootStrap::setExitCode(1) ;
 		}
 
 		ssh2_auth_password($this->connection, $this->server->username, $this->server->password);
@@ -52,7 +55,10 @@ class InvokeSsh2 {
 	public function exec($command)
 	{
 		if (!($stream = ssh2_exec($this->connection, $command))) {
-			throw new \Exception('SSH command failed');
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $logging->log("SSH command failed") ;
+            \Core\BootStrap::setExitCode(1) ;
 		}
 
 		stream_set_blocking($stream, true);

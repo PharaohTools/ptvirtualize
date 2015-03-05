@@ -41,7 +41,10 @@ class InvokePhpSecLib {
             require_once($ssh2File) ; }
 		$this->connection = new \Net_SSH2($this->server->host, $this->server->port);
 		if( ! $this->connection->login($this->server->username, $this->server->password) ){
-			throw new \Exception("Login failed!");
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $logging->log("Login failed") ;
+            \Core\BootStrap::setExitCode(1) ;
 		}
 	}
 
