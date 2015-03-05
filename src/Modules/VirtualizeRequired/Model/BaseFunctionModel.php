@@ -51,6 +51,8 @@ class BaseFunctionModel extends BaseLinuxApp {
     }
 
     protected function getProvider($provider, $modGroup) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $infoObjects = \Core\AutoLoader::getInfoObjects();
         $allProviders = array();
         foreach($infoObjects as $infoObject) {
@@ -61,7 +63,11 @@ class BaseFunctionModel extends BaseLinuxApp {
                 $className = '\Model\\'.ucfirst($oneProvider) ;
                 $providerFactory = new $className();
                 $provider = $providerFactory->getModel($this->params, $modGroup);
-                return $provider ; } }
+                if (is_object($provider)) { return $provider ; }
+                else {
+                    \Core\BootStrap::setExitCode(1);
+                    $logging->log("No Model in Group $modGroup available for provider $oneProvider") ;
+                    break ; } } }
         return false ;
     }
 
