@@ -54,7 +54,7 @@ class InvokePhpSecLib {
 
 	public function __call($k, $args = array())
 	{
-		return call_user_func_array([$this->connection, $k], $args);
+		return call_user_func_array(array($this->connection, $k), $args);
 	}
 
 }
