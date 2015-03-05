@@ -69,7 +69,7 @@
  */
 
 /*GOLDEN CONTACT*/
-$srcFolder =  str_replace("/Net", "", dirname(__FILE__) ) ;
+$srcFolder =  str_replace(DS."Net", "", dirname(__FILE__) ) ;
 
 /**
  * Include Math_BigInteger
