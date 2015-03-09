@@ -56,7 +56,7 @@ class InvokePhpSecLib extends BaseLinuxApp {
         else {
             $this->exec('echo "SSH Start"');
             $logging->log("Login successful") ;
-            return true ; }
+            return $this ; }
     }
 
     public function exec($command) {

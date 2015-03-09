@@ -136,7 +136,7 @@ class InvokeAllOS extends Base
 					$logging->log("Skipping {$server["name"]} for box id Ignore constraint");
 					continue; } }
 			$attempt = $this->attemptSSH2Connection($server);
-			if ($attempt == null) {
+			if (in_array($attempt, array(null, false))) {
 				$logging->log("Connection to Server {$server["target"]} failed."); }
             else {
 				$server["ssh2Object"] = $attempt;
@@ -307,7 +307,9 @@ QUESTION;
 
 	private function changeBashPromptToPharaoh($sshObject) {
         $command = 'echo "export PS1=PHARAOHPROMPT" > ~/.bash_login ';
-		return $sshObject->exec("$command\n");
+        $gr = $sshObject->exec("$command\n");
+        $command = 'echo "export PS1=PHARAOHPROMPT" > ~/.bash_login ';
+        return $sshObject->exec("$command\n");
 	}
 
 	private function doSSHCommand($sshObject, $command, $first = null) {
