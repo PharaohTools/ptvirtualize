@@ -101,8 +101,10 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
                 $logging->log("Starting Provisioning VM with PTConfigure...", $this->getModuleName()) ;
-                $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...", $this->getModuleName()) ;
-                $this->sftpProvision($provisionerSettings, $init);
+                if (isset($provisionerSettings["transfer"]) && $provisionerSettings["transfer"]==true) {
+                    $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...", $this->getModuleName()) ;
+                    $this->sftpProvision($provisionerSettings, $init); }
+                else { $init["provision_file"] = $provisionerSettings["script"] ; }
                 $logging->log("SSH Execute Provisioning VM with PTConfigure...", $this->getModuleName()) ;
                 $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
@@ -126,12 +128,15 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
                 $logging->log("Starting Provisioning VM with PTDeploy...") ;
-                $logging->log("SFTP Application Deployment Autopilot for PTDeploy...") ;
+                if (isset($provisionerSettings["transfer"]) && $provisionerSettings["transfer"]==true) {
+                    $logging->log("SFTP Application Deployment Autopilot for PTDeploy...", $this->getModuleName()) ;
+                    $this->sftpProvision($provisionerSettings, $init); }
+                else { $init["provision_file"] = $provisionerSettings["script"] ; }
                 $this->sftpProvision($provisionerSettings, $init);
-                $logging->log("SSH Execute Provisioning VM with PTDeploy...") ;
+                $logging->log("SSH Execute Provisioning VM with PTDeploy...", $this->getModuleName()) ;
                 $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
-            $logging->log("Provisioning Host with PTDeploy...") ;
+            $logging->log("Provisioning Host with PTDeploy...", $this->getModuleName()) ;
             $command = "ptdeploy auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
