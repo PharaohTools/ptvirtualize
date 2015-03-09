@@ -306,10 +306,11 @@ QUESTION;
 	}
 
 	private function changeBashPromptToPharaoh($sshObject) {
+        $command = 'echo "Start SSH"';
+        $gr1 = $sshObject->exec("$command\n");
         $command = 'echo "export PS1=PHARAOHPROMPT" > ~/.bash_login ';
-        $gr = $sshObject->exec("$command\n");
-        $command = 'echo "export PS1=PHARAOHPROMPT" > ~/.bash_login ';
-        return $sshObject->exec("$command\n");
+        $gr2 = $sshObject->exec("$command\n");
+        return ($gr1 == true && $gr2 == true) ? true : false ;
 	}
 
 	private function doSSHCommand($sshObject, $command, $first = null) {
