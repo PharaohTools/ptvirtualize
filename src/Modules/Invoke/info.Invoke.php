@@ -28,15 +28,15 @@ class InvokeInfo extends PTConfigureBase {
 
         - cli
         Will ask you for details for servers, then open a shell for you to execute on multiple servers
-        example: ptconfigure invoke cli --environment-name=staging
+        example: ptconfigure invoke cli --environment-name=staging --ssh-driver=seclib
 
         - script
         Will ask you for details for servers, then execute each line of a provided script file on the remote/s
-        example: ptconfigure invoke script --ssh-script="/var/www/project/script.sh" --environment-name=staging
+        example: ptconfigure invoke script --ssh-script="/var/www/project/script.sh" --environment-name=staging --ssh-driver=os
 
         - data
         Execute php variable data on one or more remotes
-        example: ptconfigure invoke data --ssh-data="ls -lah" --environment-name=staging
+        example: ptconfigure invoke data --ssh-data="ls -lah" --environment-name=staging  --ssh-driver=native
 
 HELPDATA;
       return $help ;
