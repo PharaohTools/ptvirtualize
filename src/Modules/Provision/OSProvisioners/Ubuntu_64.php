@@ -19,7 +19,7 @@ class OSProvisioner extends ProvisionDefaultLinux {
     public function getMountSharesSSHData($provisionFile) {
         $sshData = "" ;
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
-            .'| sudo -S ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
+            .'| sudo -S ln -s /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
             // @todo might be better not to sudo this creation, or allow it more params (owner, perms)
@@ -33,18 +33,18 @@ class OSProvisioner extends ProvisionDefaultLinux {
     public function getStandardPTConfigureSSHData($provisionFile, $params = array() ) {
         $paramString = "" ;
         foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
-        $sshData = <<<"SSHDATA"
-echo {$this->virtufile->config["ssh"]["password"]} | sudo -S ptconfigure auto x --af={$provisionFile}{$paramString}
-SSHDATA;
+        $sshData =
+            'echo '.$this->virtufile->config["ssh"]["password"].' | sudo -S ptconfigure auto x --af='.
+            $provisionFile.$paramString."\n" ;
         return $sshData ;
     }
 
     public function getStandardPTDeploySSHData($provisionFile, $params = array() ) {
         $paramString = "" ;
         foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
-        $sshData = <<<"SSHDATA"
-echo {$this->virtufile->config["ssh"]["password"]} | sudo -S ptdeploy auto x --af={$provisionFile}{$paramString}
-SSHDATA;
+        $sshData =
+            'echo '.$this->virtufile->config["ssh"]["password"].' | sudo -S ptdeploy auto x --af='.
+            $provisionFile.$paramString."\n" ;
         return $sshData ;
     }
 
