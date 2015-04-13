@@ -37,7 +37,7 @@ class InvokeBashSsh {
 	public function connect()
 	{
 		if(file_exists($this->server->password)){
-			$launcher = 'ssh -o PubkeyAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '.escapeshellarg($this->server->password); }
+			$launcher = 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '.escapeshellarg($this->server->password); }
         else{
 			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -o UserKnownHostsFile=/dev/null ' .
                 '-o StrictHostKeyChecking=no -o PubkeyAuthentication=no'; }
