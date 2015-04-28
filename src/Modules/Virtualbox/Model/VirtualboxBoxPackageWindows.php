@@ -39,4 +39,17 @@ class VirtualboxBoxPackageWindows extends VirtualboxBoxPackageLinuxMac {
             return $boxdir ; }
     }
 
+    protected function createPackage($target, $metadata) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $modroot = dirname(dirname(__DIR__)) ;
+        $exepath = $modroot . '\Tar\Packages\TarGnu\bin\tar.exe';
+        $logging->log("Creating box file from ova file and json file...");
+        $command = '"'.$exepath.'"'."tar -cvf $target$metadata->slug.box -C ".BASE_TEMP_DIR.DS.
+            "ptvirtualize".DS.$metadata->slug." . " ;
+        self::executeAndOutput($command);
+        $logging->log("Created box file $target{$metadata->slug}.box...");
+        return true ;
+    }
+
 }
