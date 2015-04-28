@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
+class VirtualboxBoxPackageLinuxMac extends BaseVirtualboxAllOS {
 
     // Compatibility
-    public $os = array("any") ;
+    public $os = array("Linux", "Darwin") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
