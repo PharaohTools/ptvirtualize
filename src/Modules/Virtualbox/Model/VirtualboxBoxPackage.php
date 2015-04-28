@@ -36,7 +36,7 @@ class VirtualboxBoxPackage extends BaseVirtualboxAllOS {
     }
 
     protected function saveMetadataToFS($metadata) {
-        $file = "/tmp/ptvirtualize/{$metadata->slug}/metadata.json" ;
+        $file = BASE_TEMP_DIR.DS."ptvirtualize".DS.$metadata->slug.DS."metadata.json" ;
         $string = json_encode($metadata) ;
         file_put_contents($file, $string) ;
     }
