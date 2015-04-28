@@ -6,9 +6,9 @@ class BoxWindows extends BoxUbuntu {
 
     // Compatibility
     public $os = array("Windows", "WINNT") ;
-    public $linuxType = array("None") ;
-    public $distros = array("None") ;
-    public $versions = array(array("5.0" => "+")) ;
+    public $linuxType = array("any") ;
+    public $distros = array("any") ;
+    public $versions = array("any") ;
     public $architectures = array("any") ;
 
     public function __construct($params) {
