@@ -70,7 +70,8 @@ class VirtualboxBoxPackageLinuxMac extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...");
-        $command = VBOXMGCOMM." export {$vmName} --output=/tmp/ptvirtualize/{$metadata->slug}/box.ova" ;
+        $command = VBOXMGCOMM." export {$vmName} --output=" .
+            BASE_TEMP_DIR.DS."ptvirtualize".DS.$metadata->slug.DS."box.ova" ;
         self::executeAndOutput($command);
         $logging->log("Export complete...");
     }
@@ -79,7 +80,8 @@ class VirtualboxBoxPackageLinuxMac extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Creating box file from ova file and json file...");
-        $command = "tar -cvf $target$metadata->slug.box -C /tmp/ptvirtualize/{$metadata->slug} . " ;
+        $command = "tar -cvf $target$metadata->slug.box -C ".BASE_TEMP_DIR.DS.
+            "ptvirtualize".DS.$metadata->slug." . " ;
         self::executeAndOutput($command);
         $logging->log("Created box file $target{$metadata->slug}.box...");
         return true ;
