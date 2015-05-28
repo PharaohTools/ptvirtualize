@@ -30,8 +30,8 @@ class VirtufileBase extends BaseLinuxApp {
         # Default Shared Folders
         $this->config["vm"]["shared_folders"] = array() ;
         # Default SSH Settings
-        $config["ssh"]["user"] = "ptvirtualize" ;
-        $config["ssh"]["password"] = "ptvirtualize" ;
+        $config["ssh"]["user"] = "ptv" ;
+        $config["ssh"]["password"] = "ptv" ;
         $config["ssh"]["timeout"] = "30" ;
         # Default Network Settings
         $config["network"]["nic1"] = "nat" ;
