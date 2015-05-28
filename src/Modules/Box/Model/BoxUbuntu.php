@@ -130,7 +130,7 @@ class BoxUbuntu extends BaseLinuxApp {
     protected function askForHomeLocation() {
         if (isset($this->params["home-location"])) {
             return $this->ensureTrailingSlash($this->params["home-location"]); }
-        else if (isset($this->params["guess"])) { return "http://www.ptvirtualizeboxes.co.uk/"; }
+        else if (isset($this->params["guess"])) { return "http://www.pharaohtools.com/ptvirtualize/boxes"; }
         else {
             $source = self::askForInput("Enter Home Location:", true);
             return $this->ensureTrailingSlash($source) ; }
@@ -238,7 +238,8 @@ class BoxUbuntu extends BaseLinuxApp {
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
-            self::executeAndOutput("wget -O $tmpFile {$this->source}") ;
+            $rt = self::executeAndGetReturnCode("wget -O $tmpFile {$this->source}") ;
+            if ($rt !== 0) {return false;}
             $this->source = $tmpFile ;
             $logging->log("Download complete ...");
             return true ;}
