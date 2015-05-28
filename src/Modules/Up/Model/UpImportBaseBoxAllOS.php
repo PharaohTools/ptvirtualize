@@ -34,7 +34,9 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
                 $logging->log("Guessing name $name ...") ; }
             $boxParams["name"] = $name ;
             $box = $boxFactory->getModel($boxParams) ;
-            $box->performBoxAdd() ;
+            $res = $box->performBoxAdd() ;
+            if ($res == false) {
+                return false; }
             $baseBoxPath = $this->findBaseBox(); }
         $ovaFile = $this->findOVAFile($baseBoxPath) ;
         $out = $this->doImport($ovaFile) ;
