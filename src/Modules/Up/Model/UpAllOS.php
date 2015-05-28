@@ -102,11 +102,29 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     protected function completeBuildUp() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $this->runHook("up", "pre") ;
-        $this->importBaseBox();
-        $this->modifyVm();
-        $this->startVm();
-        $this->provisionVm();
+        $res = $this->importBaseBox();
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Importing Base Box Failed", $this->source);
+            return false; }
+        $res = $this->modifyVm();
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Modifying VM Failed", $this->source);
+            return false; }
+        $res = $this->startVm();
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Starting Virtual Machine Failed", $this->source);
+            return false; }
+        $res = $this->provisionVm();
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Provisioning Virtual Machine Failed", $this->source);
+            return false; }
         $this->runHook("up", "post") ;
         $this->postUpMessage();
     }
@@ -129,7 +147,7 @@ class UpAllOS extends BaseFunctionModel {
         $importBox = $upFactory->getModel($this->params, "ImportBaseBox") ;
         $importBox->papyrus = $this->papyrus ;
         $importBox->virtufile = $this->virtufile ;
-        $importBox->performImport() ;
+        return $importBox->performImport() ;
     }
 
     protected function modifyVm($onlyIfRequestedByParam = false) {
@@ -143,7 +161,7 @@ class UpAllOS extends BaseFunctionModel {
         $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
         $modifyVM->papyrus = $this->papyrus ;
         $modifyVM->virtufile = $this->virtufile ;
-        $modifyVM->performModifications() ;
+        return $modifyVM->performModifications() ;
     }
 
     protected function startVm() {
@@ -160,8 +178,8 @@ class UpAllOS extends BaseFunctionModel {
                 $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->source);
                 $guiMode = "headless" ; } }
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
-        $this->executeAndOutput($command);
-        return true ;
+        $res = $this->executeAndGetReturnCode($command);
+        return $res ;
     }
 
     protected function provisionVm($onlyIfRequestedByParam = false) {
@@ -173,7 +191,7 @@ class UpAllOS extends BaseFunctionModel {
                 return ; } }
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
-        $provision->provisionNow();
+        return $provision->provisionNow();
     }
 
     protected function deleteFromPapyrus() {
