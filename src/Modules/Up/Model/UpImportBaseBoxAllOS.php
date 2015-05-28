@@ -46,7 +46,7 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
     protected function getRemoteSource() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $home_url = "http://www.ptvirtualizeboxes.co.uk/" ;
+        $home_url = "http://www.pharaohtools.com/ptvirtualize/boxes/" ;
         if (isset($this->virtufile->config["vm"]["box_url"])) {
             $source = $this->virtufile->config["vm"]["box_url"] ;
             $logging->log("Using explicit Box URL {$this->virtufile->config["vm"]["box_url"]} from Virtufile...") ; }
@@ -54,9 +54,8 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
             $source = $home_url.$this->virtufile->config["vm"]["box"] ;
             $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...") ; }
         else {
-            $source = $home_url.'ptvirtualize/'.$this->virtufile->config["vm"]["box"] ;
-            // @todo dont DS this its a URL
-            $logging->log("Guessing Box URL {$home_url}ptvirtualize/{$this->virtufile->config["vm"]["box"]} ...") ; }
+            $source = $home_url.''.$this->virtufile->config["vm"]["box"] ;
+            $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...") ; }
         return $source ;
     }
 
@@ -77,9 +76,7 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
                     $logging->log("Found base box {$box}") ;
                     return $dirscan.DS.$box ; } } }
         else {
-            $logging->log("No base box directory ".BOXDIR) ;
-
-        }
+            $logging->log("No base box directory ".BOXDIR) ; }
         return null ;
     }
 
