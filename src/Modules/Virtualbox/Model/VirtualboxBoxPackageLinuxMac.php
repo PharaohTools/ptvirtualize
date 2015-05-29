@@ -70,7 +70,7 @@ class VirtualboxBoxPackageLinuxMac extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...");
-        $command = VBOXMGCOMM." export {$vmName} --output=" .
+        $command = VBOXMGCOMM." export \"{$vmName}\" --output=" .
             BASE_TEMP_DIR.DS."ptvirtualize".DS.$metadata->slug.DS."box.ova" ;
         self::executeAndOutput($command);
         $logging->log("Export complete...");
