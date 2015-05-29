@@ -45,9 +45,11 @@ class VirtualboxBoxPackageWindows extends VirtualboxBoxPackageLinuxMac {
         $modroot = dirname(dirname(__DIR__)) ;
         $exepath = $modroot . '\Tar\Packages\TarGnu\bin\tar.exe';
         $logging->log("Creating box file from ova file and json file...");
-        $command = '"'.$exepath.'"'." -c -v -f $target$metadata->slug.box -C ".BASE_TEMP_DIR.DS.
+        // @note the driveless target is necessary when specifying the file target
+        $drivelessTarget = substr($target, 2) ;
+        $command = '"'.$exepath.'"'." -c -v -f {$drivelessTarget}{$metadata->slug}.box -C ".BASE_TEMP_DIR.DS.
             "ptvirtualize".DS.$metadata->slug." . " ;
-        echo "\n".$command."\n\n" ;
+        // echo "\n".$command."\n\n" ;
         self::executeAndOutput($command);
         $logging->log("Created box file $target{$metadata->slug}.box...");
         return true ;
