@@ -48,8 +48,8 @@ class BoxInfo extends Base {
             --group="ptvirtualize"
             --slug="" # guess can generate this based on name field
             --description="A Vanilla install of Ubuntu..."
-            --home-location="http://www.ptvirtualizeboxes.co.uk/" # guess will set this to http://www.ptvirtualizeboxes.co.uk/
-            --target="/opt/ptvirtualize/boxes" # save location, will guess /opt/ptvirtualize/boxes
+            --home-location="http://www.pharaohtools.com/ptvirtualize/boxes" # guess will set this to http://www.pharaohtools.com/ptvirtualize/boxes
+            --target="/opt/ptvirtualize/boxes" # save location, will guess /opt/ptvirtualize/boxes (C:\PharaohTools\boxes) on Windows
 
         - list
         List boxes installed in Virtualize
