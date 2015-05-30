@@ -36,7 +36,8 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         if (!file_exists($boxDir)) {
             $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command);}
-        $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
+        $drivelessBoxFile = substr($boxFile, 2) ;
+        $command = "$tarExe --extract --file=\"$drivelessBoxFile\" metadata.json" ;
         self::executeAndOutput($command);
         $command = "move ".BASE_TEMP_DIR."metadata.json $boxDir" ;
         self::executeAndOutput($command);
@@ -49,7 +50,8 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         chdir("C:\\Temp") ;
         $boxFile = str_replace("C:\\Temp\\", "", $source) ;
-        $command = "$tarExe -tvf \"$boxFile\"" ;
+        $drivelessBoxFile = substr($boxFile, 2) ;
+        $command = "$tarExe -tf \"$drivelessBoxFile\"" ;
         $eachFileRay = explode("\n", self::executeAndLoad($command));
         foreach ($eachFileRay as $oneFile) {
             $fileExt = substr($oneFile, -4) ;
@@ -72,8 +74,8 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
             $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command);}
         chdir("C:\\Temp\\") ;
-        $csource = substr($source, 8) ;
-        $command = "$tarExe --extract --file=\"$csource\" ./$ovaFile" ;
+        $csource = substr($source, 2) ;
+        $command = "$tarExe --extract --file=\"$csource\" $ovaFile" ;
         self::executeAndOutput($command);
         $command = "move ".BASE_TEMP_DIR."$ovaFile \"$boxDir\"" ;
         self::executeAndOutput($command);

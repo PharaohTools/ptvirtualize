@@ -44,7 +44,10 @@ class BoxWindows extends BoxUbuntu {
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         chdir(BASE_TEMP_DIR) ;
         $boxFile = str_replace(BASE_TEMP_DIR, "", $boxFile) ;
-        $command = "$tarExe --extract --file=\"$boxFile\" ./metadata.json" ;
+        $drivelessBoxFile = substr($boxFile, 2) ;
+        $command = "$tarExe --extract --file=\"$drivelessBoxFile\" metadata.json" ;
+//        $command = "$tarExe -tv --file=\"$drivelessBoxFile\" " ;
+
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $command = "del ".BASE_TEMP_DIR."metadata.json" ;
