@@ -18,9 +18,9 @@ class BoxUpImport extends BaseFunctionModel {
     public function import($file, $ostype, $name) {
         $command  = VBOXMGCOMM." import {$file} --vsys 0 --ostype {$ostype}" ;
         $command .= " --vmname {$name}" ;
-        $this->executeAndOutput($command);
-        $command = "echo $?" ;
-        $ret = $this->executeAndLoad($command);
+        $ret = $this->executeAndGetReturnCode($command);
+//        $command = "echo $?" ;
+//        $ret = $this->executeAndLoad($command);
         return ($ret == "0") ? true : false ;
     }
 
