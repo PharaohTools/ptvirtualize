@@ -72,7 +72,7 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
                 if (in_array($fileInDir, array(".", ".."))) { continue ; }
                 if (is_dir($dirscan.DS.$fileInDir)) { $boxes[] = $fileInDir ; } }
             foreach ($boxes as $box) {
-                if ($box == $this->virtufile->config["vm"]["box"]) {
+                if ($box.".box" == $this->virtufile->config["vm"]["box"]) {
                     $logging->log("Found base box {$box}") ;
                     return $dirscan.DS.$box ; } } }
         else {
