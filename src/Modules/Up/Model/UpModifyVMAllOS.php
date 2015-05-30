@@ -18,6 +18,7 @@ class UpModifyVMAllOS extends BaseFunctionModel {
     protected $availableNetworkModifications;
 
     public function performModifications() {
+        // @todo we should return false if things dont work
         $this->loadFiles();
         $this->findProvider("UpModify");
         $loggingFactory = new \Model\Logging();
@@ -35,6 +36,7 @@ class UpModifyVMAllOS extends BaseFunctionModel {
                 $logging->log("Modifying VM {$this->virtufile->config["vm"]["name"]} network by changing $configKey to $configValue") ;
                 $this->provider->modify($this->virtufile->config["vm"]["name"], $configKey, $configValue); } }
         $this->setSharedFolders();
+        return true ;
     }
 
     public function removeShares() {

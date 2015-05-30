@@ -156,7 +156,7 @@ class UpAllOS extends BaseFunctionModel {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
                 $logging->log("Not modifying as modify parameter not set", $this->source);
-                return ; } }
+                return true ; } }
         $upFactory = new \Model\Up();
         $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
         $modifyVM->papyrus = $this->papyrus ;
@@ -179,7 +179,7 @@ class UpAllOS extends BaseFunctionModel {
                 $guiMode = "headless" ; } }
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
         $res = $this->executeAndGetReturnCode($command);
-        return $res ;
+        return ($res == "0") ? true : false ;
     }
 
     protected function provisionVm($onlyIfRequestedByParam = false) {

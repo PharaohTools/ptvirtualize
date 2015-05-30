@@ -46,7 +46,7 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
     protected function getRemoteSource() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $home_url = "http://www.pharaohtools.com/ptvirtualize/boxes/" ;
+        $home_url = "http://www.pharaohtools.com/virtualize/boxes/" ;
         if (isset($this->virtufile->config["vm"]["box_url"])) {
             $source = $this->virtufile->config["vm"]["box_url"] ;
             $logging->log("Using explicit Box URL {$this->virtufile->config["vm"]["box_url"]} from Virtufile...") ; }
@@ -70,9 +70,16 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
             $boxes = array() ;
             foreach ($filesInDir as $fileInDir) {
                 if (in_array($fileInDir, array(".", ".."))) { continue ; }
-                if (is_dir($dirscan.DS.$fileInDir)) { $boxes[] = $fileInDir ; } }
+                if (is_dir($dirscan.DS.$fileInDir)) {
+                    $boxes[] = $fileInDir ;
+                }
+            }
             foreach ($boxes as $box) {
-                if ($box.".box" == $this->virtufile->config["vm"]["box"]) {
+                $confBox = $this->virtufile->config["vm"]["box"] ;
+                // @todo for if we are looking for box archive files also
+//                if (substr($this->virtufile->config["vm"]["box"], strlen($this->virtufile->config["vm"]["box"])-4) !== ".box"){
+//                    $confBox .= ".box" ; }
+                if ($box == $confBox) {
                     $logging->log("Found base box {$box}") ;
                     return $dirscan.DS.$box ; } } }
         else {
