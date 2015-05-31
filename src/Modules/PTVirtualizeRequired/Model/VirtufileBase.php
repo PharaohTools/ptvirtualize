@@ -8,6 +8,7 @@ class VirtufileBase extends BaseLinuxApp {
 
     protected function setDefaultConfig($defaultConfigType = null) {
         // @todo I need to create an array, or includes or something of $defaultConfigType, to set different defaults
+        // @todo a method to in
         $config = array() ;
         # Default System Settings
         $config["vm"]["name"] = "ptvirtualize-box" ;
@@ -16,7 +17,7 @@ class VirtufileBase extends BaseLinuxApp {
         $config["vm"]["gui_mode"] = "headless" ;
         $config["vm"]["ip_find_timeout"] = 180 ; # The time in seconds Virtualize will allow for Guest Additions to find IP's
         $config["vm"]["ssh_find_timeout"] = 300 ; # The time in seconds that Virtualize will wait for the machine SSH port to accept connections.
-        $config["vm"]["box"] = "vanillabuntu" ; # This is the name of the box the machine "up" with.
+        $config["vm"]["box"] = "vanillaubuntu" ; # This is the name of the box the machine "up" with.
         // @todo config.vm.box_url - If $config ["vm"]["box"] is an installed box you can ignore this. Otherwise point to a url it can be downloaded from
         $config["vm"]["cpus"] = 1 ;
         $config["vm"]["memory"] = 2048 ;
@@ -33,11 +34,13 @@ class VirtufileBase extends BaseLinuxApp {
         $config["ssh"]["user"] = "ptv" ;
         $config["ssh"]["password"] = "ptv" ;
         $config["ssh"]["timeout"] = "30" ;
+        $config["ssh"]["driver"] = "seclib" ;
         # Default Network Settings
         $config["network"]["nic1"] = "nat" ;
-        $config["network"]["nic2"] = "hostonly" ;
-        $config["network"]["hostonlyadapter2"] = $this->getDefaultHostNetworkName() ;
-
+        $defaultHostNetwork = $this->getDefaultHostNetworkName() ;
+        if ($defaultHostNetwork !== "") {
+            $config["network"]["nic2"] = "hostonly" ;
+            $config["network"]["hostonlyadapter2"] = $defaultHostNetwork ; }
         // @todo waiting config vars
         //$config["vm"]["box_check_update"] - If true, Vagrant will check for updates to the configured box on every vagrant up. If an update is found, Vagrant will tell the user. By default this is true. Updates will only be checked for boxes that properly support updates (boxes from Vagrant Cloud or some other versioned box).
         //$config["vm"]["box_download_checksum"] - The checksum of the box specified by $config["vm"]["box_url. If not specified, no checksum comparison will be done. If specified, Vagrant will compare the checksum of the downloaded box to this value and error if they do not match. Checksum checking is only done when Vagrant must download the box.
@@ -48,15 +51,12 @@ class VirtufileBase extends BaseLinuxApp {
         //$config["vm"]["box_version"] - The version of the box to use. This defaults to ">= 0" (the latest version available). This can contain an arbitrary list of constraints, separated by commas, such as: >= 1.0, < 1.5. When constraints are given, Vagrant will use the latest available box satisfying these constraints.
         // @todo surely by using vboxmanage this is not an issue?
         //$config["vm"]["usable_port_range"] - A range of ports Vagrant can use for handling port collisions and such. Defaults to 2200..2250.
-
         $this->config = $config ;
-
     }
 
     protected function getDefaultHostNetworkName() {
         // @todo this should come from a provider module
         $command = VBOXMGCOMM." list hostonlyifs " ;
-
         $out = $this->executeAndLoad($command);
         $outLines = explode("\n", $out);
         $outStr = "" ;

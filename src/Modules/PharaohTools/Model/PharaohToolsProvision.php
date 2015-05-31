@@ -23,11 +23,11 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $ptconfigureSpellings = array("PTConfigure", "ptconfigure", "configure", "Configure") ;
         $ptdeploySpellings = array("PTDeploy", "ptdeploy", "deploy", "Deploy" ) ;
         if (in_array($provisionerSettings["tool"], $ptconfigureSpellings)) {
-            $logging->log("Initialising Pharaoh PTConfigure Provision... ") ;
+            $logging->log("Initialising Pharaoh Configure Provision... ") ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptconfigureProvision($provisionerSettings, $init, $osProvisioner) ; }
         else if (in_array($provisionerSettings["tool"], $ptdeploySpellings)) {
-            $logging->log("Initialising Pharaoh PTDeploy Provision... ") ;
+            $logging->log("Initialising Pharaoh Deploy Provision... ") ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
@@ -80,9 +80,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             ))) ;
 
             $this->storeInPapyrus($this->virtufile->config["ssh"]["user"], $this->virtufile->config["ssh"]["password"], $chosenIp) ;
-
             $provisionFile = $this->virtufile->config["vm"]["default_tmp_dir"]."provision.php" ;
-
             $ray = array() ;
             $ray["provision_file"] = $provisionFile ;
             $ray["encoded_box"] = $encodedBox ;
@@ -190,6 +188,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
         $sshParams["servers"] = $init["encoded_box"] ;
+        $sshParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         if (isset($this->virtufile->config["ssh"]["port"])) {
             $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
         if (isset($this->virtufile->config["ssh"]["timeout"])) {

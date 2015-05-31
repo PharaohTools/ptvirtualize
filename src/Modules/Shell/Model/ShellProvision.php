@@ -35,7 +35,6 @@ class ShellProvision extends BaseShellAllOS {
     protected function initialiseShellProvision($provisionerSettings) {
 
         if ($provisionerSettings["target"] == "guest") {
-
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params);
             // get target ip from virtufile if its there
@@ -54,26 +53,20 @@ class ShellProvision extends BaseShellAllOS {
                 $gdi = $this->getDefaultIpList() ;
                 $ips = array_merge($ips, $gdi) ;
                 $logging->log("Using default ip list of $gdi") ;  }
-
             if (isset($this->virtufile->config["ssh"]["port"])) {
                 $thisPort = $this->virtufile->config["ssh"]["port"] ; }
             else {
                 $thisPort = 22 ; }
-
             $ip = $this->waitForSsh($ips, $thisPort, 2) ;
-            if ($ip != null) {
-                $chosenIp = $ip ; }
-
+            if ($ip != null) { $chosenIp = $ip ; }
             $encodedBox = serialize(array(array(
                 "user" => "{$this->virtufile->config["ssh"]["user"]}",
                 "password" => "{$this->virtufile->config["ssh"]["password"]}",
-                "target" => "$chosenIp"
+                "target" => "$chosenIp",
+                "driver" => "{$this->virtufile->config["ssh"]["driver"]}"
             ))) ;
-
             $this->storeInPapyrus($this->virtufile->config["ssh"]["user"], $this->virtufile->config["ssh"]["password"], $chosenIp) ;
-
             $provisionFile = $this->virtufile->config["vm"]["default_tmp_dir"]."provision.sh" ;
-
             $ray = array() ;
             $ray["provision_file"] = $provisionFile ;
             $ray["encoded_box"] = $encodedBox ;
@@ -81,7 +74,6 @@ class ShellProvision extends BaseShellAllOS {
         else {
             $ray = array() ; }
         return $ray ;
-
     }
 
     protected function shellProvision($provisioner, $init, $osProvisioner) {
@@ -115,6 +107,7 @@ class ShellProvision extends BaseShellAllOS {
             $sftpParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
         if (isset($this->virtufile->config["ssh"]["timeout"])) {
             $sftpParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
+        $sftpParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
         $sftp->performSFTPPut();
@@ -145,6 +138,7 @@ class ShellProvision extends BaseShellAllOS {
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
         $sshParams["servers"] = $init["encoded_box"] ;
+        $sftpParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         if (isset($this->virtufile->config["ssh"]["port"])) {
             $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
         if (isset($this->virtufile->config["ssh"]["timeout"])) {
@@ -164,7 +158,6 @@ class ShellProvision extends BaseShellAllOS {
         $command = VBOXMGCOMM." guestproperty enumerate {$this->virtufile->config["vm"]["name"]} " ;
         $cards = $this->countNICs() ;
         for ($secs = 0; $secs<$totalTime; $secs++) {
-
             $out = $this->executeAndLoad($command);
             $outLines = explode("\n", $out);
             $outStr = "" ;
@@ -213,6 +206,7 @@ class ShellProvision extends BaseShellAllOS {
     protected function storeInPapyrus($user, $pass, $target) {
         $ptvirtualizeBox = array() ;
         $ptvirtualizeBox["name"] = $this->virtufile->config["vm"]["name"] ;
+        $ptvirtualizeBox["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         $ptvirtualizeBox["username"] = $user ;
         $ptvirtualizeBox["password"] = $pass ;
         $ptvirtualizeBox["target"] = $target ;
