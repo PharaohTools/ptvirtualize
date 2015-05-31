@@ -2,7 +2,7 @@
 
 Namespace Model ;
 
-class OSProvisioner extends ProvisionDefaultLinux {
+class OSProvisioner extends ProvisionDefaultAllOS {
 
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
