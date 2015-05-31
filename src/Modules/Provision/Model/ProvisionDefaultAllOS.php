@@ -2,13 +2,13 @@
 
 Namespace Model ;
 
-class ProvisionDefaultLinux extends Base {
+class ProvisionDefaultAllOS extends Base {
 
     public $virtufile;
     public $papyrus ;
     protected $provisionModel ;
 
-    public function provision($hook = "") {
+    public function provision( $hook = "") {
         $provisionOuts = array() ;
         if ($hook != "") {$hook = "_$hook" ; }
         foreach ($this->virtufile->config["vm"]["provision$hook"] as $provisionerSettings) {
@@ -29,7 +29,7 @@ class ProvisionDefaultLinux extends Base {
     protected function provisionVirtufile($hook, $type) {
         $provisionOuts = array() ;
         if (isset($this->virtufile->config["vm"]["provision_{$hook}_{$type}"]) &&
-            count($this->virtufile->config["vm"]["provision_{$hook}_{$type}"])>0){
+            count($this->virtufile->config["vm"]["provision_{$hook}_{$type}"]) > 0){
             foreach ($this->virtufile->config["vm"]["provision_{$hook}_{$type}"] as $provisionerSettings) {
                 $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; } }
         return $provisionOuts ;
@@ -40,28 +40,24 @@ class ProvisionDefaultLinux extends Base {
         $logging = $loggingFactory->getModel($this->params) ;
         $provisionOuts = array() ;
         // @todo this will do for now but should be dynamic
-        $provisioners = array("PharaohTools", "Shell") ;
+        $provisioners_and_tools = array(
+            "PharaohTools" => array("ptconfigure", "ptdeploy"),
+            "Shell" => array("shell") ) ;
+        $provisioners = array_keys($provisioners_and_tools) ;
         foreach ($provisioners as $provisioner) {
-            // echo "dave a2\n" ;
-            // @todo this will do for now but should be dynamic
-            $tools = array("ptconfigure", "ptdeploy", "shell") ;
+            $tools = $provisioners_and_tools[$provisioner] ;
             foreach ($tools as $tool) {
-                // echo "dave a3\n" ;
                 $targets = array("host", "guest") ;
                 foreach ($targets as $target) {
                     $dir = getcwd().DS."build".DS."config".DS."ptvirtualize".DS."hooks".DS."$provisioner".DS.
                         "$tool".DS."$hook".DS."$target".DS."$type" ;
                     $hookDirectoryExists = file_exists($dir) ;
-                    $hookDirectoryIsDir = is_dir($dir) ;
                     // var_dump("hde", $hookDirectoryExists, "hdd", $hookDirectoryIsDir) ;
-                    // echo "dave a4 $dir\n" ;
                     if ($hookDirectoryExists) {
                         $relDir = str_replace(getcwd(), "", $dir) ;
                         $logging->log("Virtualize hook directory $relDir found") ;
                         $hookDirFiles = scandir($dir) ;
-                        // echo "dave a5 x ".implode(" ", $hookDirFiles) ;
                         foreach ($hookDirFiles as $hookDirFile) {
-                            // echo "dave a6\n" ;
                             if (substr($hookDirFile, strlen($hookDirFile)-4) == ".php") {
                                 $logging->log("Virtualize hook file $dir".DS."$hookDirFile found") ;
                                 $provisionerSettings =
@@ -69,8 +65,7 @@ class ProvisionDefaultLinux extends Base {
                                         "provisioner" => $provisioner,
                                         "tool" => $tool,
                                         "target" => $target,
-                                        "script" => "$dir".DS."$hookDirFile"
-                                    );
+                                        "script" => "$dir".DS."$hookDirFile" );
                                 $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ;
                                 $logging->log("Executing $hookDirFile with $tool") ; } } } } } }
         return $provisionOuts ;
