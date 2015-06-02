@@ -12,7 +12,9 @@ class ProvisionDefaultAllOS extends Base {
         $provisionOuts = array() ;
         if ($hook != "") {$hook = "_$hook" ; }
         foreach ($this->virtufile->config["vm"]["provision$hook"] as $provisionerSettings) {
-            $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; }
+            $curout = $this->doSingleProvision($provisionerSettings) ;
+            $provisionOuts[] = $curout ;
+            if ($curout==false) {return $provisionOuts ;}}
         return $provisionOuts ;
     }
 

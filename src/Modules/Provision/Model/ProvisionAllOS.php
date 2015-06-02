@@ -23,12 +23,12 @@ class ProvisionAllOS extends BaseLinuxApp {
 
     public function provisionNow($hook = "") {
         $this->loadFiles();
-        $this->osProvisioner->provision($hook);
+        return $this->osProvisioner->provision($hook);
     }
 
     public function provisionHook($hook, $type) {
         $this->loadFiles();
-        $this->osProvisioner->provisionHook($hook, $type);
+        return $this->osProvisioner->provisionHook($hook, $type);
     }
 
     public function loadFiles() {

@@ -188,10 +188,12 @@ class UpAllOS extends BaseFunctionModel {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
                 $logging->log("Not provisioning as provision parameter not set", $this->source);
-                return ; } }
+                return true; } }
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
-        return $provision->provisionNow();
+        $pn =$provision->provisionNow();
+        var_dump("this check", $pn) ;
+        return $pn ;
     }
 
     protected function deleteFromPapyrus() {

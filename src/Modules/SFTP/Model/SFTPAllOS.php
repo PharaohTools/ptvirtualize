@@ -28,8 +28,8 @@ class SFTPAllOS extends Base {
     public function performSFTPPut() {
         if ($this->askForSFTPExecute() != true) { return false; }
         $this->populateServers() ;
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params);
+        $loggingFactory = new \Model\Logging() ;
+        $logging = $loggingFactory->getModel($this->params) ;
         $sourceDataPath = $this->getSourceFilePath("local") ;
         $sourceData = $this->attemptToLoad($sourceDataPath) ;
         if (is_null($sourceData)) {
@@ -50,10 +50,11 @@ class SFTPAllOS extends Base {
                     continue ; } }
             if (isset($server["sftpObject"]) && is_object($server["sftpObject"])) {
                 $logging->log("[".$server["target"]."] Executing SFTP Put...")  ;
+                $logging->log("Attempting to STFP Put from {$sourceDataPath} to [".$server["target"]."]:{$sourceDataPath}...")  ;
                 $logging->log($this->doSFTPPut($server["sftpObject"], $targetPath, $sourceData)) ;
                 $logging->log("[".$server["target"]."] SFTP Put Completed...") ; }
             else {
-                echo "[".$server["target"]."]Connection failure. Will not execute commands on this box..\n"  ; } }
+                echo "[".$server["target"]."] Connection failure. Will not execute commands on this box..\n"  ; } }
         $logging->log("All SFTP Puts Completed");
         return "All SFTP Puts Completed";
     }

@@ -95,26 +95,50 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $logging = $loggingFactory->getModel($this->params);
         if ($provisionerSettings["target"] == "guest") {
             if (isset($provisioner["default"])) {
-                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...", $this->getModuleName()) ;
-                $this->sshProvision($provisioner, $init, $osProvisioner); }
+                $logging->log("Provisioning VM with Default Pharaoh Configure Autopilot for {$provisioner["default"]}...") ;
+                return $this->sshProvision($provisioner, $init, $osProvisioner); }
+            else if (isset($provisioner["source"]) && $provisioner["source"]=="guest") {
+                $logging->log("Provisioning VM with local guest Pharaoh Configure Autopilot for {$provisioner["default"]}...") ;
+                $init["provision_file"] = $provisionerSettings["script"] ;
+                return $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
-                $logging->log("Starting Provisioning VM with PTConfigure...", $this->getModuleName()) ;
+                $logging->log("Starting Provisioning VM with PTConfigure...") ;
                 if (isset($provisionerSettings["transfer"]) && $provisionerSettings["transfer"]==true) {
-                    $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...", $this->getModuleName()) ;
-                    $this->sftpProvision($provisionerSettings, $init); }
+                    $logging->log("SFTP Application Configuration Autopilot for PTConfigure...", $this->getModuleName()) ;
+                    return $this->sftpProvision($provisionerSettings, $init); }
                 else { $init["provision_file"] = $provisionerSettings["script"] ; }
+                $this->sftpProvision($provisionerSettings, $init);
                 $logging->log("SSH Execute Provisioning VM with PTConfigure...", $this->getModuleName()) ;
-                $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
+                return $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
             $logging->log("Provisioning Host with PTConfigure...", $this->getModuleName()) ;
-            $command = "ptconfigure auto x --af={$provisionerSettings["script"]}" ;
-            $logging->log($command, $this->getModuleName()) ;
-            // var_dump("comm", $command) ;
+            $command = "ptdeploy auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
-            self::executeAndOutput($command) ; }
-        return true ;
+            return self::executeAndGetReturnCode($command) ; }
+//        if ($provisionerSettings["target"] == "guest") {
+//            if (isset($provisioner["default"])) {
+//                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...", $this->getModuleName()) ;
+//                $this->sshProvision($provisioner, $init, $osProvisioner); }
+//            else {
+//                $logging->log("Starting Provisioning VM with PTConfigure...", $this->getModuleName()) ;
+//                if (isset($provisionerSettings["transfer"]) && $provisionerSettings["transfer"]==true) {
+//                    $logging->log("SFTP Configuration Management Autopilot to VM for PTConfigure...", $this->getModuleName()) ;
+//                    $this->sftpProvision($provisionerSettings, $init); }
+//                else { $init["provision_file"] = $provisionerSettings["script"] ; }
+//                $logging->log("SSH Execute Provisioning VM with PTConfigure...", $this->getModuleName()) ;
+//                $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
+//        else if ($provisionerSettings["target"] == "host") {
+//            $logging->log("Provisioning Host with PTConfigure...", $this->getModuleName()) ;
+//            $command = "ptconfigure auto x --af={$provisionerSettings["script"]}" ;
+//            $logging->log($command, $this->getModuleName()) ;
+//            // var_dump("comm", $command) ;
+//            if (isset($provisionerSettings["params"])) {
+//                foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
+//                    $command .= " --$paramkey=\"$paramval\"" ; } }
+//            self::executeAndOutput($command) ; }
+//        return true ;
     }
 
     protected function ptdeployProvision($provisionerSettings, $init, $osProvisioner) {
@@ -122,7 +146,11 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $logging = $loggingFactory->getModel($this->params);
         if ($provisionerSettings["target"] == "guest") {
             if (isset($provisioner["default"])) {
-                $logging->log("Provisioning VM with Default PTConfigure Autopilot for {$provisioner["default"]}...") ;
+                $logging->log("Provisioning VM with Default Pharaoh Deploy Autopilot for {$provisioner["default"]}...") ;
+                $this->sshProvision($provisioner, $init, $osProvisioner); }
+            else if (isset($provisioner["source"]) && $provisioner["source"]=="guest") {
+                $logging->log("Provisioning VM with local guest Pharaoh Deploy Autopilot for {$provisioner["default"]}...") ;
+                $init["provision_file"] = $provisionerSettings["script"] ;
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
                 $logging->log("Starting Provisioning VM with PTDeploy...") ;
@@ -156,7 +184,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $sftpParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
-        $sftp->performSFTPPut();
+        return $sftp->performSFTPPut();
     }
 
     protected function sshProvision($provisionerSettings, $init, $osProvisioner) {
@@ -195,7 +223,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
         $sshFactory = new \Model\Invoke();
         $ssh = $sshFactory->getModel($sshParams) ;
-        $ssh->performInvokeSSHData() ;
+        return $ssh->performInvokeSSHData() ;
     }
 
     protected function waitUntilGetIP() {
