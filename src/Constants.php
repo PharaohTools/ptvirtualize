@@ -13,17 +13,17 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     $outputArray = array();
     exec($command, $outputArray);
     define('VBOXMGCOMM', "\"{$outputArray[0]}\" ") ;
-    define('CLEOCOMM', '"C:\PharaohTools\ptconfigure.cmd"') ;
-    define('DAPPCOMM', '"C:\PharaohTools\ptdeploy.cmd"') ;
-    define('VIRTCOMM', '"C:\PharaohTools\ptvirtualize.cmd"') ;
+    define('PTCCOMM', '"C:\PharaohTools\ptconfigure.cmd"') ;
+    define('PTDCOMM', '"C:\PharaohTools\ptdeploy.cmd"') ;
+    define('PTVCOMM', '"C:\PharaohTools\ptvirtualize.cmd"') ;
     define('BOXDIR', 'C:\\PharaohTools\boxes') ;
     define('DS', "\\");
     define('BASE_TEMP_DIR', 'C:\\Temp\\'); }
 else if (in_array(PHP_OS, array("Linux", "Solaris", "FreeBSD", "OpenBSD", "Darwin"))) {
     define('VBOXMGCOMM', "vboxmanage ") ;
-    define('CLEOCOMM', "ptconfigure ") ;
-    define('DAPPCOMM', "ptdeploy ") ;
-    define('VIRTCOMM', "ptvirtualize") ;
+    define('PTCCOMM', "ptconfigure ") ;
+    define('PTDCOMM', "ptdeploy ") ;
+    define('PTVCOMM', "ptvirtualize") ;
     define('BOXDIR', '/opt/ptvirtualize/boxes') ;
     define('DS', "/");
     define('BASE_TEMP_DIR', '/tmp/'); }
