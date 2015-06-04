@@ -192,7 +192,6 @@ class UpAllOS extends BaseFunctionModel {
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $pn =$provision->provisionNow();
-        var_dump("this check", $pn) ;
         return $pn ;
     }
 
