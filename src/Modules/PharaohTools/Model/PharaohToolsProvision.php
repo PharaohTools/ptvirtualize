@@ -91,6 +91,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
     protected function ptconfigureProvision($provisionerSettings, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
+        if (!isset($provisionerSettings["source"])) {
+            $provisionerSettings["source"] = $provisionerSettings["target"] ; }
         if ($provisionerSettings["target"] == "guest") {
             $logging->log("Starting Provisioning Guest with Pharaoh Configure...") ;
             if (isset($provisionerSettings["default"])) {
@@ -107,17 +109,25 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $logging->log("SSH Execute Provisioning Guest with Pharaoh Configure...", $this->getModuleName()) ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
-            $logging->log("Provisioning Host with PTConfigure...", $this->getModuleName()) ;
-            $command = "ptconfigure auto x --af={$provisionerSettings["script"]}" ;
+            $logging->log("Provisioning Host with PTConfigure Starting...", $this->getModuleName()) ;
+            $sys = new \Model\SystemDetectionAllOS();
+            $prefix = "" ;
+            if (!in_array($sys->os, array("Windows", "WINNT"))) { $prefix = "sudo "; }
+            $command = $prefix.PTCCOMM." auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
-            return self::executeAndGetReturnCode($command) ; }
+            self::executeAndOutput($command) ;
+            $rc = self::executeAndLoad("echo $?") ;
+            $logging->log("Provisioning Host with PTConfigure Complete...", $this->getModuleName()) ;
+            return $rc ;}
     }
 
     protected function ptdeployProvision($provisionerSettings, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
+        if (!isset($provisionerSettings["source"])) {
+            $provisionerSettings["source"] = $provisionerSettings["target"] ; }
         if ($provisionerSettings["target"] == "guest") {
             $logging->log("Starting Provisioning Guest with Pharaoh Deploy...") ;
             if (isset($provisionerSettings["default"])) {
@@ -134,12 +144,18 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $logging->log("SSH Execute Provisioning Guest with Pharaoh Deploy...", $this->getModuleName()) ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); } }
         else if ($provisionerSettings["target"] == "host") {
-            $logging->log("Provisioning Host with PTDeploy...", $this->getModuleName()) ;
-            $command = "ptdeploy auto x --af={$provisionerSettings["script"]}" ;
+            $logging->log("Provisioning Host with PTDeploy Starting...", $this->getModuleName()) ;
+            $sys = new \Model\SystemDetectionAllOS();
+            $prefix = "" ;
+            if (!in_array($sys->os, array("Windows", "WINNT"))) { $prefix = "sudo "; }
+            $command = $prefix.PTDCOMM." auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
-            return self::executeAndOutput($command) ; }
+            self::executeAndOutput($command) ;
+            $rc = self::executeAndLoad("echo $?") ;
+            $logging->log("Provisioning Host with PTDeploy Complete...", $this->getModuleName()) ;
+            return $rc ;}
     }
 
     protected function sftpProvision($provisionerSettings, $init) {
@@ -241,7 +257,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $logging->log("Waiting for ssh...") ;
         while ($t < $totalTime) {
             foreach ($ips as $ip) {
-                $command = CLEOCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
+                $command = PTCCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
                     $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
