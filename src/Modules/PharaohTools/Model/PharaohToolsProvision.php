@@ -88,6 +88,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         return $ray ;
     }
 
+    // @todo this and the above method should be one
     protected function ptconfigureProvision($provisionerSettings, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
@@ -111,8 +112,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         else if ($provisionerSettings["target"] == "host") {
             $logging->log("Provisioning Host with PTConfigure Starting...", $this->getModuleName()) ;
             $sys = new \Model\SystemDetectionAllOS();
-            $prefix = "" ;
-            if (!in_array($sys->os, array("Windows", "WINNT"))) { $prefix = "sudo "; }
+            $prefix = (!in_array($sys->os, array("Windows", "WINNT"))) ? "sudo " : "" ;
             $command = $prefix.PTCCOMM." auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
@@ -123,6 +123,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             return $rc ;}
     }
 
+    // @todo this and the above method should be one
     protected function ptdeployProvision($provisionerSettings, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
@@ -146,8 +147,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         else if ($provisionerSettings["target"] == "host") {
             $logging->log("Provisioning Host with PTDeploy Starting...", $this->getModuleName()) ;
             $sys = new \Model\SystemDetectionAllOS();
-            $prefix = "" ;
-            if (!in_array($sys->os, array("Windows", "WINNT"))) { $prefix = "sudo "; }
+            $prefix = (!in_array($sys->os, array("Windows", "WINNT"))) ? "sudo " : "" ;
             $command = $prefix.PTDCOMM." auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
