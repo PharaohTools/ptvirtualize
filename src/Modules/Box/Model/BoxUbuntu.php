@@ -54,15 +54,10 @@ class BoxUbuntu extends BaseLinuxApp {
         $this->source = $this->getOriginalBoxLocation();
         $this->target = $this->getTargetBoxLocation();
         $this->name = $this->getBoxNewName();
-        var_dump("cw pba 1:", getcwd()) ;
         if ($this->downloadIfRemote() == false) { return false; }
-        var_dump("cw pba 2:", getcwd()) ;
         $this->metadata = $this->extractMetadata();
-        var_dump("cw pba 3:", getcwd()) ;
         if ($this->metadata == false) { return false ; }
-        var_dump("cw pba 4:", getcwd()) ;
         if ($this->findProvider() == false) { return false ; }
-        var_dump("cw pba 5:", getcwd()) ;
         return $this->attemptBoxAdd() ;
     }
 
