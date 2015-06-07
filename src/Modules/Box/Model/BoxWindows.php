@@ -29,8 +29,11 @@ class BoxWindows extends BoxUbuntu {
             // @todo error return false
             $wgetExe = '"'.dirname(dirname(dirname(__FILE__))).'\WgetWin\Packages\WgetWin\wget.exe"' ;
             $comm = "$wgetExe -O $tmpFile {$this->source}" ;
-            $rt = self::executeAndOutput($comm) ;
-            if ($rt !== 0) {
+            $rt = self::executeAndGetReturnCode($comm, true, true) ;
+
+            var_dump("error level", getenv("ErrorLevel"), "rt", $rt);
+
+            if ($rt["rc"] !== 0) {
                 $logging->log("File Download Failed");
                 return false; }
             $this->source = $tmpFile ;
