@@ -17,6 +17,8 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
     public function addBox($source, $target, $name) {
         // add the box here
         // create the directory for the box
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $boxDir = $this->createBoxDirectory($target, $name) ;
         if (!is_null($boxDir)) {
             // put the metadata file in the new box directory
@@ -28,7 +30,8 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
             $this->extractOVA($source, $boxDir, $ovaFile) ;
             $this->changeOVAName($boxDir, $ovaFile) ;
             $this->completion() ;
-        }
+            return true; }
+        return false ;
     }
 
     protected function askForBoxAddExecute() {
@@ -49,39 +52,44 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
             $logging->log("Files already exist at $boxdir. Cannot create directory to add box.");
             return null; }
         if (!file_exists($target)) {
-            $logging->log("Adding parent box directory $target.");
+            $logging->log("Adding parent box directory $target.", $this->getModuleName());
             $command = "sudo mkdir -p $boxdir" ;
             self::executeAndOutput($command);}
-        $logging->log("Changing owner of parent box directory $target to $whoami.");
+        $logging->log("Changing owner of parent box directory $target to $whoami.", $this->getModuleName());
         $command = "sudo chown $whoami $target" ;
         self::executeAndOutput($command);
-        $logging->log("Changing user write permissions of parent box directory $target to 755.");
+        $logging->log("Changing user write permissions of parent box directory $target to 755.", $this->getModuleName());
         $command = "sudo chmod -R 755 $target" ;
         self::executeAndOutput($command);
-        $logging->log("Adding box directory $boxdir.");
+        $logging->log("Adding box directory $boxdir.", $this->getModuleName());
         $command = "sudo mkdir -p $boxdir" ;
         self::executeAndOutput($command);
-        $logging->log("Changing owner of box directory $boxdir to $whoami.");
+        $logging->log("Changing owner of box directory $boxdir to $whoami.", $this->getModuleName());
         $command = "sudo chown $whoami $boxdir" ;
         self::executeAndOutput($command);
-        $logging->log("Changing user write permissions of box directory $boxdir to 755.");
+        $logging->log("Changing user write permissions of box directory $boxdir to 755.", $this->getModuleName());
         $command = "sudo chown -R $whoami $boxdir" ;
         self::executeAndOutput($command);
-        return $boxdir ;
+        if (in_array($boxdir, array(false, null)) ) {
+            $logging->log("Unable to create required Box directory", $this->getModuleName());
+            return false ; }
+        else {
+            $logging->log("Box directory {$boxdir} created", $this->getModuleName());
+            return $boxdir ;}
     }
 
     protected function extractMetadata($source, $boxDir) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting metadata.json from pbox file...");
+        $logging->log("Extracting metadata.json from pbox file...", $this->getModuleName());
         $command = "tar --extract --file=$source -C $boxDir ./metadata.json" ;
-        self::executeAndOutput($command);
+        return self::executeAndGetReturnCode($command, true);
     }
 
     protected function findOVA($source) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Finding ova file name from box file...");
+        $logging->log("Finding ova file name from box file...", $this->getModuleName());
         $command = "tar -tvf $source" ;
         $allFilesString = self::executeAndLoad($command);
         $eachFile = explode("\n", $allFilesString) ;
@@ -90,7 +98,7 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
             if ($fileExt == ".ova" || $fileExt ==".ovf") {
                 $rp = strrpos($oneFile, "./") ;
                 $stripped = substr($oneFile, ($rp+2)) ;
-                $logging->log("Found ova file $stripped from box file...");
+                $logging->log("Found ova file $stripped from box file...", $this->getModuleName());
                 return $stripped ; } }
         return null ;
     }
@@ -98,17 +106,17 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
     protected function extractOVA($source, $boxDir, $ovaFile) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting ova file $ovaFile from box file...");
+        $logging->log("Extracting ova file $ovaFile from box file...", $this->getModuleName());
         $command = "tar --extract --file=$source -C $boxDir ./$ovaFile" ;
         self::executeAndOutput($command);
-        $logging->log("Extraction complete...");
+        $logging->log("Extraction complete...", $this->getModuleName());
     }
 
     protected function changeOVAName($boxDir, $ovaFile) {
         if ($ovaFile != "box.ova") {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("Changing ova file name from $ovaFile to box.ova...");
+            $logging->log("Changing ova file name from $ovaFile to box.ova...", $this->getModuleName());
             $command = "mv $boxDir/$ovaFile $boxDir/box.ova" ;
             self::executeAndOutput($command); }
     }
@@ -116,7 +124,7 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
     protected function completion() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Completed Adding Box...");
+        $logging->log("Completed Adding Box...", $this->getModuleName());
     }
 
 }

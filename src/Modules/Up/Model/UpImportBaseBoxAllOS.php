@@ -17,21 +17,21 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
     public function performImport() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Importing Base Box...") ;
+        $logging->log("Importing Base Box...", $this->getModuleName()) ;
         $baseBoxPath = $this->findBaseBox();
         // if its null, we don't have the box yet, so box add it
         if (is_null($baseBoxPath)) {
-            $logging->log("Base Box {$this->virtufile->config["vm"]["box"]} doesn't exist locally, adding...") ;
+            $logging->log("Base Box {$this->virtufile->config["vm"]["box"]} doesn't exist locally, adding...", $this->getModuleName()) ;
             $boxFactory = new \Model\Box();
             $boxParams = $this->params ;
             $boxParams["source"] = $this->getRemoteSource() ;
             $boxParams["guess"] = true ; // guess target
             if (strpos($this->virtufile->config["vm"]["box"], "/") != false) {
                 $name = substr($this->virtufile->config["vm"]["box"], strpos($this->virtufile->config["vm"]["box"], "/")) ;
-                $logging->log("Guessing name $name ...") ; }
+                $logging->log("Guessing name $name ...", $this->getModuleName()) ; }
             else {
                 $name = substr($this->virtufile->config["vm"]["box"], strpos($this->virtufile->config["vm"]["box"], "/")) ;
-                $logging->log("Guessing name $name ...") ; }
+                $logging->log("Guessing name $name ...", $this->getModuleName()) ; }
             $boxParams["name"] = $name ;
             $box = $boxFactory->getModel($boxParams) ;
             $res = $box->performBoxAdd() ;
@@ -49,23 +49,23 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
         $home_url = "http://www.pharaohtools.com/virtualize/boxes/" ;
         if (isset($this->virtufile->config["vm"]["box_url"])) {
             $source = $this->virtufile->config["vm"]["box_url"] ;
-            $logging->log("Using explicit Box URL {$this->virtufile->config["vm"]["box_url"]} from Virtufile...") ; }
+            $logging->log("Using explicit Box URL {$this->virtufile->config["vm"]["box_url"]} from Virtufile...", $this->getModuleName()) ; }
         else if (strpos($this->virtufile->config["vm"]["box"], "/") != false) {
             $source = $home_url.$this->virtufile->config["vm"]["box"] ;
-            $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...") ; }
+            $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...", $this->getModuleName()) ; }
         else {
             $source = $home_url.''.$this->virtufile->config["vm"]["box"] ;
-            $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...") ; }
+            $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...", $this->getModuleName()) ; }
         return $source ;
     }
 
     protected function findBaseBox() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Finding base box {$this->virtufile->config["vm"]["box"]} from Virtufile") ;
+        $logging->log("Finding base box {$this->virtufile->config["vm"]["box"]} from Virtufile", $this->getModuleName()) ;
         $dirscan = BOXDIR ;
         if (file_exists(BOXDIR)) {
-            $logging->log("Found base box directory ".BOXDIR) ;
+            $logging->log("Found base box directory ".BOXDIR, $this->getModuleName()) ;
             $filesInDir = scandir(BOXDIR) ;
             $boxes = array() ;
             foreach ($filesInDir as $fileInDir) {
@@ -80,10 +80,10 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
 //                if (substr($this->virtufile->config["vm"]["box"], strlen($this->virtufile->config["vm"]["box"])-4) !== ".box"){
 //                    $confBox .= ".box" ; }
                 if ($box == $confBox) {
-                    $logging->log("Found base box {$box}") ;
+                    $logging->log("Found base box {$box}", $this->getModuleName()) ;
                     return $dirscan.DS.$box ; } } }
         else {
-            $logging->log("No base box directory ".BOXDIR) ; }
+            $logging->log("No base box directory ".BOXDIR, $this->getModuleName()) ; }
         return null ;
     }
 
@@ -91,9 +91,9 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
         $ovaFile = $baseBox.DS.'box.ova' ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Finding OVA file $ovaFile") ;
+        $logging->log("Finding OVA file $ovaFile", $this->getModuleName()) ;
         if (file_exists($ovaFile)) {
-            $logging->log("Found OVA file {$ovaFile}") ;
+            $logging->log("Found OVA file {$ovaFile}", $this->getModuleName()) ;
             return $ovaFile ; }
         return null ;
     }

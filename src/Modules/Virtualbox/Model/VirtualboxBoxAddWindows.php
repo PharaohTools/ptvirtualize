@@ -19,10 +19,10 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (file_exists($boxdir)) {
-            $logging->log("Files already exist at $boxdir. Cannot create directory to add box.");
+            $logging->log("Files already exist at $boxdir. Cannot create directory to add box.", $this->getModuleName()) ;
             return null; }
         if (!file_exists($target)) {
-            $logging->log("Adding parent box directory $target.");
+            $logging->log("Adding parent box directory $target.", $this->getModuleName()) ;
             $command = "mkdir $boxdir" ;
             self::executeAndOutput($command);}
         return $boxdir ;
@@ -31,36 +31,39 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
     protected function extractMetadata($source, $boxDir) {
         $boxFile = $source ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
-        chdir("C:\\Temp") ;
-         $boxFile = str_replace("C:\\Temp\\", "", $boxFile) ;
+        $start_directory = getcwd() ;
+        chdir(BASE_TEMP_DIR) ;
         if (!file_exists($boxDir)) {
             $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command);}
         $drivelessBoxFile = substr($boxFile, 2) ;
-        $command = "$tarExe --extract --file=\"$drivelessBoxFile\" metadata.json" ;
+        $command = "$tarExe --extract --file=\"$drivelessBoxFile\" ./metadata.json" ;
         self::executeAndOutput($command);
         $command = "move ".BASE_TEMP_DIR."metadata.json $boxDir" ;
         self::executeAndOutput($command);
+        chdir($start_directory) ;
     }
 
     protected function findOVA($source) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Finding ova file name from box file...") ;
+        $logging->log("Finding ova file name from box file...", $this->getModuleName()) ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
-        chdir("C:\\Temp") ;
-        $boxFile = str_replace("C:\\Temp\\", "", $source) ;
+        $boxFile = $source ;
+        $start_directory = getcwd() ;
+        chdir(BASE_TEMP_DIR) ;
         $drivelessBoxFile = substr($boxFile, 2) ;
         $command = "$tarExe -tf \"$drivelessBoxFile\"" ;
         $eachFileRay = explode("\n", self::executeAndLoad($command));
+        chdir($start_directory) ;
         foreach ($eachFileRay as $oneFile) {
-            $fileExt = substr($oneFile, -4) ;
+//            $fileExt = substr($oneFile, -4) ;
             if (strpos($oneFile, ".ova")!==false || strpos($oneFile, ".ovf")!==false) {
                 $lpos = strpos($oneFile, "./") ;
                 $fname = substr($oneFile, $lpos) ;
                 $fname = str_replace("./", "", $fname) ;
                 $fname = str_replace(".\\", "", $fname) ;
-                $logging->log("Found ova file $fname from box file...");
+                $logging->log("Found ova file $fname from box file...", $this->getModuleName()) ;
                 return $fname ; } }
         return null ;
     }
@@ -68,18 +71,20 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
     protected function extractOVA($source, $boxDir, $ovaFile) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting ova file $ovaFile from box file...");
+        $logging->log("Extracting ova file $ovaFile from box file...", $this->getModuleName()) ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         if (!file_exists($boxDir)) {
             $command = "mkdir \"$boxDir\"" ;
-            self::executeAndOutput($command);}
-        chdir("C:\\Temp\\") ;
+            self::executeAndOutput($command); }
+        $start_directory = getcwd() ;
+        chdir(BASE_TEMP_DIR) ;
         $csource = substr($source, 2) ;
-        $command = "$tarExe --extract --file=\"$csource\" $ovaFile" ;
+        $command = "$tarExe --extract --file=\"$csource\" ./$ovaFile" ;
         self::executeAndOutput($command);
         $command = "move ".BASE_TEMP_DIR."$ovaFile \"$boxDir\"" ;
         self::executeAndOutput($command);
-        $logging->log("Extraction complete...");
+        $logging->log("Extraction complete...", $this->getModuleName()) ;
+        chdir($start_directory) ;
     }
 
     protected function changeOVAName($boxDir, $ovaFile) {
