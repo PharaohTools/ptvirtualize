@@ -54,23 +54,19 @@ class BoxUbuntu extends BaseLinuxApp {
         $this->source = $this->getOriginalBoxLocation();
         $this->target = $this->getTargetBoxLocation();
         $this->name = $this->getBoxNewName();
-        if ($this->downloadIfRemote() == false) {
-            return false; }
+        if ($this->downloadIfRemote() == false) { return false; }
         $this->metadata = $this->extractMetadata();
-        $this->findProvider() ;
-        $this->attemptBoxAdd() ;
-        # vbox module
-        return true;
+        if ($this->metadata == false) { return false ; }
+        if ($this->findProvider() == false) { return false ; }
+        return $this->attemptBoxAdd() ;
     }
 
     public function performBoxRemove() {
         $this->target = $this->getTargetBoxLocation();
         $this->name = $this->getBoxNewName();
         $this->metadata = $this->getMetadataFromFS();
-        $this->findProvider("BoxRemove") ;
-        $this->attemptBoxRemove() ;
-        # vbox module
-        return true;
+        if ($this->findProvider("BoxRemove") == false) { return false ; }
+        return $this->attemptBoxRemove() ;
     }
 
     public function performBoxPackage() {
@@ -84,9 +80,8 @@ class BoxUbuntu extends BaseLinuxApp {
         $this->metadata->home_location = $this->askForHomeLocation();
         $this->target = $this->getTargetBoxLocation();
         $this->vmname = $this->getVmName();
-        $this->findProvider("BoxPackage") ;
-        $this->attemptBoxPackage() ;
-        return true;
+        if ($this->findProvider("BoxPackage") == false) { return false ; }
+        return $this->attemptBoxPackage() ;
     }
 
     protected function askForProvider() {
@@ -178,7 +173,8 @@ class BoxUbuntu extends BaseLinuxApp {
         $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
         self::executeAndOutput($command);
         $fdo = json_decode($fData) ;
-        return $fdo ;
+        if (is_object($fdo)) { return $fdo ; }
+        return false ;
     }
 
     protected function getMetadataFromFS() {
@@ -194,11 +190,14 @@ class BoxUbuntu extends BaseLinuxApp {
         if (isset($this->metadata)) {
             if (isset($this->metadata->provider)) {
                 $logging->log("Provider {$this->metadata->provider} found in metadata.json") ;
-                $this->provider = $this->getProvider($this->metadata->provider, $modGroup) ; }
+                $this->provider = $this->getProvider($this->metadata->provider, $modGroup) ;
+                return ($this->provider !== false) ? true : false ; }
             else {
-                $logging->log("No Provider configured in Metadata object."); } }
+                $logging->log("No Provider configured in Metadata object.");
+                return false ;} }
         else {
-            $logging->log("No Metadata object found."); }
+            $logging->log("No Metadata object found.");
+            return false ;}
     }
 
     protected function getProvider($provider, $modGroup = "BoxAdd") {
@@ -221,9 +220,10 @@ class BoxUbuntu extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
             $logging->log("Attempting to add box via provider {$this->metadata->provider}...");
-            $this->provider->addBox($this->source, $this->target, $this->name) ; }
+            return $this->provider->addBox($this->source, $this->target, $this->name) ; }
         else {
-            $logging->log("No Provider available, will not attempt to add box."); }
+            $logging->log("No Provider available, will not attempt to add box.");
+            return false ; }
     }
 
     protected function downloadIfRemote() {
@@ -251,9 +251,10 @@ class BoxUbuntu extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
             $logging->log("Attempting to remove box via provider {$this->metadata->provider}...");
-            $this->provider->removeBox($this->target, $this->name) ; }
+            return $this->provider->removeBox($this->target, $this->name) ; }
         else {
-            $logging->log("No Provider available, will not attempt to remove box."); }
+            $logging->log("No Provider available, will not attempt to remove box.");
+            return false ;}
     }
 
     protected function attemptBoxPackage() {
@@ -261,9 +262,10 @@ class BoxUbuntu extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
             $logging->log("Attempting to package box via provider {$this->metadata->provider}...");
-            $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
+            return $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
         else {
-            $logging->log("No Provider available, will not attempt to package box."); }
+            $logging->log("No Provider available, will not attempt to package box.");
+            return false ;}
     }
 
 }

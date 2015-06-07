@@ -30,14 +30,11 @@ class BoxWindows extends BoxUbuntu {
             $wgetExe = '"'.dirname(dirname(dirname(__FILE__))).'\WgetWin\Packages\WgetWin\wget.exe"' ;
             $comm = "$wgetExe -O $tmpFile {$this->source}" ;
             $rt = self::executeAndGetReturnCode($comm, true, true) ;
-
-            var_dump("error level", getenv("ErrorLevel"), "rt", $rt);
-
             if ($rt["rc"] !== 0) {
-                $logging->log("File Download Failed");
+                $logging->log("File Download Failed", $this->getModuleName());
                 return false; }
             $this->source = $tmpFile ;
-            $logging->log("Download complete ...");
+            $logging->log("Download complete ...", $this->getModuleName());
             return true ;}
         return true ;
     }
@@ -50,12 +47,12 @@ class BoxWindows extends BoxUbuntu {
         $drivelessBoxFile = substr($boxFile, 2) ;
         $command = "$tarExe --extract --file=\"$drivelessBoxFile\" metadata.json" ;
 //        $command = "$tarExe -tv --file=\"$drivelessBoxFile\" " ;
-
         self::executeAndOutput($command);
         $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
         $command = "del ".BASE_TEMP_DIR."metadata.json" ;
         self::executeAndOutput($command);
         $fdo = json_decode($fData) ;
-        return $fdo ;
+        if (is_object($fdo)) { return $fdo ; }
+        return false ;
     }
 }
