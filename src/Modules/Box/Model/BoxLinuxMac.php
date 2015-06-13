@@ -5,10 +5,10 @@ Namespace Model;
 class BoxUbuntu extends BaseLinuxApp {
 
     // Compatibility
-    public $os = array("Linux") ;
-    public $linuxType = array("Debian") ;
-    public $distros = array("Ubuntu") ;
-    public $versions = array(array("11.04", "+")) ;
+    public $os = array("Linux", "Darwin") ;
+    public $linuxType = array("any") ;
+    public $distros = array("Ubuntu", "any") ;
+    public $versions = array(array("11.04", "+"), "any") ;
     public $architectures = array("any") ;
 
     // Model Group
@@ -238,7 +238,7 @@ class BoxUbuntu extends BaseLinuxApp {
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
-            $rt = self::executeAndGetReturnCode("wget -O $tmpFile {$this->source}") ;
+            $rt = self::executeAndGetReturnCode('curl "'.$this->source.'" -O "'.$tmpFile.'"') ;
             if ($rt !== 0) {return false;}
             $this->source = $tmpFile ;
             $logging->log("Download complete ...");
