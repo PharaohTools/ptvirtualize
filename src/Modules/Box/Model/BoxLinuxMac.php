@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxUbuntu extends BaseLinuxApp {
+class BoxLinuxMac extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("Linux", "Darwin") ;
