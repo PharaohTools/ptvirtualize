@@ -34,6 +34,9 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
                 $logging->log("Guessing name $name ...", $this->getModuleName()) ; }
             $boxParams["name"] = $name ;
             $box = $boxFactory->getModel($boxParams) ;
+            if (!is_object($box)) {
+                $logging->log("No Box model available for this system ...", $this->getModuleName()) ;
+                return false ; }
             $res = $box->performBoxAdd() ;
             if ($res == false) {
                 return false; }
