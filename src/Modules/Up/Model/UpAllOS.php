@@ -75,7 +75,8 @@ class UpAllOS extends BaseFunctionModel {
             $this->params["pfiles"] = self::askForInput($question) ; }
         if ($this->params["up-all"] == true) { $pfilesToExecute = $this->virtufile->files ; }
         else { $pfilesToExecute = $this->params["pfiles"] ; }
-        $ptconfigureCommand = "ptconfigure parallax cli --yes --guess " ;
+        // @todo should we just have parallax in ptv, otherwise we are creating an unneccessary dependency
+        $ptconfigureCommand = PTCCOMM." parallax cli --yes --guess " ;
         for ($i = 0; $i < count($pfilesToExecute); $i++) {
             $cnum = $i + 1 ;
             $ptconfigureCommand .= "--command-{$cnum}=\"ptvirtualize up now --yes --guess --pfile={$this->virtufile->files[$i]} \" " ; }
@@ -203,8 +204,6 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->params["ignore-hooks"]) ) {
-            $loggingFactory = new \Model\Logging();
-            $logging = $loggingFactory->getModel($this->params) ;
             $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->source);
             return ; }
         $logging->log("Provisioning $hook $type hooks", $this->source);
