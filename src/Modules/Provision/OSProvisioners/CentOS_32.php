@@ -1,3 +1,3 @@
 <?php
 
-require_once("Ubuntu_64.php") ;
+require_once("CentOS_64.php") ;
