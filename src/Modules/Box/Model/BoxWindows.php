@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxWindows extends BoxUbuntu {
+class BoxWindows extends BoxLinuxMac {
 
     // Compatibility
     public $os = array("Windows", "WINNT") ;
