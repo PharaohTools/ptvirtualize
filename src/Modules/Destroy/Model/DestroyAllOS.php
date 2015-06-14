@@ -51,9 +51,9 @@ class DestroyAllOS extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params);
         $destroyables = $this->provider->getDestroyableStates();
         if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $destroyables) == true) {
-            $logging->log("This VM is in a Destroyable state...") ;
+            $logging->log("This VM is in a Destroyable state...", $this->getModuleName()) ;
             return true ; }
-        $logging->log("This VM is not in a Destroyable state...") ;
+        $logging->log("This VM is not in a Destroyable state...", $this->getModuleName()) ;
         return false ;
     }
 
@@ -63,10 +63,10 @@ class DestroyAllOS extends BaseFunctionModel {
         if (isset($this->params["ignore-hooks"]) ) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("Not provisioning destroy hooks as ignore hooks parameter is set");
+            $logging->log("Not provisioning destroy hooks as ignore hooks parameter is set", $this->getModuleName()) ;
             return ; }
         $ut = ucfirst($type) ;
-        $logging->log("Provisioning $ut Destroy Hooks");
+        $logging->log("Provisioning $ut Destroy Hooks", $this->getModuleName()) ;
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $provision->provisionHook("destroy", $type);
