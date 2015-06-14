@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class VirtualizeFileLoaderAllLinux extends BaseLinuxApp {
+class VirtuFileLoaderAllLinux extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("any") ;
@@ -12,7 +12,7 @@ class VirtualizeFileLoaderAllLinux extends BaseLinuxApp {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("VirtualizeFileLoader") ;
+    public $modelGroup = array("VirtuFileLoader") ;
 
     public function load() {
         $this->findFile() ;
