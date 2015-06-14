@@ -4,7 +4,7 @@ Namespace Model ;
 
 class OSProvisioner extends ProvisionDefaultAllOS {
 
-    public $ostype = "Centos 64 or 32 Bit from 6 onwards" ;
+    public $ostype = "Centos / Red Hat Linux, 64 or 32 Bit from 6 onwards" ;
 
     public function getPTConfigureInitSSHData($provisionFile) {
 		$sshData = "" ;
