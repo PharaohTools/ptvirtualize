@@ -21,9 +21,9 @@ class ProvisionDefaultAllOS extends Base {
     public function provisionHook($hook, $type) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Provisioning from Virtufile settings if available for $hook $type") ;
+        $logging->log("Provisioning from Virtufile settings if available for $hook $type", $this->getModuleName()) ;
         $provisionOuts = $this->provisionVirtufile($hook, $type) ;
-        $logging->log("Provisioning from hook directories if available for $hook $type") ;
+        $logging->log("Provisioning from hook directories if available for $hook $type", $this->getModuleName()) ;
         $provisionOuts = array_merge($provisionOuts, $this->provisionHookDirs($hook, $type)) ;
         return $provisionOuts ;
     }
