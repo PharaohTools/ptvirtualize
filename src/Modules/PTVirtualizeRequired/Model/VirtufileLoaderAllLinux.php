@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class VirtuFileLoaderAllLinux extends BaseLinuxApp {
+class VirtufileLoaderAllLinux extends BaseLinuxApp {
 
     // Compatibility
     public $os = array("any") ;
@@ -12,10 +12,11 @@ class VirtuFileLoaderAllLinux extends BaseLinuxApp {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("VirtuFileLoader") ;
+    public $modelGroup = array("VirtufileLoader") ;
 
     public function load() {
-        $this->findFile() ;
+        if ($this->findFile() ==false) {
+            return false; }
         $ptvirtualize = $this->loadClass() ;
         return $ptvirtualize;
     }
@@ -26,8 +27,9 @@ class VirtuFileLoaderAllLinux extends BaseLinuxApp {
             $this->params["classname"] :
             str_replace(".php", "", $virtufilename) ;
         $cname = '\Model\\'.$cname  ;
-        $ptvirtualize = (class_exists($cname)) ? new $cname($this->params) : null ;
-        return $ptvirtualize;
+        if (class_exists($cname)) {
+            $ptvirtualize = new $cname($this->params) ;
+            return $ptvirtualize; }
     }
 
     private function getPfile() {
@@ -40,19 +42,32 @@ class VirtuFileLoaderAllLinux extends BaseLinuxApp {
     protected function findFile() {
         $virtufile = $this->getPfile() ;
         if (file_exists(getcwd().DS."$virtufile") && is_file(getcwd().DS."$virtufile")) {
-            require_once(getcwd().DS."$virtufile"); }
+            require_once(getcwd().DS."$virtufile");
+            return true; }
         else if (file_exists($virtufile)) {
-            require_once($virtufile); }
+            require_once($virtufile);
+            return true; }
         else if (!is_null($virtufile)) {
-            require_once(getcwd().DS."Virtufile"); }
+            require_once(getcwd().DS."Virtufile");
+            return true; }
         else if (file_exists(getcwd().DS."Virtufile")) {
-            require_once(getcwd().DS."Virtufile"); }
+            require_once(getcwd().DS."Virtufile");
+            return true; }
         else if (file_exists(getcwd().DS."virtufile")) {
-            require_once(getcwd().DS."virtufile"); }
+            require_once(getcwd().DS."virtufile");
+            return true; }
         else if (file_exists(getcwd().DS."build/config/ptvirtualize/Virtufile")) {
-            require_once(getcwd().DS."build/config/ptvirtualize/Virtufile"); }
+            require_once(getcwd().DS."build/config/ptvirtualize/Virtufile");
+            return true; }
         else if (file_exists(getcwd().DS."build/config/ptvirtualize/virtufile")) {
-            require_once(getcwd().DS."build/config/ptvirtualize/virtufile"); }
+            require_once(getcwd().DS."build/config/ptvirtualize/virtufile");
+            return true; }
+        else {
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $logging->log("Unable to find Virtufile", $this->getModuleName()) ;
+            \Core\BootStrap::setExitCode(1) ;
+            return false ; }
     }
 
 }
