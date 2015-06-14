@@ -22,24 +22,31 @@ class ProvisionAllOS extends BaseLinuxApp {
     }
 
     public function provisionNow($hook = "") {
-        $this->loadFiles();
+        if ($this->loadFiles() == false) { return false; }
         return $this->osProvisioner->provision($hook);
     }
 
     public function provisionHook($hook, $type) {
-        $this->loadFiles();
+        if ($this->loadFiles() == false) { return false; }
         return $this->osProvisioner->provisionHook($hook, $type);
     }
 
     public function loadFiles() {
-        $this->virtufile = $this->loadVirtualizeFile();
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $this->virtufile = $this->loadVirtufile();
         $this->papyrus = $this->loadPapyrusLocal();
         $this->osProvisioner = $this->loadOSProvisioner() ;
+        if (in_array(false, array($this->virtufile, $this->osProvisioner))) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Unable to load a required file", $this->getModuleName()) ;
+            return false ; }
+        return true ;
     }
 
-    protected function loadVirtualizeFile() {
+    protected function loadVirtufile() {
         $prFactory = new \Model\PTVirtualizeRequired();
-        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
+        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtufileLoader") ;
         return $ptvirtualizeFileLoader->load() ;
     }
 
@@ -56,12 +63,12 @@ class ProvisionAllOS extends BaseLinuxApp {
             $this->virtufile->config["vm"]["ostype"].".php" ;
         if (file_exists($provFile)) {
             require_once ($provFile) ;
-            $logging->log("OS Provisioner found for {$this->virtufile->config["vm"]["ostype"]}") ;
+            $logging->log("OS Provisioner found for {$this->virtufile->config["vm"]["ostype"]}", $this->getModuleName()) ;
             $osp = new \Model\OSProvisioner($this->params) ;
             $osp->virtufile = $this->virtufile;
             $osp->papyrus = $this->papyrus;
             return $osp ; }
-        $logging->log("No suitable OS Provisioner found");
+        $logging->log("No suitable OS Provisioner found for {$this->virtufile->config["vm"]["ostype"]}", $this->getModuleName()) ;
         return null ;
     }
 
