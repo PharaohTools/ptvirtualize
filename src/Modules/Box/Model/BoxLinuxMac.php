@@ -143,12 +143,28 @@ class BoxLinuxMac extends BaseLinuxApp {
         if (isset($this->params["target"])) {
             return $this->ensureTrailingSlash($this->params["target"]) ; }
         else if (isset($this->params["guess"])) {
-            $target = BOXDIR ;
-            if (!file_exists($target)) { mkdir($target, true) ; }
-            return $this->ensureTrailingSlash($target) ; }
+            if (!file_exists(BOXDIR)) {
+                if ($this->attemptToCreateBoxDir()== false) {
+                    return false ; } }
+            return $this->ensureTrailingSlash(BOXDIR) ; }
         else {
             $target = self::askForInput("Enter Box Target Path:", true);
             return $this->ensureTrailingSlash($target) ; }
+    }
+
+    protected function attemptToCreateBoxDir() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        if (!is_writable(dirname(BOXDIR))) {
+            $msg = "Box target directory does not exist, parent is not writable. Attempting to create with escalated privileges" ;
+            $logging->log($msg, $this->getModuleName());
+            $command = 'sudo mkdir -p '.BOXDIR;
+            $res = self::executeAndGetReturnCode($command, true);
+            return $res ;}
+        else {
+            $msg = "Box target directory does not exist, parent is writable. Attempting to create" ;
+            $logging->log($msg, $this->getModuleName());
+            return mkdir(BOXDIR, 0777, true) ; }
     }
 
     protected function getBoxNewName() {
