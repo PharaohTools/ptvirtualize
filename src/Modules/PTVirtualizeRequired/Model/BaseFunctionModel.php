@@ -24,13 +24,13 @@ class BaseFunctionModel extends BaseLinuxApp {
     }
 
     protected function loadFiles() {
-        $this->virtufile = $this->loadVirtualizeFile();
+        $this->virtufile = $this->loadVirtufile();
         $this->papyrus = $this->loadPapyrusLocal();
     }
 
-    protected function loadVirtualizeFile() {
+    protected function loadVirtufile() {
         $prFactory = new \Model\PTVirtualizeRequired();
-        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
+        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtufileLoader") ;
         return $ptvirtualizeFileLoader->load() ;
     }
 
