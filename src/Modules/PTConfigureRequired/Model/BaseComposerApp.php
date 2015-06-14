@@ -60,9 +60,9 @@ class BaseComposerApp extends BasePHPApp {
   protected function doComposerCommand(){
       $command = array(
           "cd $this->programDataFolder".DIRECTORY_SEPARATOR.$this->programNameMachine ,
-          "wget https://getcomposer.org/installer",
+          'curl -L "https://getcomposer.org/installer" -o "installer"',
           "php installer",
-          "sudo php composer.phar install -vvv --prefer-dist"
+          "php composer.phar install -vvv --prefer-dist"
       );
       self::executeAsShell($command);
     return true;
