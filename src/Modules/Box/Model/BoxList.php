@@ -70,12 +70,12 @@ class BoxList extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->metadata)) {
             if (isset($this->metadata->provider)) {
-                $logging->log("Provider {$this->metadata->provider} found in metadata.json") ;
+                $logging->log("Provider {$this->metadata->provider} found in metadata.json", $this->getModuleName());
                 $this->provider = $this->getProvider($this->metadata->provider, $modGroup) ; }
             else {
-                $logging->log("No Provider configured in Metadata object."); } }
+                $logging->log("No Provider configured in Metadata object.", $this->getModuleName()); } }
         else {
-            $logging->log("No Metadata object found."); }
+            $logging->log("No Metadata object found.", $this->getModuleName()); }
     }
 
     protected function getProvider($provider, $modGroup = "BoxAdd") {

@@ -189,14 +189,14 @@ class BoxLinuxMac extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->metadata)) {
             if (isset($this->metadata->provider)) {
-                $logging->log("Provider {$this->metadata->provider} found in metadata.json") ;
+                $logging->log("Provider {$this->metadata->provider} found in metadata.json", $this->getModuleName()) ;
                 $this->provider = $this->getProvider($this->metadata->provider, $modGroup) ;
                 return ($this->provider !== false) ? true : false ; }
             else {
-                $logging->log("No Provider configured in Metadata object.");
+                $logging->log("No Provider configured in Metadata object.", $this->getModuleName());
                 return false ;} }
         else {
-            $logging->log("No Metadata object found.");
+            $logging->log("No Metadata object found.", $this->getModuleName());
             return false ;}
     }
 
@@ -231,17 +231,18 @@ class BoxLinuxMac extends BaseLinuxApp {
         $logging = $loggingFactory->getModel($this->params) ;
         if (substr($this->source, 0, 7) == "http://" || substr($this->source, 0, 8) == "https://") {
             $this->source = $this->ensureTrailingSlash($this->source);
-            $logging->log("Box is remote not local, will download to temp directory before adding...");
+            $logging->log("Box is remote not local, will download to temp directory before adding...", $this->getModuleName());
             set_time_limit(0); // unlimited max execution time
             $tmpFile = BASE_TEMP_DIR.'file.box' ;
             $logging->log("Downloading File ...");
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
-            $rt = self::executeAndGetReturnCode('curl "'.$this->source.'" -O "'.$tmpFile.'"') ;
+            $curlComm = 'curl -L "'.$this->source.'" -o "'.$tmpFile.'"' ;
+            $rt = self::executeAndGetReturnCode($curlComm) ;
             if ($rt !== 0) {return false;}
             $this->source = $tmpFile ;
-            $logging->log("Download complete ...");
+            $logging->log("Download complete ...", $this->getModuleName());
             return true ;}
         return true ;
     }
@@ -250,10 +251,10 @@ class BoxLinuxMac extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
-            $logging->log("Attempting to remove box via provider {$this->metadata->provider}...");
+            $logging->log("Attempting to remove box via provider {$this->metadata->provider}...", $this->getModuleName());
             return $this->provider->removeBox($this->target, $this->name) ; }
         else {
-            $logging->log("No Provider available, will not attempt to remove box.");
+            $logging->log("No Provider available, will not attempt to remove box.", $this->getModuleName());
             return false ;}
     }
 
@@ -264,7 +265,7 @@ class BoxLinuxMac extends BaseLinuxApp {
             $logging->log("Attempting to package box via provider {$this->metadata->provider}...");
             return $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
         else {
-            $logging->log("No Provider available, will not attempt to package box.");
+            $logging->log("No Provider available, will not attempt to package box.", $this->getModuleName());
             return false ;}
     }
 
