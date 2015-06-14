@@ -23,7 +23,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
     }
 
     public function autoSSHCli() {
-        $this->loadFiles();
+        if ($this->loadFiles() == false) { return false; }
         // try the connection
         $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
         $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
@@ -55,7 +55,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
     // @todo this needs testing
     public function autoSSHData() {
-        $this->loadFiles();
+        if ($this->loadFiles() == false) { return false; }
         // try the connection
         $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
         $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
@@ -88,7 +88,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
     // @todo this and method below can be rolled into one
     public function autoSFTPPut() {
-        $this->loadFiles();
+        if ($this->loadFiles() == false) { return false; }
         // try the connection
         $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
         $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
@@ -122,7 +122,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
     // @todo this and method above can be rolled into one
     public function autoSFTPGet() {
-        $this->loadFiles();
+        if ($this->loadFiles() == false) { return false; }
         // try the connection
         $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
         $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
@@ -154,14 +154,21 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
     }
 
-    protected function loadFiles() {
-        $this->virtufile = $this->loadVirtualizeFile();
+    public function loadFiles() {
+        $this->virtufile = $this->loadVirtufile();
         $this->papyrus = $this->loadPapyrusLocal();
+        if (in_array(false, array($this->virtufile, $this->papyrus))) {
+            \Core\BootStrap::setExitCode(1);
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $logging->log("Unable to load a required file", $this->getModuleName()) ;
+            return false ; }
+        return true ;
     }
 
-    protected function loadVirtualizeFile() {
+    protected function loadVirtufile() {
         $prFactory = new \Model\PTVirtualizeRequired();
-        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtualizeFileLoader") ;
+        $ptvirtualizeFileLoader = $prFactory->getModel($this->params, "VirtufileLoader") ;
         return $ptvirtualizeFileLoader->load() ;
     }
 
@@ -179,7 +186,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
             ? $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Waiting for ssh...") ;
+        $logging->log("Waiting for ssh...", $this->getModuleName()) ;
         while ($t < $totalTime) {
             $command = PTCCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
             $vmInfo = self::executeAndLoad($command) ;
