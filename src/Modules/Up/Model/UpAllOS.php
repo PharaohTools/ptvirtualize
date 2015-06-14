@@ -42,9 +42,9 @@ class UpAllOS extends BaseFunctionModel {
         if ($this->isSavedInPapyrus()) {
             if ($this->vmExistsInProvider()) {
                 if ($this->vmIsRunning()) {
-                    $logging->log("This VM is already up and running.", $this->source);
+                    $logging->log("This VM is already up and running.", $this->getModuleName());
                     return; }
-                $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->source);
+                $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
                 $this->runHook("up", "pre") ;
                 $this->modifyVm(true);
                 $this->startVm();
@@ -52,18 +52,18 @@ class UpAllOS extends BaseFunctionModel {
                 $this->runHook("up", "post") ;
                 $this->postUpMessage();
                 return ;}
-            $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->source);
+            $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
             $this->deleteFromPapyrus();
             $this->completeBuildUp();
             return ; }
-        $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.", $this->source);
+        $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.", $this->getModuleName());
         $this->completeBuildUp();
     }
 
     protected function doMultiUp() {
         $loggingFactory = new \Model\Logging() ;
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Using multiple Virtufile setup", $this->source);
+        $logging->log("Using multiple Virtufile setup", $this->getModuleName());
         // Please enter the following...
         // All boxes ?
         if (!isset($this->params["up-all"])) {
@@ -88,18 +88,18 @@ class UpAllOS extends BaseFunctionModel {
         $this->loadFiles();
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Halting Machine...", $this->source);
+        $logging->log("Halting Machine...", $this->getModuleName());
         $haltFactory = new \Model\Halt() ;
         $halt = $haltFactory->getModel($this->params) ;
         $halt->haltNow();
-        $logging->log("Bringing Machine up with Modifications and Provisioning...", $this->source);
+        $logging->log("Bringing Machine up with Modifications and Provisioning...", $this->getModuleName());
         $this->doUp();
     }
 
     protected function postUpMessage() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("{$this->virtufile->config["vm"]["post_up_message"]}", $this->source);
+        $logging->log("{$this->virtufile->config["vm"]["post_up_message"]}", $this->getModuleName());
     }
 
     protected function completeBuildUp() {
@@ -109,22 +109,22 @@ class UpAllOS extends BaseFunctionModel {
         $res = $this->importBaseBox();
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
-            $logging->log("Importing Base Box Failed", $this->source);
+            $logging->log("Importing Base Box Failed", $this->getModuleName());
             return false; }
         $res = $this->modifyVm();
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
-            $logging->log("Modifying VM Failed", $this->source);
+            $logging->log("Modifying VM Failed", $this->getModuleName());
             return false; }
         $res = $this->startVm();
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
-            $logging->log("Starting Virtual Machine Failed", $this->source);
+            $logging->log("Starting Virtual Machine Failed", $this->getModuleName());
             return false; }
         $res = $this->provisionVm();
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
-            $logging->log("Provisioning Virtual Machine Failed", $this->source);
+            $logging->log("Provisioning Virtual Machine Failed", $this->getModuleName());
             return false; }
         $this->runHook("up", "post") ;
         $this->postUpMessage();
@@ -156,7 +156,7 @@ class UpAllOS extends BaseFunctionModel {
             if (!isset($this->params["modify"]) || (isset($this->params["modify"]) && $this->params["modify"] != true) ) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
-                $logging->log("Not modifying as modify parameter not set", $this->source);
+                $logging->log("Not modifying as modify parameter not set", $this->getModuleName());
                 return true ; } }
         $upFactory = new \Model\Up();
         $modifyVM = $upFactory->getModel($this->params, "ModifyVM") ;
@@ -169,14 +169,14 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->virtufile->config["vm"]["gui_mode"])) {
-            $logging->log("Using {$this->virtufile->config["vm"]["gui_mode"]} GUI mode specified in Virtufile", $this->source);
+            $logging->log("Using {$this->virtufile->config["vm"]["gui_mode"]} GUI mode specified in Virtufile", $this->getModuleName());
             $guiMode = $this->virtufile->config["vm"]["gui_mode"] ; }
         else {
             if (isset($this->params["guess"])) {
-                $logging->log("No GUI mode explicitly set, Guess parameter set, defaulting to headless GUI mode...", $this->source);
+                $logging->log("No GUI mode explicitly set, Guess parameter set, defaulting to headless GUI mode...", $this->getModuleName());
                 $guiMode = "headless" ; }
             else {
-                $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->source);
+                $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->getModuleName());
                 $guiMode = "headless" ; } }
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
         $res = $this->executeAndGetReturnCode($command);
@@ -188,7 +188,7 @@ class UpAllOS extends BaseFunctionModel {
             if (!isset($this->params["provision"]) || (isset($this->params["provision"]) && $this->params["provision"] != true) ) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
-                $logging->log("Not provisioning as provision parameter not set", $this->source);
+                $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
@@ -204,9 +204,9 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->params["ignore-hooks"]) ) {
-            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->source);
+            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->getModuleName());
             return ; }
-        $logging->log("Provisioning $hook $type hooks", $this->source);
+        $logging->log("Provisioning $hook $type hooks", $this->getModuleName());
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $provision->provisionHook($hook, $type);
