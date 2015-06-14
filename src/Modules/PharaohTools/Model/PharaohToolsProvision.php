@@ -23,15 +23,15 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $ptconfigureSpellings = array("PTConfigure", "ptconfigure", "configure", "Configure") ;
         $ptdeploySpellings = array("PTDeploy", "ptdeploy", "deploy", "Deploy" ) ;
         if (in_array($provisionerSettings["tool"], $ptconfigureSpellings)) {
-            $logging->log("Initialising Pharaoh Configure Provision... ") ;
+            $logging->log("Initialising Pharaoh Configure Provision... ", $this->getModuleName()) ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptconfigureProvision($provisionerSettings, $init, $osProvisioner) ; }
         else if (in_array($provisionerSettings["tool"], $ptdeploySpellings)) {
-            $logging->log("Initialising Pharaoh Deploy Provision... ") ;
+            $logging->log("Initialising Pharaoh Deploy Provision... ", $this->getModuleName()) ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
-            $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified") ;
+            $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName()) ;
             return null ; }
     }
 
@@ -44,23 +44,23 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $pflocal = $this->loadPapyrusLocal() ;
             $ips = array() ;
             if (isset($pflocal[$this->virtufile->config["vm"]["name"]]["target"])) {
-                $logging->log("Using papyrusfilelocal defined ssh target of {$pflocal[$this->virtufile->config["vm"]["name"]]["target"]}... ") ;
+                $logging->log("Using papyrusfilelocal defined ssh target of {$pflocal[$this->virtufile->config["vm"]["name"]]["target"]}... ", $this->getModuleName()) ;
                 $ips[] = $pflocal[$this->virtufile->config["vm"]["name"]]["target"] ; }
             else if (isset($this->virtufile->config["ssh"]["target"])) {
-                $logging->log("Using Virtufile defined ssh target of {$this->virtufile->config["ssh"]["target"]}... ") ;
+                $logging->log("Using Virtufile defined ssh target of {$this->virtufile->config["ssh"]["target"]}... ", $this->getModuleName()) ;
                 $ips[] = $this->virtufile->config["ssh"]["target"] ; }
             else if ($this->checkForGuestAdditions()==true) {
-                $logging->log("Guest additions found on VM, finding target from it...") ;
+                $logging->log("Guest additions found on VM, finding target from it...", $this->getModuleName()) ;
                 $wug = $this->waitUntilGetIP() ;
                 $ips = array_merge($wug, $ips) ;
                 // this should be quicker because guest additions returns the unused one first
                 $ips = array_reverse($ips) ;
                 $ipstring = implode(", " , $ips) ;
-                $logging->log("... Found $ipstring") ; }
+                $logging->log("... Found $ipstring", $this->getModuleName()) ; }
             else {
                 $gdi = $this->getDefaultIpList() ;
                 $ips = array_merge($ips, $gdi) ;
-                $logging->log("Using default ip list of $gdi") ;  }
+                $logging->log("Using default ip list of $gdi", $this->getModuleName()) ;  }
 
             if (isset($this->virtufile->config["ssh"]["port"])) {
                 $thisPort = $this->virtufile->config["ssh"]["port"] ; }
@@ -95,12 +95,12 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         if (!isset($provisionerSettings["source"])) {
             $provisionerSettings["source"] = $provisionerSettings["target"] ; }
         if ($provisionerSettings["target"] == "guest") {
-            $logging->log("Starting Provisioning Guest with Pharaoh Configure...") ;
+            $logging->log("Starting Provisioning Guest with Pharaoh Configure...", $this->getModuleName()) ;
             if (isset($provisionerSettings["default"])) {
-                $logging->log("Provisioning VM with Default Pharaoh Configure Autopilot for {$provisionerSettings["default"]}...") ;
+                $logging->log("Provisioning VM with Default Pharaoh Configure Autopilot for {$provisionerSettings["default"]}...", $this->getModuleName()) ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
             else if (isset($provisionerSettings["source"]) && $provisionerSettings["source"]=="guest") {
-                $logging->log("Provisioning Guest with local Pharaoh Configure Autopilot {$provisionerSettings["script"]}...") ;
+                $logging->log("Provisioning Guest with local Pharaoh Configure Autopilot {$provisionerSettings["script"]}...", $this->getModuleName()) ;
                 $init["provision_file"] = $provisionerSettings["script"] ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
             else {
@@ -130,12 +130,12 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         if (!isset($provisionerSettings["source"])) {
             $provisionerSettings["source"] = $provisionerSettings["target"] ; }
         if ($provisionerSettings["target"] == "guest") {
-            $logging->log("Starting Provisioning Guest with Pharaoh Deploy...") ;
+            $logging->log("Starting Provisioning Guest with Pharaoh Deploy...", $this->getModuleName()) ;
             if (isset($provisionerSettings["default"])) {
-                $logging->log("Provisioning VM with Default Pharaoh Deploy Autopilot for {$provisionerSettings["default"]}...") ;
+                $logging->log("Provisioning VM with Default Pharaoh Deploy Autopilot for {$provisionerSettings["default"]}...", $this->getModuleName()) ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
             else if (isset($provisionerSettings["source"]) && $provisionerSettings["source"]=="guest") {
-                $logging->log("Provisioning VM with local guest Pharaoh Deploy Autopilot for {$provisionerSettings["default"]}...") ;
+                $logging->log("Provisioning VM with local guest Pharaoh Deploy Autopilot for {$provisionerSettings["default"]}...", $this->getModuleName()) ;
                 $init["provision_file"] = $provisionerSettings["script"] ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
             else {
@@ -181,23 +181,23 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $psparams = (isset($provisionerSettings["params"])) ? $provisionerSettings["params"] : array() ;
 
         if (isset($provisionerSettings["default"])) {
-            $logging->log("Attempting to use default {$provisionerSettings["tool"]} script {$provisionerSettings["default"]}") ;
+            $logging->log("Attempting to use default {$provisionerSettings["tool"]} script {$provisionerSettings["default"]}", $this->getModuleName()) ;
             $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
-                $logging->log("Found $methodName method in OS Provisioner") ;
+                $logging->log("Found $methodName method in OS Provisioner", $this->getModuleName()) ;
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams) ; }
             else {
-                $logging->log("No method $methodName found in OS Provisioner, cannot continue") ;
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName()) ;
                 return false ; } }
         else {
             $tool = ucfirst($provisionerSettings["tool"]) ;
-            $logging->log("Attempting to use {$tool} script {$provisionerSettings["script"]}") ;
+            $logging->log("Attempting to use {$tool} script {$provisionerSettings["script"]}", $this->getModuleName()) ;
             $methodName = "getStandard{$tool}SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
-                $logging->log("Found $methodName method in OS Provisioner") ;
+                $logging->log("Found $methodName method in OS Provisioner", $this->getModuleName()) ;
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams ) ; }
             else {
-                $logging->log("No method $methodName found in OS Provisioner, cannot continue") ;
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName()) ;
                 return false ; } }
 
         $sshParams["yes"] = true ;
@@ -239,7 +239,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                     $ip = substr($afterValue, 0, $endOfIp) ;
                     if (!in_array($ip, $ips)) {
                         $ips[] = $ip ;
-                        $logging->log("Found $ip...") ;
+                        $logging->log("Found $ip...", $this->getModuleName()) ;
                         if ($cards==count($ips)) { return $ips ; } } } }
             echo "." ;
             sleep(1) ; }
@@ -254,13 +254,13 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             ? $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Waiting for ssh...") ;
+        $logging->log("Waiting for ssh...", $this->getModuleName()) ;
         while ($t < $totalTime) {
             foreach ($ips as $ip) {
                 $command = PTCCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
-                    $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
+                    $logging->log("IP $ip and Port $thisPort are responding, we'll use those...", $this->getModuleName()) ;
                     return $ip ; }
                 echo "." ;
                 $t = $t+1; }
