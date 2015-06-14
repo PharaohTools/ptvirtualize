@@ -22,11 +22,11 @@ class ShellProvision extends BaseShellAllOS {
         $logging = $loggingFactory->getModel($this->params);
         $shellSpellings = array("shell", "bash");
         if (in_array($provisionerSettings["tool"], $shellSpellings)) {
-            $logging->log("Initialising Shell Provision... ") ;
+            $logging->log("Initialising Shell Provision... ", $this->getModuleName());
             $init = $this->initialiseShellProvision($provisionerSettings) ;
             return $this->shellProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
-            $logging->log("Unrecognised Shell Provisioning Tool {$provisionerSettings["tool"]} specified") ;
+            $logging->log("Unrecognised Shell Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName());
             return null ; }
     }
 
@@ -41,18 +41,18 @@ class ShellProvision extends BaseShellAllOS {
             // if not check for guest additions installed
             $ips = array() ;
             if (isset($this->virtufile->config["ssh"]["target"])) {
-                $logging->log("Using Virtufile defined ssh target of {$this->virtufile->config["ssh"]["target"]}... ") ;
+                $logging->log("Using Virtufile defined ssh target of {$this->virtufile->config["ssh"]["target"]}... ", $this->getModuleName());
                 $ips[] = $this->virtufile->config["ssh"]["target"] ; }
             else if ($this->checkForGuestAdditions()==true) {
-                $logging->log("Guest additions found on VM, finding target from it...") ;
+                $logging->log("Guest additions found on VM, finding target from it...", $this->getModuleName());
                 $wug = $this->waitUntilGetIP() ;
                 $ips = array_merge($wug, $ips) ;
                 $ipstring = implode(", " , $ips) ;
-                $logging->log("... Found $ipstring") ; }
+                $logging->log("... Found $ipstring", $this->getModuleName()); }
             else {
                 $gdi = $this->getDefaultIpList() ;
                 $ips = array_merge($ips, $gdi) ;
-                $logging->log("Using default ip list of $gdi") ;  }
+                $logging->log("Using default ip list of $gdi", $this->getModuleName());  }
             if (isset($this->virtufile->config["ssh"]["port"])) {
                 $thisPort = $this->virtufile->config["ssh"]["port"] ; }
             else {
@@ -81,16 +81,16 @@ class ShellProvision extends BaseShellAllOS {
         $logging = $loggingFactory->getModel($this->params);
         if ($provisioner["target"] == "guest") {
             if (isset($provisioner["default"])) {
-                $logging->log("Provisioning VM with Default Shell Script for {$provisioner["default"]}...") ;
+                $logging->log("Provisioning VM with Default Shell Script for {$provisioner["default"]}...", $this->getModuleName());
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
-                $logging->log("Starting Provisioning VM with Shell...") ;
-                $logging->log("SFTP Configuration Management .sh file to VM for Shell...") ;
+                $logging->log("Starting Provisioning VM with Shell...", $this->getModuleName());
+                $logging->log("SFTP Configuration Management .sh file to VM for Shell...", $this->getModuleName());
                 $this->sftpProvision($provisioner, $init);
-                $logging->log("SSH Execute Provisioning VM with Shell script...") ;
+                $logging->log("SSH Execute Provisioning VM with Shell script...", $this->getModuleName());
                 $this->sshProvision($provisioner, $init, $osProvisioner); } }
         else if ($provisioner["target"] == "host") {
-            $logging->log("Provisioning Host with Shell...") ;
+            $logging->log("Provisioning Host with Shell...", $this->getModuleName());
             $command = "sh {$provisioner["script"]}" ;
             self::executeAndOutput($command) ; }
         return true ;
@@ -118,22 +118,22 @@ class ShellProvision extends BaseShellAllOS {
         $logging = $loggingFactory->getModel($this->params);
         $sshParams = $this->params ;
         if (isset($provisionerSettings["default"])) {
-            $logging->log("Attempting to use default shell script {$provisionerSettings["default"]}") ;
+            $logging->log("Attempting to use default shell script {$provisionerSettings["default"]}", $this->getModuleName());
             $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
-                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner") ;
+                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner", $this->getModuleName());
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue") ;
+                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName());
                 return false ; } }
         else {
-            $logging->log("Attempting to use Standard shell script {$provisionerSettings["default"]}") ;
+            $logging->log("Attempting to use Standard shell script {$provisionerSettings["default"]}", $this->getModuleName());
             $methodName = "getStandardShellSSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
-                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner") ;
+                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner", $this->getModuleName());
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue") ;
+                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName());
                 return false ; } }
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
@@ -174,7 +174,7 @@ class ShellProvision extends BaseShellAllOS {
                     $ip = substr($afterValue, 0, $endOfIp) ;
                     if (!in_array($ip, $ips)) {
                         $ips[] = $ip ;
-                        $logging->log("Found $ip...") ;
+                        $logging->log("Found $ip...", $this->getModuleName());
                         if ($cards==count($ips)) { return $ips ; } } } }
             echo "." ;
             sleep(1) ; }
@@ -188,13 +188,13 @@ class ShellProvision extends BaseShellAllOS {
             ? $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Waiting for ssh...") ;
+        $logging->log("Waiting for ssh...", $this->getModuleName());
         while ($t < $totalTime) {
             foreach ($ips as $ip) {
                 $command = PTCCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
                 $vmInfo = self::executeAndLoad($command) ;
                 if (strpos($vmInfo, "Port: Success") != false) {
-                    $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
+                    $logging->log("IP $ip and Port $thisPort are responding, we'll use those...", $this->getModuleName());
                     return $ip ; }
                 echo "." ;
                 $t = $t+1; }

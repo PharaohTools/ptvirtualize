@@ -35,28 +35,30 @@ class SFTPAllOS extends Base {
         if (is_null($sourceData)) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params);
-            $logging->log("SFTP Put will cancel, no source file") ;
+            $logging->log("SFTP Put will cancel, no source file", $this->getModuleName()) ;
             return false ;}
         $targetPath = $this->getTargetFilePath("remote") ;
-        $logging->log("Opening SFTP Connections...") ;
+        $logging->log("Opening SFTP Connections...", $this->getModuleName()) ;
         foreach ($this->servers as $srvId => &$server) {
             if (isset($this->params["environment-box-id-include"])) {
                 if ($srvId != $this->params["environment-box-id-include"] ) {
-                    $logging->log("Skipping {$$server["name"]} for box id Include constraint") ;
+                    $logging->log("Skipping {$$server["name"]} for box id Include constraint", $this->getModuleName()) ;
                     continue ; } }
             if (isset($this->params["environment-box-id-ignore"])) {
                 if ($srvId == $this->params["environment-box-id-ignore"] ) {
-                    $logging->log("Skipping {$$server["name"]} for box id Ignore constraint") ;
+                    $logging->log("Skipping {$$server["name"]} for box id Ignore constraint", $this->getModuleName()) ;
                     continue ; } }
             if (isset($server["sftpObject"]) && is_object($server["sftpObject"])) {
-                $logging->log("[".$server["target"]."] Executing SFTP Put...")  ;
-                $logging->log("Attempting to STFP Put from {$sourceDataPath} to [".$server["target"]."]:{$sourceDataPath}...")  ;
-                $logging->log($this->doSFTPPut($server["sftpObject"], $targetPath, $sourceData)) ;
-                $logging->log("[".$server["target"]."] SFTP Put Completed...") ; }
+                $logging->log("[".$server["target"]."] Executing SFTP Put...", $this->getModuleName()) ;
+                $logging->log("Attempting to STFP Put from {$sourceDataPath} to [".$server["target"]."]:{$sourceDataPath}...", $this->getModuleName()) ;
+                $res = $this->doSFTPPut($server["sftpObject"], $targetPath, $sourceData) ;
+                $sf = ($res == true) ? "Success" : "Failure" ;
+                $logging->log($sf , $this->getModuleName()) ;
+                $logging->log("[".$server["target"]."] SFTP Put Completed...", $this->getModuleName()) ; }
             else {
-                echo "[".$server["target"]."] Connection failure. Will not execute commands on this box..\n"  ; } }
-        $logging->log("All SFTP Puts Completed");
-        return "All SFTP Puts Completed";
+                $logging->log("[".$server["target"]."] Connection failure. Will not execute commands on this box..", $this->getModuleName()) ;  ; } }
+        $logging->log("All SFTP Puts Completed", $this->getModuleName()) ;
+        return $res;
     }
 
     protected function attemptToLoad($sourceDataPath){
@@ -73,13 +75,15 @@ class SFTPAllOS extends Base {
         $targetPath = $this->getTargetFilePath("local");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Opening SFTP Connections...");
+        $logging->log("Opening SFTP Connections...", $this->getModuleName()) ;
         foreach ($this->servers as &$server) {
-            $logging->log("[".$server["target"]."] Executing SFTP Get...");
-            $logging->log($this->doSFTPGet($server["sftpObject"], $sourceDataPath, $targetPath)) ;
-            $logging->log("[".$server["target"]."] SFTP Get Completed..."); }
-        $logging->log("All SFTP Gets Completed");
-        return true;
+            $logging->log("[".$server["target"]."] Executing SFTP Get...", $this->getModuleName()) ;
+            $res = $this->doSFTPGet($server["sftpObject"], $sourceDataPath, $targetPath) ;
+            $sf = ($res == true) ? "Success" : "Failure" ;
+            $logging->log($sf , $this->getModuleName()) ;
+            $logging->log("[".$server["target"]."] SFTP Get Completed...", $this->getModuleName()) ;; }
+        $logging->log("All SFTP Gets Completed", $this->getModuleName()) ;
+        return $res;
     }
 
     protected function doSFTPPut($sftpObject, $remoteFile, $data) {
@@ -91,7 +95,7 @@ class SFTPAllOS extends Base {
                 if (isset($this->params["mkdir"]) && $this->params["mkdir"]==true) {
                     $dn = dirname($remoteFile) ;
                     if ($sftpObject->_is_dir($dn)==false) {
-                        $logging->log("Target directory does not exist, so creating...");
+                        $logging->log("Target directory does not exist, so creating...", $this->getModuleName());
                         $sftpObject->mkdir($dn) ; } }
                 $result .= $sftpObject->put($remoteFile, $data);
                 $ar = $sftpObject->getSFTPErrors() ;
@@ -101,14 +105,14 @@ class SFTPAllOS extends Base {
                 if (isset($this->params["mkdir"]) && $this->params["mkdir"]==true) {
                     $dn = dirname($remoteFile) ;
                     if ($sftpObject->_is_dir($dn)==false) {
-                        $logging->log("Target directory does not exist, so creating...");
+                        $logging->log("Target directory does not exist, so creating...", $this->getModuleName());
                         $sftpObject->mkdir($dn) ; } }
                 $result .= $sftpObject->put($remoteFile, $data);
                 $ar = $sftpObject->getSFTPErrors() ;
                 foreach ($ar as $s) {
                     $result .= "$s\n" ; } } }
         else {
-            $logging->log("No SFTP Object, Connection likely failed");
+            $logging->log("No SFTP Object, Connection likely failed", $this->getModuleName());
             $result = false; }
         return $result ;
     }
@@ -119,8 +123,7 @@ class SFTPAllOS extends Base {
         if ($sftpObject instanceof \Net_SFTP) {
             $result = $sftpObject->get($remoteFile, $localFile); }
         else {
-            // @todo make this a log
-            $logging->log("No SFTP Object");
+            $logging->log("No SFTP Object", $this->getModuleName());
             $result = false; }
         return $result ;
     }
@@ -160,22 +163,22 @@ class SFTPAllOS extends Base {
     protected function loadSFTPConnections() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Attempting to load SFTP connections...");
+        $logging->log("Attempting to load SFTP connections...", $this->getModuleName());
         foreach ($this->servers as $srvId => &$server) {
             if (isset($this->params["environment-box-id-include"])) {
                 if ($srvId != $this->params["environment-box-id-include"] ) {
-                    $logging->log("Skipping {$server["name"]} for box id Include constraint") ;
+                    $logging->log("Skipping {$server["name"]} for box id Include constraint", $this->getModuleName());
                     continue ; } }
             if (isset($this->params["environment-box-id-ignore"])) {
                 if ($srvId == $this->params["environment-box-id-ignore"] ) {
-                    $logging->log("Skipping {$server["name"]} for box id Ignore constraint") ;
+                    $logging->log("Skipping {$server["name"]} for box id Ignore constraint", $this->getModuleName());
                     continue ; } }
             $attempt = $this->attemptSFTPConnection($server) ;
             if ($attempt == null) {
-                $logging->log("Connection to Server {$server["target"]} failed.");
+                $logging->log("Connection to Server {$server["target"]} failed.", $this->getModuleName());
                 $server["sftpObject"] = null ; }
             else {
-                $logging->log("Connection to Server {$server["target"]} successful.");
+                $logging->log("Connection to Server {$server["target"]} successful.", $this->getModuleName());
                 $server["sftpObject"] = $attempt ; } }
             return true;
     }

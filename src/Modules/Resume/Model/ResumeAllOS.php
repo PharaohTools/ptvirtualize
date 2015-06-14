@@ -24,9 +24,9 @@ class ResumeAllLinux extends BaseFunctionModel {
         $this->findProvider("BoxResume");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Checking current state...") ;
+        $logging->log("Checking current state...", $this->getModuleName()) ;
         if ($this->currentStateIsResumable() == false) { return ; }
-        $logging->log("Attempting Resume...") ;
+        $logging->log("Attempting Resume...", $this->getModuleName()) ;
         $this->provider->resume($this->virtufile->config["vm"]["name"]);
     }
 
@@ -35,9 +35,9 @@ class ResumeAllLinux extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params);
         $resumables = $this->provider->getResumableStates();
         if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $resumables) == true) {
-            $logging->log("This VM is in a Resumable state...") ;
+            $logging->log("This VM is in a Resumable state...", $this->getModuleName()) ;
             return true ; }
-        $logging->log("This VM is not in a Resumable state...") ;
+        $logging->log("This VM is not in a Resumable state...", $this->getModuleName()) ;
         return false ;
     }
 
