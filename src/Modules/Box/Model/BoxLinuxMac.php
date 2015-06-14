@@ -235,10 +235,10 @@ class BoxLinuxMac extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
-            $logging->log("Attempting to add box via provider {$this->metadata->provider}...");
+            $logging->log("Attempting to add box via provider {$this->metadata->provider}...", $this->getModuleName());
             return $this->provider->addBox($this->source, $this->target, $this->name) ; }
         else {
-            $logging->log("No Provider available, will not attempt to add box.");
+            $logging->log("No Provider available, will not attempt to add box.", $this->getModuleName());
             return false ; }
     }
 
