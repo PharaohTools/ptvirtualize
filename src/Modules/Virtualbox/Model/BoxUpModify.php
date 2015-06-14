@@ -17,10 +17,8 @@ class BoxUpModify extends BaseFunctionModel {
     //@todo need windows version
     public function modify($name, $key, $value) {
         $command = VBOXMGCOMM." modifyvm {$name} --$key \"$value\"" ;
-        $this->executeAndOutput($command);
-        $command = "echo $?" ;
-        $ret = $this->executeAndLoad($command);
-        return ($ret == "0") ? true : false ;
+        $ret = $this->executeAndGetReturnCode($command, true);
+        return $ret ;
     }
 
     //@todo need windows version

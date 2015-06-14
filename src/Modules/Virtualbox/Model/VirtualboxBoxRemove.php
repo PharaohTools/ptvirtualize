@@ -37,28 +37,28 @@ class VirtualboxBoxRemove extends BaseVirtualboxAllOS {
         $whoami = str_replace("\n", "", $whoami);
         $whoami = str_replace("\r", "", $whoami);
         if (file_exists($boxdir)) {
-            $logging->log("Files exist at $boxdir. Removing.");
+            $logging->log("Files exist at $boxdir. Removing.", $this->getModuleName());
             $command = "rm -rf $boxdir" ;
             self::executeAndOutput($command); }
         else {
-            $logging->log("No files exist at $boxdir. Nothing to do, exiting...");
+            $logging->log("No files exist at $boxdir. Nothing to do, exiting...", $this->getModuleName());
             return ; }
         if (!file_exists($target)) {
-            $logging->log("$boxdir removed."); }
+            $logging->log("$boxdir removed.", $this->getModuleName()); }
         else {
-            $logging->log("An error occured removing $boxdir. Retrying as superuser");
+            $logging->log("An error occured removing $boxdir. Retrying as superuser", $this->getModuleName());
             $command = "sudo rm -rf $boxdir" ;
             self::executeAndOutput($command);
             if (!file_exists($boxdir)) {
-                $logging->log("$boxdir removed."); }
+                $logging->log("$boxdir removed.", $this->getModuleName()); }
             else {
-                $logging->log("Errors occured when removing $boxdir as both $whoami and superuser"); } }
+                $logging->log("Errors occured when removing $boxdir as both $whoami and superuser", $this->getModuleName()); } }
     }
 
     protected function completion() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Completed Removing Box...");
+        $logging->log("Completed Removing Box...", $this->getModuleName());
     }
 
 }

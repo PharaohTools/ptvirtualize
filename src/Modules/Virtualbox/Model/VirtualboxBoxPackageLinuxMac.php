@@ -46,21 +46,21 @@ class VirtualboxBoxPackageLinuxMac extends BaseVirtualboxAllOS {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (file_exists($boxdir) && !is_writable($boxdir)) {
-            $logging->log("Directory $boxdir exists and is not writable. Removing.");
+            $logging->log("Directory $boxdir exists and is not writable. Removing.", $this->getModuleName());
             $command = "sudo rm -rf $boxdir" ;
             self::executeAndOutput($command);
             $command = "mkdir -p $boxdir" ;
             self::executeAndOutput($command);
             return $boxdir; }
         if (file_exists($boxdir)) {
-            $logging->log("Files already exist at $boxdir. Removing.");
+            $logging->log("Files already exist at $boxdir. Removing.", $this->getModuleName());
             $command = "sudo rm -rf $boxdir" ;
             self::executeAndOutput($command);
             $command = "mkdir -p $boxdir" ;
             self::executeAndOutput($command);
             return $boxdir; }
         else {
-            $logging->log("Creating $boxdir");
+            $logging->log("Creating $boxdir", $this->getModuleName());
             $command = "mkdir -p $boxdir" ;
             self::executeAndOutput($command);
             return $boxdir ; }
@@ -69,28 +69,28 @@ class VirtualboxBoxPackageLinuxMac extends BaseVirtualboxAllOS {
     protected function exportOVA($vmName, $metadata) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...");
+        $logging->log("Exporting ova file box.ova from Virtual Machine $vmName...", $this->getModuleName());
         $command = VBOXMGCOMM." export \"{$vmName}\" --output=" .
             BASE_TEMP_DIR.DS."ptvirtualize".DS.$metadata->slug.DS."box.ova" ;
         self::executeAndOutput($command);
-        $logging->log("Export complete...");
+        $logging->log("Export complete...", $this->getModuleName());
     }
 
     protected function createPackage($target, $metadata) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Creating box file from ova file and json file...");
+        $logging->log("Creating box file from ova file and json file...", $this->getModuleName());
         $command = "tar -cvf $target$metadata->slug.box -C ".BASE_TEMP_DIR.DS.
             "ptvirtualize".DS.$metadata->slug." . " ;
         self::executeAndOutput($command);
-        $logging->log("Created box file $target{$metadata->slug}.box...");
+        $logging->log("Created box file $target{$metadata->slug}.box...", $this->getModuleName());
         return true ;
     }
 
     protected function completion() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Completed Packaging Box...");
+        $logging->log("Completed Packaging Box...", $this->getModuleName());
     }
 
 }

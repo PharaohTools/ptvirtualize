@@ -49,7 +49,8 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
         $whoami = str_replace("\n", "", $whoami);
         $whoami = str_replace("\r", "", $whoami);
         if (file_exists($boxdir)) {
-            $logging->log("Files already exist at $boxdir. Cannot create directory to add box.");
+            $logging->log("Files already exist at $boxdir. Cannot create directory to add box.", $this->getModuleName());
+            \Core\BootStrap::setExitCode(1);
             return null; }
         if (!file_exists($target)) {
             $logging->log("Adding parent box directory $target.", $this->getModuleName());

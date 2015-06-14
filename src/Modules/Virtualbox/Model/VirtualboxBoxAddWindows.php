@@ -91,7 +91,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         if ($ovaFile != "box.ova") {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("Changing ova file name from $ovaFile to box.ova...");
+            $logging->log("Changing ova file name from $ovaFile to box.ova...", $this->getModuleName());
             $command = "rename $boxDir".DS."$ovaFile $boxDir".DS."box.ova" ;
             self::executeAndOutput($command); }
     }
