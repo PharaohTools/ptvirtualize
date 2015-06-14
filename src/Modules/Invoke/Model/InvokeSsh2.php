@@ -40,7 +40,7 @@ class InvokeSsh2 {
 		if (!($this->connection = ssh2_connect($this->server->host, $this->server->port))) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log('Cannot connect to server') ;
+            $logging->log('Cannot connect to server', $this->getModuleName()) ;
             \Core\BootStrap::setExitCode(1) ;
 		}
 
@@ -57,7 +57,7 @@ class InvokeSsh2 {
 		if (!($stream = ssh2_exec($this->connection, $command))) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("SSH command failed") ;
+            $logging->log("SSH command failed", $this->getModuleName()) ;
             \Core\BootStrap::setExitCode(1) ;
 		}
 

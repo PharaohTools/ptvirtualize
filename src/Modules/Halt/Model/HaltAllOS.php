@@ -24,16 +24,16 @@ class HaltAllOS extends BaseFunctionModel {
         $this->findProvider("BoxHalt");
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Checking current state...") ;
-        if ($this->currentStateIsHaltable() == false) { return ; }
-        $logging->log("Attempting soft power off by button...") ;
-        $logging->log("Waiting at least {$this->virtufile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...") ;
+        $logging->log("Checking current state...", $this->getModuleName()) ;
+        if ($this->currentStateIsHaltable() == false) { return false ; }
+        $logging->log("Attempting soft power off by button...", $this->getModuleName()) ;
+        $logging->log("Waiting at least {$this->virtufile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...", $this->getModuleName()) ;
         $this->provider->haltSoft($this->virtufile->config["vm"]["name"]);
         if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["graceful_halt_timeout"], "3")==true) {
             $logging->log("Successful soft power off by button...") ;
             return true ; }
         else {
-            $logging->log("Failed soft power off by button, attempting SSH shutdown.") ;
+            $logging->log("Failed soft power off by button, attempting SSH shutdown.", $this->getModuleName()) ;
 
             $sshParams = $this->params ;
 
@@ -54,21 +54,21 @@ class HaltAllOS extends BaseFunctionModel {
             $ssh = $sshFactory->getModel($sshParams) ;
             $ssh->performInvokeSSHData() ;
 
-            $logging->log("Attempting shutdown by SSH...") ;
-            $logging->log("Waiting at least {$this->virtufile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...") ;
+            $logging->log("Attempting shutdown by SSH...", $this->getModuleName()) ;
+            $logging->log("Waiting at least {$this->virtufile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...", $this->getModuleName()) ;
 
             if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["ssh_halt_timeout"], "3")==true) {
-                $logging->log("Successful power off SSH Shutdown...") ;
+                $logging->log("Successful power off SSH Shutdown...", $this->getModuleName()) ;
                 return true ; } }
         if (isset($this->params["fail-hard"])) {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 "--fail-hard flag to do hard power off now." ;
-            $logging->log($lmsg) ;
+            $logging->log($lmsg, $this->getModuleName()) ;
             $this->provider->haltHard($this->virtufile->config["vm"]["name"]);
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
             "ptvirtualize halt hard. You can also use the parameter --fail-hard to do this automatically." ;
-        $logging->log($lmsg) ;
+        $logging->log($lmsg, $this->getModuleName()) ;
         return false ;
 
     }
@@ -90,9 +90,9 @@ class HaltAllOS extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params);
         $haltables = $this->provider->getHaltableStates();
         if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $haltables) == true) {
-            $logging->log("This VM is in a Haltable state...") ;
+            $logging->log("This VM is in a Haltable state...", $this->getModuleName()) ;
             return true ; }
-        $logging->log("This VM is not in a Haltable state...") ;
+        $logging->log("This VM is not in a Haltable state...", $this->getModuleName()) ;
         return false ;
     }
 

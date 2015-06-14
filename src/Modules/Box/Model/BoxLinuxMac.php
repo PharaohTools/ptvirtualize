@@ -234,7 +234,7 @@ class BoxLinuxMac extends BaseLinuxApp {
             $logging->log("Box is remote not local, will download to temp directory before adding...", $this->getModuleName());
             set_time_limit(0); // unlimited max execution time
             $tmpFile = BASE_TEMP_DIR.'file.box' ;
-            $logging->log("Downloading File ...");
+            $logging->log("Downloading File ...", $this->getModuleName()) ;
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
@@ -262,7 +262,7 @@ class BoxLinuxMac extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (is_object($this->provider)) {
-            $logging->log("Attempting to package box via provider {$this->metadata->provider}...");
+            $logging->log("Attempting to package box via provider {$this->metadata->provider}...", $this->getModuleName()) ;
             return $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
         else {
             $logging->log("No Provider available, will not attempt to package box.", $this->getModuleName());

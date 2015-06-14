@@ -35,17 +35,19 @@ class InvokeAllOS extends Base {
 			return false; }
 		$this->populateServers();
 		$commandExecution = true;
-		echo "Opening CLI...\n";
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Opening CLI...", $this->getModuleName()) ;
 		while ($commandExecution == true) {
 			$command = $this->askForACommand();
 			if ($command == false) {
 				$commandExecution = false; }
             else {
 				foreach ($this->servers as &$server) {
-					echo "[" . $server["target"] . "] Executing $command...\n";
+                    $logging->log( "[" . $server["target"] . "] Executing $command...", $this->getModuleName()) ;
 					echo $this->doSSHCommand($server["ssh2Object"], $command);
-					echo "[" . $server["target"] . "] $command Completed...\n"; } } }
-		echo "Shell Completed";
+                    $logging->log( "[" . $server["target"] . "] $command Completed...", $this->getModuleName()) ; } } }
+        $logging->log("Shell Completed", $this->getModuleName()) ;
 		return true;
 	}
 
@@ -55,14 +57,16 @@ class InvokeAllOS extends Base {
 		$scriptLoc = $this->askForScriptLocation();
 		$this->populateServers();
 		$this->sshCommands = explode("\n", file_get_contents($scriptLoc));
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
 		foreach ($this->sshCommands as $sshCommand) {
 			foreach ($this->servers as &$server) {
 				if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
-					echo "[" . $server["target"] . "] Executing $sshCommand...\n";
+                    $logging->log(  "[" . $server["target"] . "] Executing $sshCommand...", $this->getModuleName()) ;
 					echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
-					echo "[" . $server["target"] . "] $sshCommand Completed...\n";}
+                    $logging->log(  "[" . $server["target"] . "] $sshCommand Completed...", $this->getModuleName()) ; }
                 else {
-					echo "[" . $server["target"] . "] Connection failure. Will not execute commands on this box..\n"; } } }
+                    $logging->log( "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...", $this->getModuleName()) ; } } }
 		echo "Script by SSH Completed";
 		return true;
 	}
@@ -73,15 +77,17 @@ class InvokeAllOS extends Base {
 		$data = $this->askForSSHData();
 		$this->populateServers();
 		$this->sshCommands = explode("\n", $data);
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
 		foreach ($this->sshCommands as $sshCommand) {
 			foreach ($this->servers as &$server) {
 				if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
-					echo "[" . $server["target"] . "] Executing $sshCommand...\n";
+                    $logging->log(  "[" . $server["target"] . "] Executing $sshCommand...", $this->getModuleName()) ;
 					echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
-					echo "[" . $server["target"] . "] $sshCommand Completed...\n"; }
+                    $logging->log(  "[" . $server["target"] . "] $sshCommand Completed...", $this->getModuleName()) ; }
                 else {
-					echo "[" . $server["target"] . "] Connection failure. Will not execute commands on this box..\n"; } } }
-		echo "Data by SSH Completed\n";
+                    $logging->log(  "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...", $this->getModuleName()) ; } } }
+        $logging->log(  "Data by SSH Completed", $this->getModuleName()) ;;
 		return true;
 	}
 
@@ -123,22 +129,22 @@ class InvokeAllOS extends Base {
 	private function loadSSHConnections() {
 		$loggingFactory = new \Model\Logging();
 		$logging = $loggingFactory->getModel($this->params);
-		$logging->log("Attempting to load SSH connections...");
+		$logging->log("Attempting to load SSH connections...", $this->getModuleName()) ;
 		foreach ($this->servers as $srvId => &$server) {
 			if (isset($this->params["environment-box-id-include"])) {
 				if ($srvId != $this->params["environment-box-id-include"]) {
-					$logging->log("Skipping {$server["name"]} for box id Include constraint");
+					$logging->log("Skipping {$server["name"]} for box id Include constraint", $this->getModuleName()) ;
 					continue; } }
 			if (isset($this->params["environment-box-id-ignore"])) {
 				if ($srvId == $this->params["environment-box-id-ignore"]) {
-					$logging->log("Skipping {$server["name"]} for box id Ignore constraint");
+					$logging->log("Skipping {$server["name"]} for box id Ignore constraint", $this->getModuleName()) ;
 					continue; } }
 			$attempt = $this->attemptSSH2Connection($server);
 			if ($attempt == null) {
-				$logging->log("Connection to Server {$server["target"]} failed."); }
+				$logging->log("Connection to Server {$server["target"]} failed.", $this->getModuleName()) ; }
             else {
 				$server["ssh2Object"] = $attempt;
-				$logging->log("Connection to Server {$server["target"]} successful.");
+				$logging->log("Connection to Server {$server["target"]} successful.", $this->getModuleName()) ;
 //				echo $this->changeBashPromptToPharaoh($server["ssh2Object"]);
 //				if (!isset($this->isNativeSSH) || (isset($this->isNativeSSH) && $this->isNativeSSH != true)) {
 //				}
@@ -173,18 +179,18 @@ class InvokeAllOS extends Base {
         $system = new \Model\SystemDetectionAllOS() ;
         if (isset($this->params["driver"]) && in_array($this->params["driver"], $optionsAsk) ) {
             if (in_array($system->os, array("WINNT", "Windows")) && $this->params["driver"] == "os") {
-                $logging->log("Windows does not support requested OS level SSH driver, switching to seclib...");
+                $logging->log("Windows does not support requested OS level SSH driver, switching to seclib...", $this->getModuleName()) ;
                 return "DriverSecLib" ; }
-            $logging->log("Using requested {$optionsKeep[$this->params["driver"]]} driver...");
+            $logging->log("Using requested {$optionsKeep[$this->params["driver"]]} driver...", $this->getModuleName()) ;
             return $optionsKeep[$this->params["driver"]]; }
         if (isset($this->params["guess"]) && $this->params["guess"] == true) {
             if (in_array($system->os, array("WINNT", "Windows"))) {
-                $logging->log("Using default driver for Windows systems, Seclib SSH driver...");
+                $logging->log("Using default driver for Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
                 return "DriverSecLib" ; }
 //            @todo fix bash
 //            $logging->log("Using default driver for non-windows systems, Shell/OS Native SSH driver...");
 //            return "DriverBashSSH";
-            $logging->log("Using default driver for non-windows systems, Seclib SSH driver...");
+            $logging->log("Using default driver for non-windows systems, Seclib SSH driver...", $this->getModuleName()) ;
             return "DriverSecLib"; }
         $question = 'Which SSH Driver should I use?';
         $ofound = self::askForArrayOption($question, $optionsAsk);
