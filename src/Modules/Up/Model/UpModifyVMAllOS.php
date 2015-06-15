@@ -76,7 +76,7 @@ class UpModifyVMAllOS extends BaseFunctionModel {
         $logging->log("Finding existing shares", $this->getModuleName()) ;
         $names = $this->provider->getShares($this->virtufile->config["vm"]["name"]);
         foreach ($names as $share) {
-            $logging->log("Removing Shared Folder named {$share} from VM {$this->virtufile->config["vm"]["name"]}") ;
+            $logging->log("Removing Shared Folder named {$share} from VM {$this->virtufile->config["vm"]["name"]}", $this->getModuleName()) ;
             $this->provider->removeShare($this->virtufile->config["vm"]["name"], $share); }
     }
 
