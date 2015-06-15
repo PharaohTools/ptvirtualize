@@ -9,7 +9,8 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public function getPTConfigureInitSSHData($provisionFile) {
 		$sshData = "" ;
         $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S yum update -y\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S yum install -y php git\n" ;
+        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S yum install git -y\n" ;
+        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S yum install php -y\n" ;
         $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S rm -rf ptconfigure\n" ;
         $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S git clone https://github.com/PharaohTools/ptconfigure.git\n" ;
         $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S php ptconfigure/install-silent\n" ;
