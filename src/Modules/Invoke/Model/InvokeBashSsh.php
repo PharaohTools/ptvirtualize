@@ -29,13 +29,11 @@ class InvokeBashSsh {
 	/**
 	 * @param Server $server
 	 */
-	public function setServer($server)
-	{
+	public function setServer($server) {
 		$this->server = $server;
 	}
 
-	public function connect()
-	{
+	public function connect() {
 		if(file_exists($this->server->password)){
 			$launcher = 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '.escapeshellarg($this->server->password); }
         else{
@@ -51,6 +49,7 @@ class InvokeBashSsh {
 				echo fgets($fp, 4096); }
 			pclose($fp);
 			exit; }
+        return true ;
 	}
 
 	/**
