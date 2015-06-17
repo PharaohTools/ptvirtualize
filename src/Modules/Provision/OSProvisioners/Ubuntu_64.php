@@ -19,7 +19,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public function getMountSharesSSHData($provisionFile) {
         $sshData = "" ;
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
-            .'| sudo -S ln -s /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
+            .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
             // @todo might be better not to sudo this creation, or allow it more params (owner, perms)
