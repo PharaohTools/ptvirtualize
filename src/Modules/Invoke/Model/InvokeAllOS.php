@@ -122,6 +122,8 @@ class InvokeAllOS extends Base {
 		if (isset($this->params["servers"])) {
 			$this->servers = unserialize($this->params["servers"]); }
         else {
+            if (isset($this->params["env"]) && !isset($this->params["environment-name"] )) {
+                $this->params["environment-name"] =$this->params["env"] ; }
 			if (isset($this->params["environment-name"])) {
 				$names = $this->getEnvironmentNames($allProjectEnvs);
 				$this->servers = $allProjectEnvs[ $names[ $this->params["environment-name"] ] ]["servers"]; }
