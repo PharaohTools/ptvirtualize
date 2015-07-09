@@ -19,7 +19,7 @@ class PapyrusLocalLoaderAllLinux extends BaseLinuxApp {
         $pf = \Model\AppConfig::getProjectVariable($boxname, true) ;
         if (is_array($pf) && count($pf)>0) {
             return $pf ; }
-        return array() ;
+        return null ;
     }
 
 }
