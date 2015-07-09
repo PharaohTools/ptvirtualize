@@ -209,11 +209,12 @@ class InvokeAllOS extends Base {
             if (in_array($system->os, array("WINNT", "Windows"))) {
                 $logging->log("Using default driver for Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
                 return "DriverSecLib" ; }
-//            @todo fix bash
-//            $logging->log("Using default driver for non-windows systems, Shell/OS Native SSH driver...");
-//            return "DriverBashSSH";
-            $logging->log("Using default driver for non-windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-            return "DriverSecLib"; }
+//            @todo fix bash properly
+            $logging->log("Using default driver for Non-Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
+            return "DriverSecLib" ;
+//            $logging->log("Using default driver for non-windows systems, Seclib SSH driver...", $this->getModuleName()) ;
+//            return "DriverSecLib";
+        }
         $question = 'Which SSH Driver should I use?';
         $ofound = self::askForArrayOption($question, $optionsAsk);
         $ofound = $optionsKeep[$ofound] ;
