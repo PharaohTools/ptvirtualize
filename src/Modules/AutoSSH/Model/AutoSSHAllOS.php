@@ -86,6 +86,39 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
     }
 
+    // @todo this needs testing
+    public function autoSSHScript() {
+        if ($this->loadFiles() == false) { return false; }
+        // try the connection
+        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
+        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
+
+        // @todo need to set the SSH Data we're sending
+        if ($sshWorks == true) {
+            $sshParams = $this->params ;
+            // try papyrus first. if box specified in virtufile exists there, try its connection details.
+            $srv = array(
+                "user" => $this->papyrus["username"] ,
+                "password" => $this->papyrus["password"] ,
+                "target" => $this->papyrus["target"] );
+            $sshParams["yes"] = true ;
+            $sshParams["guess"] = true ;
+            $sshParams["servers"] = serialize(array($srv)) ;
+            if (isset($this->papyrus["port"])) {
+                $srv["port"] =
+                    (isset($this->papyrus["port"]))
+                        ? $this->papyrus["port"] : 22; }
+            if (isset($this->papyrus["timeout"])) {
+                $srv["timeout"] = $this->papyrus["timeout"] ; }
+
+            $sshFactory = new \Model\Invoke();
+            $ssh = $sshFactory->getModel($sshParams) ;
+            $ssh->performInvokeSSHScript() ;
+            return true ;
+        }
+
+    }
+
     // @todo this and method below can be rolled into one
     public function autoSFTPPut() {
         if ($this->loadFiles() == false) { return false; }
@@ -156,7 +189,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
 
     public function loadFiles() {
         $this->virtufile = $this->loadVirtufile();
-        $this->papyrus = $this->loadPapyrusLocal();
+        $this->papyrus = $this->loadPapyrusLocal($this->virtufile);
         if (in_array(false, array($this->virtufile, $this->papyrus))) {
             \Core\BootStrap::setExitCode(1);
             $loggingFactory = new \Model\Logging();
@@ -191,7 +224,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
             $command = PTCCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
             $vmInfo = self::executeAndLoad($command) ;
             if (strpos($vmInfo, "Port: Success") != false) {
-                $logging->log("IP $ip and Port $thisPort are responding, we'll use those...") ;
+                $logging->log("IP $ip and Port $thisPort are responding, we'll use those...", $this->getModuleName()) ;
                 return true; }
             echo "." ;
             $t = $t+1;

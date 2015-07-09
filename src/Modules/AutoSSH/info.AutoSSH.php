@@ -13,7 +13,7 @@ class AutoSSHInfo extends PTConfigureBase {
   }
 
   public function routesAvailable() {
-    return array( "AutoSSH" =>   array("cli", "sftp-put", "sftp-get", "help") );
+    return array( "AutoSSH" =>   array("cli", "data", "script", "sftp-put", "sftp-get", "help") );
   }
 
   public function routeAliases() {
@@ -29,6 +29,14 @@ class AutoSSHInfo extends PTConfigureBase {
         - cli
         Open an SSH Cli to your Virtualize Box
         example: ptvirtualize auto-ssh cli --yes --guess
+
+        - script
+        Open an SSH Cli to your Virtualize Box
+        example: ptvirtualize auto-ssh script --yes --guess
+
+        - data
+        Open an SSH Cli to your Virtualize Box
+        example: ptvirtualize auto-ssh data --yes --guess
 
         - sftp-put
         SFTP Put a file on to your Virtualize Box
