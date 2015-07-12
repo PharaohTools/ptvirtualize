@@ -15,11 +15,16 @@ class InvokeSsh2 {
     public $modelGroup = array("DriverNativeSSH");
 
     /**
-	 * @var
-	 */
-	private $connection;
+     * @var
+     */
+    private $connection;
 
-	/**
+    /**
+     * @var
+     */
+    private $stream;
+
+    /**
 	 * @var Server
 	 */
 	private $server;
@@ -62,21 +67,21 @@ class InvokeSsh2 {
             $logging->log('Native PHP SSH2 Functions are not installed. Cannot use the PHP Native SSH Driver', "Invoke - PHP SSH") ;
             \Core\BootStrap::setExitCode(1) ;
             return false; }
-		if (!($stream = ssh2_exec($this->connection, $command))) {
+		if (!($this->stream = ssh2_exec($this->connection, $command, "vanilla"))) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
             $logging->log("SSH command failed", "Invoke - PHP SSH") ;
             \Core\BootStrap::setExitCode(1) ;
 		}
 
-		stream_set_blocking($stream, true);
+		stream_set_blocking($this->stream, true);
 		$data = "";
-		while ($buf = fread($stream, 4096)) {
+		while ($buf = fread($this->stream, 4096)) {
 			$data .= $buf;
             echo $buf ;
 		}
-		fclose($stream);
-		return $data;
+		fclose($this->stream);
+		return "";
 	}
 
 	/**
