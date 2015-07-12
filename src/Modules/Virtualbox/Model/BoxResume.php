@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxResume extends BaseFunctionModel {
+class BoxResume extends BaseVirtualboxAllOS {
 
     // Compatibility
     public $os = array("any") ;
@@ -12,7 +12,7 @@ class BoxResume extends BaseFunctionModel {
     public $architectures = array("any") ;
 
     // Model Group
-    public $modelGroup = array("BoxHalt") ;
+    public $modelGroup = array("BoxResume") ;
 
     public function resume($name) {
         $command = VBOXMGCOMM." controlvm {$name} resume" ;

@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class ResumeAllLinux extends BaseFunctionModel {
+class ResumeAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
