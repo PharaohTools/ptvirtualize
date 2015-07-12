@@ -46,7 +46,8 @@ class InvokeSsh2 {
             $logging->log('Cannot connect to server', "Invoke - PHP SSH") ;
             \Core\BootStrap::setExitCode(1) ;
             return false; }
-        ssh2_auth_password($this->connection, $this->server->username, $this->server->password);
+        $rt = ssh2_auth_password($this->connection, $this->server->username, $this->server->password);
+        return $rt ;
     }
 
 	/**
@@ -72,6 +73,7 @@ class InvokeSsh2 {
 		$data = "";
 		while ($buf = fread($stream, 4096)) {
 			$data .= $buf;
+            echo $buf ;
 		}
 		fclose($stream);
 		return $data;
