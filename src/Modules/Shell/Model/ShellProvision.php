@@ -138,7 +138,7 @@ class ShellProvision extends BaseShellAllOS {
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
         $sshParams["servers"] = $init["encoded_box"] ;
-        $sftpParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
+        $sshParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         if (isset($this->virtufile->config["ssh"]["port"])) {
             $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
         if (isset($this->virtufile->config["ssh"]["timeout"])) {
