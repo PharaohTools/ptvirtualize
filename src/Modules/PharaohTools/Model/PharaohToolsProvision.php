@@ -281,7 +281,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $ptvirtualizeBox["username"] = $user ;
         $ptvirtualizeBox["password"] = $pass ;
         $ptvirtualizeBox["target"] = $target ;
-        $ptvirtualizeBox = array_merge($this->papyrus, $ptvirtualizeBox) ;
+        $ptvirtualizeBox["driver"] = $this->virtufile->config["ssh"]["driver"] ;
+        if (is_array($this->papyrus)) { $ptvirtualizeBox = array_merge($this->papyrus, $ptvirtualizeBox) ; }
         \Model\AppConfig::setProjectVariable($this->virtufile->config["vm"]["name"], $ptvirtualizeBox, null, null, true) ;
     }
 
