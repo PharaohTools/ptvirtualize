@@ -190,7 +190,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
     public function loadFiles() {
         $this->virtufile = $this->loadVirtufile();
         $this->papyrus = $this->loadPapyrusLocal($this->virtufile);
-        if (in_array(false, array($this->virtufile, $this->papyrus))) {
+        if (in_array(false, array($this->virtufile))) {
             \Core\BootStrap::setExitCode(1);
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
