@@ -10,7 +10,7 @@ class ProvisionDefaultAllOS extends Base {
 
     public function provision( $hook = "") {
         $provisionOuts = array() ;
-        if ($hook != "") {$hook = "_$hook" ; }
+        if ($hook != "") { $hook = "_$hook" ; }
         foreach ($this->virtufile->config["vm"]["provision$hook"] as $provisionerSettings) {
             $curout = $this->doSingleProvision($provisionerSettings) ;
             $provisionOuts[] = $curout ;
@@ -28,13 +28,30 @@ class ProvisionDefaultAllOS extends Base {
         return $provisionOuts ;
     }
 
-    protected function provisionVirtufile($hook, $type) {
+    protected function provisionVirtufile($module, $hook) {
         $provisionOuts = array() ;
-        if (isset($this->virtufile->config["vm"]["provision_{$hook}_{$type}"]) &&
-            count($this->virtufile->config["vm"]["provision_{$hook}_{$type}"]) > 0){
-            foreach ($this->virtufile->config["vm"]["provision_{$hook}_{$type}"] as $provisionerSettings) {
-                $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; } }
+        if ($module=="up" && $hook == "default") { $pstr = "provision" ; }
+        else { $pstr = "provision_{$module}_{$hook}" ; }
+
+//        var_dump($pstr) ;
+
+        if (isset($this->virtufile->config["vm"][$pstr]) &&
+            count($this->virtufile->config["vm"][$pstr]) > 0){
+            foreach ($this->virtufile->config["vm"][$pstr] as $provisionerSettings) {
+                if (isset($this->params["hooks"]) && in_array($hook, $this->getParameterHooks())) {
+                    $loggingFactory = new \Model\Logging();
+                    $logging = $loggingFactory->getModel($this->params) ;
+                    $logging->log("Requested hooks include $module $hook, executing", "Provision") ;
+                    $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; }
+                else {
+                    $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; } } }
         return $provisionOuts ;
+    }
+
+    protected function getParameterHooks() {
+        if (!isset($this->params["hooks"])) { return array() ; }
+        $tags = explode(",", $this->params["hooks"]) ;
+        return $tags ;
     }
 
     protected function provisionHookDirs($hook, $type) {

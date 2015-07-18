@@ -184,16 +184,28 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     protected function provisionVm($onlyIfRequestedByParam = false) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         if ($onlyIfRequestedByParam == true) {
             if (!isset($this->params["provision"]) || (isset($this->params["provision"]) && $this->params["provision"] != true) ) {
-                $loggingFactory = new \Model\Logging();
-                $logging = $loggingFactory->getModel($this->params) ;
                 $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
-        $provisionFactory = new \Model\Provision();
-        $provision = $provisionFactory->getModel($this->params) ;
-        $pn =$provision->provisionNow();
+        if (isset($this->params["hooks"])) {
+            $logging->log("Specific execution hooks requested", $this->getModuleName());
+            $hooks = $this->getParameterHooks();
+            $pns = array();
+            foreach ($hooks as $hook) {
+                $pns[] = $this->runHook("up", $hook); }
+            return (in_array(false, $pns)) ? false : true ; }
+        $pn = $this->runHook("up", "default");
         return $pn ;
+    }
+
+
+    protected function getParameterHooks() {
+        if (!isset($this->params["hooks"])) { return array() ; }
+        $tags = explode(",", $this->params["hooks"]) ;
+        return $tags ;
     }
 
     protected function deleteFromPapyrus() {
@@ -205,11 +217,11 @@ class UpAllOS extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->params["ignore-hooks"]) ) {
             $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->getModuleName());
-            return ; }
+            return true ; }
         $logging->log("Provisioning $hook $type hooks", $this->getModuleName());
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
-        $provision->provisionHook($hook, $type);
+        return $provision->provisionHook($hook, $type);
     }
 
 }
