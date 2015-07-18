@@ -25,9 +25,11 @@ class ResumeAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Checking current state...", $this->getModuleName()) ;
-        if ($this->currentStateIsResumable() == false) { return ; }
+        if ($this->currentStateIsResumable() == false) { return false ; }
         $logging->log("Attempting Resume...", $this->getModuleName()) ;
+        $this->runHook("resume", "pre") ;
         $this->provider->resume($this->virtufile->config["vm"]["name"]);
+        $this->runHook("resume", "post") ;
     }
 
     protected function currentStateIsResumable() {
@@ -39,6 +41,19 @@ class ResumeAllOS extends BaseFunctionModel {
             return true ; }
         $logging->log("This VM is not in a Resumable state...", $this->getModuleName()) ;
         return false ;
+    }
+
+
+    protected function runHook($hook, $type) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->params["ignore-hooks"]) ) {
+            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->getModuleName());
+            return ; }
+        $logging->log("Provisioning $hook $type hooks", $this->getModuleName());
+        $provisionFactory = new \Model\Provision();
+        $provision = $provisionFactory->getModel($this->params) ;
+        $provision->provisionHook($hook, $type);
     }
 
 }
