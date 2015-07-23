@@ -71,4 +71,17 @@ class BaseFunctionModel extends BaseLinuxApp {
         return false ;
     }
 
+
+    protected function runHook($hook, $type) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->params["ignore-hooks"]) ) {
+            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->getModuleName());
+            return ; }
+        $logging->log("Provisioning $hook $type hooks", $this->getModuleName());
+        $provisionFactory = new \Model\Provision();
+        $provision = $provisionFactory->getModel($this->params) ;
+        $provision->provisionHook($hook, $type);
+    }
+
 }
