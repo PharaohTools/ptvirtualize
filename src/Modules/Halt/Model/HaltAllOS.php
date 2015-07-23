@@ -26,6 +26,7 @@ class HaltAllOS extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Checking current state...", $this->getModuleName()) ;
         if ($this->currentStateIsHaltable() == false) { return false ; }
+        $this->runHook("halt", "pre") ;
         $logging->log("Attempting soft power off by button...", $this->getModuleName()) ;
         $logging->log("Waiting at least {$this->virtufile->config["vm"]["graceful_halt_timeout"]} seconds for machine to power off...", $this->getModuleName()) ;
         $this->provider->haltSoft($this->virtufile->config["vm"]["name"]);
@@ -59,16 +60,19 @@ class HaltAllOS extends BaseFunctionModel {
 
             if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["ssh_halt_timeout"], "3")==true) {
                 $logging->log("Successful power off SSH Shutdown...", $this->getModuleName()) ;
+                $this->runHook("halt", "post") ;
                 return true ; } }
         if (isset($this->params["fail-hard"])) {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 "--fail-hard flag to do hard power off now." ;
             $logging->log($lmsg, $this->getModuleName()) ;
             $this->provider->haltHard($this->virtufile->config["vm"]["name"]);
+            $this->runHook("halt", "post") ;
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
             "ptvirtualize halt hard. You can also use the parameter --fail-hard to do this automatically." ;
         $logging->log($lmsg, $this->getModuleName()) ;
+        $this->runHook("halt", "post") ;
         return false ;
 
     }
