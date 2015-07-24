@@ -9,12 +9,14 @@ class BaseLinuxApp extends Base {
     protected $installUserName;
     protected $installUserHomeDir;
     protected $programExecutorCommand;
+    public $defaultStatusCommandPrefix = "command -v";
 
     public function __construct($params) {
         parent::__construct($params);
         $this->populateCompletion();
     }
 
+    // @todo surely this can go its in every model nd basically pointless. DEPRECATE
     public function initialize() {
         $this->populateTitle();
     }
@@ -92,6 +94,7 @@ if not doing versions
 
     /*
      * @todo this method is 100 lines long, making it the one most in need of a refactor IMO
+     * @
      */
 
     public function ensureInstalled(){
@@ -105,14 +108,16 @@ if not doing versions
                     $logging->log("No --version-operator is set. Assuming requested version operator is minimum") ;
                     $this->params["version-operator"] = "+" ; }
                 $currentVersion = $this->getVersion() ;
-                $currentVersion->setCondition($this->params["version"], $this->params["version-operator"]) ;
-                if ($currentVersion->isCompatible() == true) {
+                if ($currentVersion !== false) {
+                    $currentVersion->setCondition($this->params["version"], $this->params["version-operator"]) ; }
+                if (is_object($currentVersion) && $currentVersion->isCompatible() == true) {
                     // status 1
                     $logging->log("Installed version {$currentVersion->shortVersionNumber} matches constraints, not installing") ; }
                 else {
                     $recVersion = $this->getVersion("Recommended") ;
-                    $recVersion->setCondition($this->params["version"], $this->params["version-operator"]) ;
-                    if ($recVersion->isCompatible()) {
+                    if ($recVersion !== false) {
+                        $recVersion->setCondition($this->params["version"], $this->params["version-operator"]) ; }
+                    if (is_object($recVersion) && $recVersion->isCompatible() == true) {
                         // status 2
                         $logging->log(
                             "Installed version {$currentVersion->shortVersionNumber} does not match constraints, but ".
@@ -135,6 +140,7 @@ if not doing versions
                                 // @todo this functionality doesnt work yet, but it should do this
                                 $this->install("Latest") ;  }
                             else {
+                                var_dump($currentVersion, $latestVersion);
                                 // status 4
                                 $logging->log(
                                     "Installed version {$currentVersion->shortVersionNumber} does not match constraints, nor does ".
@@ -205,7 +211,7 @@ if not doing versions
         $this->doInstallCommand();
         if ($this->programDataFolder) {
             $this->changePermissions($this->programDataFolder); }
-        $this->setInstallFlagStatus(true) ;
+        // $this->setInstallFlagStatus(true) ; @todo we can deprecate this now as status is dynamic, and install is used by everything not just installers
         if (isset($this->params["hide-completion"])) { $this->populateTinyCompletion(); }
         $this->showCompletion();
         return true;
@@ -214,9 +220,24 @@ if not doing versions
     public function unInstall() {
         $this->showTitle();
         $this->doUnInstallCommand();
-        $this->setInstallFlagStatus(false) ;
+        // $this->setInstallFlagStatus(false) ; @todo we can deprecate this now as status is dynamic, and install is used by everything not just installers
         $this->showCompletion();
         return true;
+    }
+
+    public function runAtReboots() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        if (isset($this->rebootsCommand)) {
+            if (!is_array($this->rebootsCommand)) { $this->rebootsCommand = array($this->rebootsCommand) ; }
+            $serviceFactory = new Service();
+            $serviceManager = $serviceFactory->getModel($this->params) ;
+            foreach ($this->rebootsCommand as $rebootsCommand) {
+                $logging->log("Ensuring {$rebootsCommand} Will Run at Reboots") ;
+                $serviceManager->setService($rebootsCommand);
+                $serviceManager->runAtReboots(); } }
+        else {
+            $logging->log("This module does not report any services which can run at reboots") ; }
     }
 
     protected function showTitle() {
@@ -297,7 +318,7 @@ if not doing versions
     }
 
     protected function populateExecutorFile() {
-      $this->bootStrapData = "#!/usr/bin/php\n
+        $this->bootStrapData = "#!/usr/bin/php\n
 <?php\n
 exec('".$this->programExecutorCommand."');\n
 ?>";
