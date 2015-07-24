@@ -83,10 +83,10 @@ class ShellProvision extends BaseShellAllOS {
             if (isset($provisioner["default"])) {
                 $logging->log("Provisioning VM with Default Shell Script for {$provisioner["default"]}...", $this->getModuleName());
                 $this->sshProvision($provisioner, $init, $osProvisioner); }
-            else if (isset($provisionerSettings["source"]) && $provisionerSettings["source"]=="guest") {
-                $logging->log("Provisioning Guest with local Shell Script {$provisionerSettings["script"]}...", $this->getModuleName()) ;
-                $init["provision_file"] = $provisionerSettings["script"] ;
-                return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
+            else if (isset($provisioner["source"]) && $provisioner["source"]=="guest") {
+                $logging->log("Provisioning Guest with local Shell Script {$provisioner["script"]}...", $this->getModuleName()) ;
+                $init["provision_file"] = $provisioner["script"] ;
+                return $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
                 $logging->log("Starting Provisioning VM with Shell...", $this->getModuleName());
                 $logging->log("SFTP Configuration Management .sh file to VM for Shell...", $this->getModuleName());
