@@ -18,6 +18,10 @@ class InvokeAllOS extends Base {
 	private $sshCommands;
 	protected $isNativeSSH;
 
+	public function __construct($params = null) {
+		parent::__construct($params) ;
+	}
+
 	public function askWhetherToInvokeSSHShell() {
 		return $this->performInvokeSSHShell();
 	}
@@ -205,20 +209,20 @@ class InvokeAllOS extends Base {
                 return "DriverSecLib" ; }
             $logging->log("Using requested {$optionsKeep[$this->params["driver"]]} driver...", $this->getModuleName()) ;
             return $optionsKeep[$this->params["driver"]]; }
-        if (isset($this->params["guess"]) && $this->params["guess"] == true) {
+        // if (isset($this->params["guess"]) && $this->params["guess"] == true) {
             if (in_array($system->os, array("WINNT", "Windows"))) {
                 $logging->log("Using default driver for Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
                 return "DriverSecLib" ; }
 //            @todo fix bash properly
             $logging->log("Using default driver for Non-Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-            return "DriverSecLib" ;
+            return "DriverNativeSSH" ;
 //            $logging->log("Using default driver for non-windows systems, Seclib SSH driver...", $this->getModuleName()) ;
 //            return "DriverSecLib";
-        }
-        $question = 'Which SSH Driver should I use?';
-        $ofound = self::askForArrayOption($question, $optionsAsk);
-        $ofound = $optionsKeep[$ofound] ;
-        return $ofound ;
+//        }
+//        $question = 'Which SSH Driver should I use?';
+//        $ofound = self::askForArrayOption($question, $optionsAsk);
+//        $ofound = $optionsKeep[$ofound] ;
+//        return $ofound ;
     }
 
 	private function askForSSHShellExecute() {
@@ -287,23 +291,15 @@ QUESTION;
 	private function askForTimeout() {
 		if (isset($this->params["timeout"])) {
 			return; }
-		if (isset($this->params["guess"])) {
-			$this->params["timeout"] = 100;
-			return; }
-		$question = 'Please Enter SSH Timeout in seconds';
-		$input = self::askForInput($question, true);
-		$this->params["timeout"] = $input;
+		$this->params["timeout"] = 100;
 	}
 
 	private function askForPort() {
 		if (isset($this->params["port"])) {
 			return; }
-		if (isset($this->params["guess"])) {
-			$this->params["port"] = 22;
-			return; }
-		$question = 'Please Enter remote SSH Port';
-		$input = self::askForInput($question, true);
-		$this->params["port"] = $input;
+		// @todo guess is beig unset on creation of this object
+		$this->params["port"] = 22;
+		return;
 	}
 
 	private function askForServerTarget() {
