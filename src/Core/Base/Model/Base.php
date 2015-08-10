@@ -127,8 +127,13 @@ COMPLETION;
             stream_set_blocking($pipes[1], true);
             $data = "";
             while ($buf = fread($pipes[1], 4096)) {
+
+                var_dump(mb_strlen($buf, '8bit'));
+
                 $data .= $buf;
                 echo $buf ; } }
+
+        var_dump("at end");
 
 //        $stdout = stream_get_contents($pipes[1]);
         $stdout = $data;
