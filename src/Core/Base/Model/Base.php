@@ -118,23 +118,15 @@ COMPLETION;
     }
 
     public static function executeAndGetReturnCode($command, $show_output = null, $get_output = null) {
-        $proc = proc_open($command,[
-            1 => ['pipe','w'],
-            2 => ['pipe','w'],
-        ],$pipes);
-
+        $proc = proc_open($command, array( 1 => array('pipe','w'), 2 => array('pipe','w'),),$pipes);
+        $data = "";
         if ($show_output==true) {
             stream_set_blocking($pipes[1], true);
-            $data = "";
             while ($buf = fread($pipes[1], 4096)) {
-
-                var_dump(mb_strlen($buf, '8bit'));
-
+//                var_dump(mb_strlen($buf, '8bit'));
                 $data .= $buf;
                 echo $buf ; } }
-
-        var_dump("at end");
-
+        //var_dump("at end");
 //        $stdout = stream_get_contents($pipes[1]);
         $stdout = $data;
         fclose($pipes[1]);
