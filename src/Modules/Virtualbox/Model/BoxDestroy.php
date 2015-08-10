@@ -20,7 +20,7 @@ class BoxDestroy extends BaseVirtualboxAllOS {
     }
 
     public function getDestroyableStates() {
-        return array("aborted", "powered off") ;
+        return array("aborted", "powered off", "saved") ;
     }
 
 }
