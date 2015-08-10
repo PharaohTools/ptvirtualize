@@ -137,7 +137,7 @@ class ShellProvision extends BaseShellAllOS {
                 $logging->log("Found {$methodName} method in OS Provisioner", $this->getModuleName());
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName());
+                $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName());
                 return false ; } }
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
