@@ -12,6 +12,7 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     $command = "where /R \"{$pf}\" *VBoxManage* " ;
     $outputArray = array();
     exec($command, $outputArray);
+    define('SUDOPREFIX', "");
     define('VBOXMGCOMM', "\"{$outputArray[0]}\" ") ;
     define('PTCCOMM', '"C:\PharaohTools\ptconfigure.cmd"') ;
     define('PTDCOMM', '"C:\PharaohTools\ptdeploy.cmd"') ;
@@ -20,6 +21,10 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     define('DS', "\\");
     define('BASE_TEMP_DIR', 'C:\\Temp\\'); }
 else if (in_array(PHP_OS, array("Linux", "Solaris", "FreeBSD", "OpenBSD", "Darwin"))) {
+    $uname = exec('whoami');
+    $isAdmin = ($uname == "root") ? true : false ;
+    if ($isAdmin == true) { define('SUDOPREFIX', ""); }
+    else { define('SUDOPREFIX', "sudo "); }
     define('VBOXMGCOMM', "vboxmanage ") ;
     define('PTCCOMM', "ptconfigure ") ;
     define('PTDCOMM', "ptdeploy ") ;
