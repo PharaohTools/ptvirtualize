@@ -130,7 +130,8 @@ COMPLETION;
                 $data .= $buf;
                 echo $buf ; } }
 
-        $stdout = stream_get_contents($pipes[1]);
+//        $stdout = stream_get_contents($pipes[1]);
+        $stdout = $data;
         fclose($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[2]);
