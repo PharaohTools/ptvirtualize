@@ -64,12 +64,12 @@ class DestroyAllOS extends BaseFunctionModel {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
             $logging->log("Not provisioning destroy hooks as ignore hooks parameter is set", $this->getModuleName()) ;
-            return ; }
+            return true ; }
         $ut = ucfirst($type) ;
         $logging->log("Provisioning $ut Destroy Hooks", $this->getModuleName()) ;
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
-        $provision->provisionHook("destroy", $type);
+        return $provision->provisionHook("destroy", $type);
     }
 
 }
