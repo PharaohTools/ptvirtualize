@@ -5,7 +5,7 @@ Namespace Model;
 class BoxUpImport extends BaseFunctionModel {
 
     // Compatibility
-    public $os = array("any") ;
+    public $os = array("Darwin") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -21,7 +21,7 @@ class BoxUpImport extends BaseFunctionModel {
         $ret = $this->executeAndGetReturnCode($command);
 //        $command = "echo $?" ;
 //        $ret = $this->executeAndLoad($command);
-        return ($ret == "0") ? true : false ;
+        return (in_array($ret, array("0","1"))) ? true : false ;
     }
 
     public function getResumableStates() {

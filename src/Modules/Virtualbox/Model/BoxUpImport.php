@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class BoxUpImport extends BaseFunctionModel {
+class BoxUpImportLinux extends BaseFunctionModel {
 
     // Compatibility
-    public $os = array("any") ;
+    public $os = array("Linux") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -16,7 +16,7 @@ class BoxUpImport extends BaseFunctionModel {
 
     //@todo need windows version
     public function import($file, $ostype, $name) {
-        $command  = VBOXMGCOMM." import {$file} --vsys 0 --ostype {$ostype}" ;
+        $command  = VBOXMGCOMM."import {$file} --vsys 0 --ostype {$ostype}" ;
         $command .= " --vmname {$name}" ;
         $ret = $this->executeAndGetReturnCode($command);
 //        $command = "echo $?" ;
