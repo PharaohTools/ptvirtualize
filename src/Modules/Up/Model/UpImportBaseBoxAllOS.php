@@ -82,7 +82,7 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
                 // @todo for if we are looking for box archive files also
 //                if (substr($this->virtufile->config["vm"]["box"], strlen($this->virtufile->config["vm"]["box"])-4) !== ".box"){
 //                    $confBox .= ".box" ; }
-                if ($box == $confBox) {
+                if ($box == $this->virtufile->config["vm"]["box"]) {
                     $logging->log("Found base box {$box}", $this->getModuleName()) ;
                     return $dirscan.DS.$box ; } } }
         else {
