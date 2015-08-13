@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxUpImport extends BaseFunctionModel {
+class BoxUpImportMac extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("Darwin") ;
