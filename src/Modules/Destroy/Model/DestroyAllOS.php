@@ -23,10 +23,10 @@ class DestroyAllOS extends BaseFunctionModel {
         $this->loadFiles();
         $this->findProvider();
         if ($this->currentStateIsDestroyable() == false) { return ; }
-        $this->runHook("pre") ;
+        $this->runHook("destroy", "pre") ;
         $this->removeShares();
         $this->doDestruction();
-        $this->runHook("post") ;
+        $this->runHook("destroy", "post") ;
         $this->deleteFromPapyrus() ;
     }
 
@@ -55,21 +55,6 @@ class DestroyAllOS extends BaseFunctionModel {
             return true ; }
         $logging->log("This VM is not in a Destroyable state...", $this->getModuleName()) ;
         return false ;
-    }
-
-    protected function runHook($type) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->params["ignore-hooks"]) ) {
-            $loggingFactory = new \Model\Logging();
-            $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("Not provisioning destroy hooks as ignore hooks parameter is set", $this->getModuleName()) ;
-            return true ; }
-        $ut = ucfirst($type) ;
-        $logging->log("Provisioning $ut Destroy Hooks", $this->getModuleName()) ;
-        $provisionFactory = new \Model\Provision();
-        $provision = $provisionFactory->getModel($this->params) ;
-        return $provision->provisionHook("destroy", $type);
     }
 
 }
