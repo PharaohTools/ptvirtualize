@@ -1,0 +1,195 @@
+[Pharaoh Logging] [EventRunner] Executing event beforeSettings
+[Pharaoh Logging] [EventRunner] Executing event afterSettings
+[Pharaoh Logging] [PipeRunner] Writing to temp file /opt/ptbuild/pipes/pharaoh_virtualize/tmpfile
+[Pharaoh Logging] [PipeRunner] Executing as _www
+
+[Pharaoh Logging] [PipeRunner] Changing to workspace directory /opt/ptbuild/pipes/pharaoh_virtualize/workspace/
+[Pharaoh Logging] [EventRunner] Executing event beforeBuild
+[Pharaoh Logging] [PipeRunner] Executing step id 40879215396551847
+[Pharaoh Logging] [StepRunner] Module ClearWorkspace, step type clearworkspace
+[Pharaoh Logging] [ClearWorkspace] Running Workspace Clear...
+[Pharaoh Logging] [ClearWorkspace] Execution flag is set to on, executing...
+[Pharaoh Logging] [ClearWorkspace] Executing rm -rf /opt/ptbuild/pipes/pharaoh_virtualize/workspace/*...
+[Pharaoh Logging] [ClearWorkspace] Executing rm -rf /opt/ptbuild/pipes/pharaoh_virtualize/workspace/.*...
+[Pharaoh Logging] [ClearWorkspace] Executing ls -lah /opt/ptbuild/pipes/pharaoh_virtualize/workspace/...
+total 0
+drwxr-xr-x   2 _www  admin    68B 20 Aug 06:14 .
+drwxr-xr-x  11 _www  admin   374B 20 Aug 00:58 ..
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 40879215396551847
+
+[Pharaoh Logging] [PipeRunner] Executing step id 7895428616097204
+[Pharaoh Logging] [StepRunner] Module Git, step type gitclonepoll
+[Pharaoh Logging] [Git] Running Git clone from default repo /opt/ptvirtualize/ptvirtualize/ to /opt/ptbuild/pipes/pharaoh_virtualize/workspace...
+ptdeploy  GitClone clone --yes --guess --change-owner-permissions="false"  --repository-url="/opt/ptvirtualize/ptvirtualize/"
+Cloning into 'ptvirtualize'...
+done.
+
+******************************
+
+
+1In GitClone View
+******************************
+
+[Pharaoh Exit] Execution finished after 1440047650.8362 seconds 
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 7895428616097204
+
+[Pharaoh Logging] [PipeRunner] Executing step id 5221359287802089
+[Pharaoh Logging] [StepRunner] Module Shell, step type shelldata
+[Pharaoh Logging] [Shell] Running Shell from Data...
+[Pharaoh Logging] [Shell] Creating /tmp/ptconfigure-temp-script-1518311124.sh
+[Pharaoh Logging] [Shell] Changing /tmp/ptconfigure-temp-script-1518311124.sh Permissions
+[Pharaoh Logging] [Shell] Executing /tmp/ptconfigure-temp-script-1518311124.sh
+total 0
+drwxr-xr-x   3 _www  admin   102B 20 Aug 06:14 .
+drwxr-xr-x  11 _www  admin   374B 20 Aug 00:58 ..
+drwxr-xr-x  14 _www  admin   476B 20 Aug 06:14 ptvirtualize
+/opt/ptbuild/pipes/pharaoh_virtualize/workspace
+[Pharaoh Logging] [Shell] Temp File /tmp/ptconfigure-temp-script-1518311124.sh Removed
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 5221359287802089
+
+[Pharaoh Logging] [PipeRunner] Executing step id 5904461283753337
+[Pharaoh Logging] [StepRunner] Module Shell, step type shelldata
+[Pharaoh Logging] [Shell] Running Shell from Data...
+[Pharaoh Logging] [Shell] Creating /tmp/ptconfigure-temp-script-73807157090.sh
+[Pharaoh Logging] [Shell] Changing /tmp/ptconfigure-temp-script-73807157090.sh Permissions
+[Pharaoh Logging] [Shell] Executing /tmp/ptconfigure-temp-script-73807157090.sh
+#!/usr/bin/env php
+@basics
+Feature: Basic functionality of all modules
+  As a command line user
+  I want to execute any modules basic features
+  To see they are working before use
+
+  Scenario: Execute any help command for a correct exit code                    # features/AllModules.feature:7
+Executing ptconfigure AutoSSH help 
+Executing ptconfigure Box help 
+Executing ptconfigure Destroy help 
+Executing ptconfigure EnvironmentConfig help 
+Executing ptconfigure Flirtify help 
+Executing ptconfigure Halt help 
+Executing ptconfigure Index help 
+Executing ptconfigure Invoke help 
+Executing ptconfigure Logging help 
+Executing ptconfigure PTConfigureRequired help 
+Executing ptconfigure VirtualizeRequired help 
+Executing ptconfigure PharaohTools help 
+Executing ptconfigure Provision help 
+Executing ptconfigure Resume help 
+Executing ptconfigure SFTP help 
+Executing ptconfigure Shell help 
+Executing ptconfigure Status help 
+Executing ptconfigure Templating help 
+Executing ptconfigure Up help 
+Executing ptconfigure Virtualbox help 
+    Given I run the help for all compatible modules checking success exit codes # AnyModuleActionsContext::iRunTheHelpForAllCompatibleModulesCheckingSuccessExitCodes()
+
+  Scenario: Execute any help command for some output                            # features/AllModules.feature:11
+Executing ptconfigure AutoSSH help 
+Executing ptconfigure Box help 
+Executing ptconfigure Destroy help 
+Executing ptconfigure EnvironmentConfig help 
+Executing ptconfigure Flirtify help 
+Executing ptconfigure Halt help 
+Executing ptconfigure Index help 
+Executing ptconfigure Invoke help 
+Executing ptconfigure Logging help 
+Executing ptconfigure PTConfigureRequired help 
+Executing ptconfigure PTVirtualizeRequired help 
+Executing ptconfigure PharaohTools help 
+Executing ptconfigure Provision help 
+Executing ptconfigure Resume help 
+Executing ptconfigure SFTP help 
+Executing ptconfigure Shell help 
+Executing ptconfigure Status help 
+Executing ptconfigure SystemDetection help 
+Executing ptconfigure Templating help 
+Executing ptconfigure Up help 
+Executing ptconfigure Virtualbox help 
+    Given I run the help for all modules checking exit output exists            # AnyModuleActionsContext::iRunTheHelpForAllModulesCheckingExitOutputExists()
+
+@home
+Feature: Executing the program index page
+  As a command line user
+  I want to execute the index page
+  To see overview information about the application
+
+  Scenario: Execute with no parameters                                          # features/Index.feature:11
+    Given I run the application command in the shell                            # NoActionsContext::iRunTheApplicationCommandInTheShell()
+    Then I should see the application description                               # NoActionsContext::iShouldSeeTheApplicationDescription()
+
+  Scenario: Execute with no parameters                                          # features/Index.feature:15
+    Given I run the application command in the shell                            # NoActionsContext::iRunTheApplicationCommandInTheShell()
+    Then I should see the cli text "www.pharaohtools.com"                       # NoActionsContext::iShouldSeeTheCliText()
+
+4 scenarios (4 passed)
+6 steps (6 passed)
+0m18.797s
+[Pharaoh Logging] [Shell] Temp File /tmp/ptconfigure-temp-script-73807157090.sh Removed
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 5904461283753337
+
+[Pharaoh Logging] [PipeRunner] Executing step id 662353164921901
+[Pharaoh Logging] [StepRunner] Module PHPScript, step type phpscriptdata
+[Pharaoh Logging] [PHPScript] Running PHPScript from Data...
+/opt/ptbuild/pipes/pharaoh_virtualize/workspace/ptvirtualize
+Last commit was: Automated Build, Test and Release. MINOR RELEASE 
+Current Tagged Version Is: 0.0.1
+New Tagged Version Is: 0.1.0
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 662353164921901
+
+[Pharaoh Logging] [PipeRunner] Executing step id 3413454691394885
+[Pharaoh Logging] [StepRunner] Module Shell, step type shelldata
+[Pharaoh Logging] [Shell] Running Shell from Data...
+[Pharaoh Logging] [Shell] Creating /tmp/ptconfigure-temp-script-79927745015.sh
+[Pharaoh Logging] [Shell] Changing /tmp/ptconfigure-temp-script-79927745015.sh Permissions
+[Pharaoh Logging] [Shell] Executing /tmp/ptconfigure-temp-script-79927745015.sh
+Ensuring the SSH Key Friendly version of Git is available
+
+*******************************
+*        Pharaoh Tools        *
+*         Git Key-Safe Server!        *
+*******************************
+Git Key-Safe script /usr/bin/git-key-safe added
+Git Key-Safe script /usr/bin/git-key-safe permissions changed to 775
+... All done!
+*******************************
+Thanks for installing , visit www.pharaohtools.com for more
+******************************
+
+
+Single App Installer:
+--------------------------------------------
+GitKeySafe: Success
+------------------------------
+Installer Finished
+******************************
+
+[Pharaoh Exit] Execution finished after 0.35685896873474 seconds 
+[Pharaoh Logging] [Shell] Temp File /tmp/ptconfigure-temp-script-79927745015.sh Removed
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 3413454691394885
+
+[Pharaoh Logging] [PipeRunner] Executing step id 39951745943864903
+[Pharaoh Logging] [StepRunner] Module Shell, step type shelldata
+[Pharaoh Logging] [Shell] Running Shell from Data...
+[Pharaoh Logging] [Shell] Creating /tmp/ptconfigure-temp-script-52097494808.sh
+[Pharaoh Logging] [Shell] Changing /tmp/ptconfigure-temp-script-52097494808.sh Permissions
+[Pharaoh Logging] [Shell] Executing /tmp/ptconfigure-temp-script-52097494808.sh
+We are in directory...
+/opt/ptbuild/pipes/pharaoh_virtualize/workspace/ptvirtualize
+Adding Github Repository Remote
+Performing Git Push to Github Repository
+Pushing to git@github.com:PharaohTools/ptvirtualize.git
+Could not create directory '/Library/WebServer/.ssh'.
+Warning: Permanently added 'github.com,192.30.252.130' (RSA) to the list of known hosts.
+To git@github.com:PharaohTools/ptvirtualize.git
+ = [up to date]      master -> master
+ = [up to date]      0.0.1 -> 0.0.1
+ * [new tag]         0.1.0 -> 0.1.0
+updating local tracking ref 'refs/remotes/github/master'
+[Pharaoh Logging] [Shell] Temp File /tmp/ptconfigure-temp-script-52097494808.sh Removed
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 39951745943864903
+
+[Pharaoh Logging] [EventRunner] Executing event beforeBuildComplete
+[Pharaoh Logging] [PipeRunner] SUCCESSFUL EXECUTION
+
+[Pharaoh Logging] [EventRunner] Executing event afterBuildComplete
+[Pharaoh Logging] [SendEmail] Error sending mail

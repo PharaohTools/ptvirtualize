@@ -1,0 +1,89 @@
+[Pharaoh Logging] [EventRunner] Executing event beforeSettings
+[Pharaoh Logging] [EventRunner] Executing event afterSettings
+[Pharaoh Logging] [PipeRunner] Writing to temp file /opt/ptbuild/pipes/pharaoh_virtualize/tmpfile
+[Pharaoh Logging] [PipeRunner] Executing as _www
+
+[Pharaoh Logging] [PipeRunner] Changing to workspace directory /opt/ptbuild/pipes/pharaoh_virtualize/workspace/
+[Pharaoh Logging] [EventRunner] Executing event beforeBuild
+[Pharaoh Logging] [PipeRunner] Executing step id 40879215396551847
+[Pharaoh Logging] [StepRunner] Module ClearWorkspace, step type clearworkspace
+[Pharaoh Logging] [ClearWorkspace] Running Workspace Clear...
+[Pharaoh Logging] [ClearWorkspace] Execution flag is set to on, executing...
+[Pharaoh Logging] [ClearWorkspace] Executing rm -rf /opt/ptbuild/pipes/pharaoh_virtualize/workspace/*...
+[Pharaoh Logging] [ClearWorkspace] Executing rm -rf /opt/ptbuild/pipes/pharaoh_virtualize/workspace/.*...
+[Pharaoh Logging] [ClearWorkspace] Executing ls -lah /opt/ptbuild/pipes/pharaoh_virtualize/workspace/...
+total 0
+drwxr-xr-x   2 _www  admin    68B 20 Aug 02:25 .
+drwxr-xr-x  11 _www  admin   374B 20 Aug 00:58 ..
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 40879215396551847
+
+[Pharaoh Logging] [PipeRunner] Executing step id 7895428616097204
+[Pharaoh Logging] [StepRunner] Module Git, step type gitclonepoll
+[Pharaoh Logging] [Git] Running Git clone from default repo /opt/ptvirtualize/ptvirtualize/ to /opt/ptbuild/pipes/pharaoh_virtualize/workspace...
+ptdeploy  GitClone clone --yes --guess --change-owner-permissions="false"  --repository-url="/opt/ptvirtualize/ptvirtualize/"
+Cloning into 'ptvirtualize'...
+done.
+
+
+
+******************************
+
+
+1In GitClone View
+******************************
+
+[Pharaoh Exit] Execution finished after 1440033946.6698 seconds 
+
+
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 7895428616097204
+
+[Pharaoh Logging] [PipeRunner] Executing step id 5221359287802089
+[Pharaoh Logging] [StepRunner] Module Shell, step type shelldata
+[Pharaoh Logging] [Shell] Running Shell from Data...
+[Pharaoh Logging] [Shell] Creating /tmp/ptconfigure-temp-script-60962124394.sh
+[Pharaoh Logging] [Shell] Changing /tmp/ptconfigure-temp-script-60962124394.sh Permissions
+[Pharaoh Logging] [Shell] Executing /tmp/ptconfigure-temp-script-60962124394.sh
+total 0
+drwxr-xr-x   3 _www  admin   102B 20 Aug 02:25 .
+drwxr-xr-x  11 _www  admin   374B 20 Aug 00:58 ..
+drwxr-xr-x  14 _www  admin   476B 20 Aug 02:25 ptvirtualize
+
+
+/opt/ptbuild/pipes/pharaoh_virtualize/workspace
+
+
+[Pharaoh Logging] [Shell] Temp File /tmp/ptconfigure-temp-script-60962124394.sh Removed
+[Pharaoh Logging] [PipeRunner] Step execution Success, ID 5221359287802089
+
+[Pharaoh Logging] [PipeRunner] Executing step id 5904461283753337
+[Pharaoh Logging] [StepRunner] Module Shell, step type shelldata
+[Pharaoh Logging] [Shell] Running Shell from Data...
+[Pharaoh Logging] [Shell] Creating /tmp/ptconfigure-temp-script-44803896461.sh
+[Pharaoh Logging] [Shell] Changing /tmp/ptconfigure-temp-script-44803896461.sh Permissions
+[Pharaoh Logging] [Shell] Executing /tmp/ptconfigure-temp-script-44803896461.sh
+#!/usr/bin/env php
+
+
+
+
+                                                                             
+  [RuntimeException]                                                         
+  Context class not found.                                                   
+  Maybe you have provided a wrong or no `bootstrap` path in your behat.yml:  
+  http://docs.behat.org/guides/7.config.html#paths                           
+                                                                             
+
+
+behat [--init] [-f|--format="..."] [--out="..."] [--lang="..."] [--[no-]ansi] [--[no-]time] [--[no-]paths] [--[no-]snippets] [--[no-]snippets-paths] [--[no-]multiline] [--[no-]expand] [--story-syntax] [-d|--definitions="..."] [--name="..."] [--tags="..."] [--cache="..."] [--strict] [--dry-run] [--stop-on-failure] [--rerun="..."] [--append-snippets] [--append-to="..."] [features]
+
+
+
+[Pharaoh Logging] [Shell] Temp File /tmp/ptconfigure-temp-script-44803896461.sh Removed
+[Pharaoh Logging] [PipeRunner] Step execution Failed, ID 5904461283753337
+
+[Pharaoh Logging] [EventRunner] Executing event beforeBuildComplete
+[Pharaoh Logging] [PipeRunner] FAILED EXECUTION
+
+[Pharaoh Logging] [EventRunner] Executing event afterBuildComplete
+[Pharaoh Logging] [SendEmail] Sending alert mail
+[Pharaoh Logging] [SendEmail] Error sending mail
