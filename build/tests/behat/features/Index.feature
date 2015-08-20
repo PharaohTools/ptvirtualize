@@ -4,9 +4,9 @@ Feature: Executing the program index page
   I want to execute the index page
   To see overview information about the application
 
-  Scenario: Execute with no parameters
-    Given I run the application command in the shell
-    Then I should see all of the modules which are not hidden
+#  Scenario: Execute with no parameters
+#    Given I run the application command in the shell
+#    Then I should see all of the modules which are not hidden
 
   Scenario: Execute with no parameters
     Given I run the application command in the shell
