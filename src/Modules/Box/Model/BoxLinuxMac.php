@@ -142,14 +142,14 @@ class BoxLinuxMac extends BaseLinuxApp {
     protected function getTargetBoxLocation() {
         if (isset($this->params["target"])) {
             return $this->ensureTrailingSlash($this->params["target"]) ; }
-        else if (isset($this->params["guess"])) {
+        else {
             if (!file_exists(BOXDIR)) {
                 if ($this->attemptToCreateBoxDir()== false) {
                     return false ; } }
             return $this->ensureTrailingSlash(BOXDIR) ; }
-        else {
-            $target = self::askForInput("Enter Box Target Path:", true);
-            return $this->ensureTrailingSlash($target) ; }
+//        else {
+//            $target = self::askForInput("Enter Box Target Path:", true);
+//            return $this->ensureTrailingSlash($target) ; }
     }
 
     protected function attemptToCreateBoxDir() {
