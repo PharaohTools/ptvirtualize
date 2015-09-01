@@ -185,11 +185,31 @@ class BoxLinuxMac extends BaseLinuxApp {
         $boxFile = $this->source ;
         $command = "tar --extract --file=$boxFile -C ".BASE_TEMP_DIR." .".DS."metadata.json" ;
         self::executeAndOutput($command);
-        $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
-        $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
+        if (file_exists(BASE_TEMP_DIR."metadata.json")) {
+
+            $fData = file_get_contents(BASE_TEMP_DIR."metadata.json") ;
+            $command = "rm ".BASE_TEMP_DIR."metadata.json" ;
+            self::executeAndOutput($command);
+            $fdo = json_decode($fData) ;
+            if (is_object($fdo)) { return $fdo ; }
+        }
+        // try if its a vagrant box
+        $command = "tar --extract --file=$boxFile -C ".BASE_TEMP_DIR." .".DS."Vagrantfile" ;
         self::executeAndOutput($command);
-        $fdo = json_decode($fData) ;
-        if (is_object($fdo)) { return $fdo ; }
+
+        if (file_exists(BASE_TEMP_DIR."Vagrantfile")) {
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params) ;
+            $command = "rm ".BASE_TEMP_DIR."Vagrantfile" ;
+            self::executeAndOutput($command);
+            $logging->log("Detected a Vagrant file, using default vagrant box metadata", $this->getModuleName()) ;
+            $metadata = new \StdClass();
+            $metadata->provider = "virtualbox" ;
+            $metadata->group = "none" ;
+            $metadata->slug = "none" ;
+            $metadata->home_location = "none" ;
+            return $metadata ;}
+
         return false ;
     }
 
@@ -254,9 +274,11 @@ class BoxLinuxMac extends BaseLinuxApp {
             if (substr($this->source, strlen($this->source)-1, 1) == '/') {
                 $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
             // @todo error return false
-            $curlComm = 'curl -L "'.$this->source.'" -o "'.$tmpFile.'"' ;
-            $rt = self::executeAndGetReturnCode($curlComm) ;
-            if ($rt !== 0) {return false;}
+            $curlComm = 'curl -L "'.$this->source.'" -o "'.$tmpFile.'" ' ;
+            self::executeAndOutput($curlComm);
+            // @todo this should be done with an rc but thers no friendly output fir some reason
+//            $rt = self::executeAndGetReturnCode($curlComm, true, true) ;
+//            if ($rt["rc"] !== 0) { return false;}
             $this->source = $tmpFile ;
             $logging->log("Download complete ...", $this->getModuleName());
             return true ;}
