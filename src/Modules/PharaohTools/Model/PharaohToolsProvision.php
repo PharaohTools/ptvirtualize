@@ -74,7 +74,10 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $encodedBox = serialize(array(array(
                 "user" => "{$this->virtufile->config["ssh"]["user"]}",
                 "password" => "{$this->virtufile->config["ssh"]["password"]}",
-                "target" => "$chosenIp"
+                "target" => "$chosenIp",
+                "driver" => "{$this->virtufile->config["ssh"]["driver"]}",
+                "port" => $thisPort ,
+                "timeout" => $this->virtufile->config["ssh"]["timeout"]
             ))) ;
 
             $this->storeInPapyrus($this->virtufile->config["ssh"]["user"], $this->virtufile->config["ssh"]["password"], $chosenIp) ;
