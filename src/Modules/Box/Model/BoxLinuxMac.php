@@ -193,16 +193,18 @@ class BoxLinuxMac extends BaseLinuxApp {
             $fdo = json_decode($fData) ;
             if (is_object($fdo)) { return $fdo ; }
         }
+        else {
+//            assume vagrant box
         // try if its a vagrant box
-        $command = "tar --extract --file=$boxFile -C ".BASE_TEMP_DIR." .".DS."Vagrantfile" ;
-        self::executeAndOutput($command);
-
-        if (file_exists(BASE_TEMP_DIR."Vagrantfile")) {
+//        $command = "tar --extract --file=$boxFile -C ".BASE_TEMP_DIR." .".DS."Vagrantfile" ;
+//        self::executeAndOutput($command);
+//
+//        if (file_exists(BASE_TEMP_DIR."Vagrantfile")) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $command = "rm ".BASE_TEMP_DIR."Vagrantfile" ;
+//            $command = "rm ".BASE_TEMP_DIR."Vagrantfile" ;
             self::executeAndOutput($command);
-            $logging->log("Detected a Vagrant file, using default vagrant box metadata", $this->getModuleName()) ;
+            $logging->log("Detected a Vagrant box, using default vagrant box metadata", $this->getModuleName()) ;
             $metadata = new \StdClass();
             $metadata->provider = "virtualbox" ;
             $metadata->group = "none" ;
