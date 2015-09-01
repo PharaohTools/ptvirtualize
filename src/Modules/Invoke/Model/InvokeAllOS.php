@@ -192,7 +192,16 @@ class InvokeAllOS extends Base {
         $driver = $invokeFactory->getModel($this->params, $driverString) ;
         $driver->setServer($serverObj);
         $serverObj->setDriver($driver);
-        if ($serverObj->connect() == true ){ return $serverObj; }
+        $connection_attempts = 30 ;
+        $interval = 3 ;
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        for ($i=1; $i < $connection_attempts ; $i++) {
+            $logging->log("Connection attempt {$i}...", $this->getModuleName()) ;
+            if ($serverObj->connect() == true ){
+                $logging->log("Connection attempt {$i} Successful...", $this->getModuleName()) ;
+                return $serverObj; }
+            sleep($interval) ; }
 //        var_dump($serverObj) ;
         return false;
     }
