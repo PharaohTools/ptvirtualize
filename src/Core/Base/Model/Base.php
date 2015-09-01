@@ -38,7 +38,7 @@ class Base {
     protected function populateTitle() {
         $this->titleData = <<<TITLE
 *******************************
-*   Golden Contact Computing  *
+*        Pharaoh Tools        *
 *         $this->programNameFriendly        *
 *******************************
 
@@ -57,7 +57,7 @@ TITLE;
         $this->completionData = <<<COMPLETION
 ... All done!
 *******************************
-Thanks for installing , visit www.gcsoftshop.co.uk for more
+Thanks for installing , visit www.pharaohtools.com for more
 
 COMPLETION;
     }
@@ -68,7 +68,6 @@ COMPLETION;
             foreach ($keys as $property) {
                 $this->$property = $step[$property] ; } }
     }
-
 
 
     protected function executeAsShell($multiLineCommand, $message=null) {
@@ -118,17 +117,21 @@ COMPLETION;
     }
 
     public static function executeAndGetReturnCode($command, $show_output = null, $get_output = null) {
-        $proc = proc_open($command, array( 1 => array('pipe','w'), 2 => array('pipe','w'),),$pipes);
-        $data = "";
+        $proc = proc_open($command, array(
+            0 => array("pipe","r"),
+            1 => array("pipe",'w'),
+            2 => array("pipe",'w'),
+        ),$pipes);
         if ($show_output==true) {
             stream_set_blocking($pipes[1], true);
+            $data = "";
             while ($buf = fread($pipes[1], 4096)) {
-//                var_dump(mb_strlen($buf, '8bit'));
                 $data .= $buf;
-                echo $buf ; } }
-        //var_dump("at end");
-//        $stdout = stream_get_contents($pipes[1]);
-        $stdout = $data;
+                echo $buf ;
+                $buf2 = "STDERR: ". fread($pipes[2], 4096);
+                if ($buf2) {
+                    echo $buf2 ; } } }
+        $stdout = stream_get_contents($pipes[1]);
         fclose($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[2]);
@@ -140,10 +143,12 @@ COMPLETION;
 //            foreach ($stdout as $stdoutline) {
 //                echo $stdoutline."\n" ; }
             if (strlen($stderr)>0) {
-                echo "ERRORS:\n";
+//                echo "ERRORS:\n";
                 $stderr = explode("\n", $stderr) ;
                 foreach ($stderr as $stderrline) {
-                    echo $stderrline."\n" ; } }
+//                    echo $stderrline."\n" ;
+                }
+            }
             return array("rc"=>$retVal, "output"=>$output) ; }
         if ($get_output == true) {
             return array("rc"=>$retVal, "output"=>$output) ;}
