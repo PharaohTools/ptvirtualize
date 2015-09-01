@@ -32,9 +32,14 @@ class UpModifyVMAllOS extends BaseFunctionModel {
                 $this->provider->modify($this->virtufile->config["vm"]["name"], $configKey, $configValue); } }
         $this->setAvailableNetworkModifications();
         foreach ($this->virtufile->config["network"] as $configKey => $configValue) {
-            if (in_array($configKey, $this->availableNetworkModifications)) {
-                $logging->log("Modifying VM {$this->virtufile->config["vm"]["name"]} network by changing $configKey to $configValue", $this->getModuleName()) ;
-                $this->provider->modify($this->virtufile->config["vm"]["name"], $configKey, $configValue); } }
+            if (!is_array($configValue)) {
+                $configValue = array($configValue) ;}
+            foreach ($configValue as $configVal) {
+
+                if (in_array($configKey, $this->availableNetworkModifications)) {
+                    $logging->log("Modifying VM {$this->virtufile->config["vm"]["name"]} network by changing $configKey to $configVal", $this->getModuleName()) ;
+                    $this->provider->modify($this->virtufile->config["vm"]["name"], $configKey, $configVal); }
+            } }
         $this->setSharedFolders();
         return true ;
     }

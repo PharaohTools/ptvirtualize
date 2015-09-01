@@ -91,12 +91,16 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
 
     protected function findOVAFile($baseBox) {
         $ovaFile = $baseBox.DS.'box.ova' ;
+        $ovfFile = $baseBox.DS.'box.ovf' ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Finding OVA file $ovaFile", $this->getModuleName()) ;
         if (file_exists($ovaFile)) {
             $logging->log("Found OVA file {$ovaFile}", $this->getModuleName()) ;
             return $ovaFile ; }
+        if (file_exists($ovfFile)) {
+            $logging->log("Found OVF file {$ovfFile}", $this->getModuleName()) ;
+            return $ovfFile ; }
         return null ;
     }
 

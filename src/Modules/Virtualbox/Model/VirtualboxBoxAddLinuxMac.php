@@ -27,7 +27,7 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
             // change the name of the ova file
             $this->extractMetadata($source, $boxDir) ;
             $ovaFile = $this->findOVA($source) ;
-            $this->extractOVA($source, $boxDir, $ovaFile) ;
+            $this->extractAll($source, $boxDir) ;
             $this->changeOVAName($boxDir, $ovaFile) ;
             $this->completion() ;
             return true; }
@@ -80,12 +80,40 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
     }
 
     protected function extractMetadata($source, $boxDir) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting metadata.json from pbox file...", $this->getModuleName());
-        $command = "tar --extract --file=$source -C $boxDir ./metadata.json" ;
-        return self::executeAndGetReturnCode($command, true);
-    }
+            $boxFile = $source ;
+            $command = "tar --extract --file=$boxFile -C ".$boxDir." .".DS."metadata.json" ;
+            self::executeAndOutput($command);
+            if (file_exists($boxDir."metadata.json")) {
+
+                $fData = file_get_contents($boxDir."metadata.json") ;
+                $command = "rm ".$boxDir."metadata.json" ;
+                self::executeAndOutput($command);
+                $fdo = json_decode($fData) ;
+                if (is_object($fdo)) { return $fdo ; }
+            }
+            else {
+//            assume vagrant box
+                // try if its a vagrant box
+            $command = "tar --extract --file=$boxFile -C ".$boxDir." .".DS."Vagrantfile" ;
+//            self::executeAndOutput($command);
+//
+//            if (file_exists($boxDir."Vagrantfile")) {
+                $loggingFactory = new \Model\Logging();
+                $logging = $loggingFactory->getModel($this->params) ;
+//                $command = "rm ".$boxDir."Vagrantfile" ;
+                self::executeAndOutput($command);
+                $logging->log("Detected a Vagrant box, creating default vagrant box metadata", $this->getModuleName()) ;
+                $metadata = new \StdClass();
+                $metadata->provider = "virtualbox" ;
+                $metadata->group = "none" ;
+                $metadata->slug = "none" ;
+                $metadata->home_location = "none" ;
+                $fData = json_encode($metadata) ;
+                $res = file_put_contents($boxDir."metadata.json", $fData) ;
+                return $res ;}
+
+            return false ;
+        }
 
     protected function findOVA($source) {
         $loggingFactory = new \Model\Logging();
@@ -94,27 +122,32 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
         $command = "tar -tvf $source" ;
         $allFilesString = self::executeAndLoad($command);
         $eachFile = explode("\n", $allFilesString) ;
+
         foreach ($eachFile as $oneFile) {
-            $fileExt = substr($oneFile, -4) ;
+            $parts = preg_split('/\s+/', $oneFile);
+            $last = max(array_keys($parts));
+            $oneFile = $parts[$last] ;
+            $fileExt = substr($oneFile, 3) ;
             if ($fileExt == ".ova" || $fileExt ==".ovf") {
                 $rp = strrpos($oneFile, "./") ;
-                $stripped = substr($oneFile, ($rp+2)) ;
-                $logging->log("Found ova file $stripped from box file...", $this->getModuleName());
-                return $stripped ; } }
+                if ($rp !== false) {
+                    $oneFile = substr($oneFile, ($rp+2)) ; }
+                $logging->log("Found ova file $oneFile from box file...", $this->getModuleName());
+                return $oneFile ; } }
         return null ;
     }
 
-    protected function extractOVA($source, $boxDir, $ovaFile) {
+    protected function extractAll($source, $boxDir) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting ova file $ovaFile from box file...", $this->getModuleName());
-        $command = "tar --extract --file=$source -C $boxDir ./$ovaFile" ;
+        $logging->log("Extracting all files from box file...", $this->getModuleName());
+        $command = "tar --extract --file=$source -C $boxDir " ;
         self::executeAndOutput($command);
         $logging->log("Extraction complete...", $this->getModuleName());
     }
 
     protected function changeOVAName($boxDir, $ovaFile) {
-        if ($ovaFile != "box.ova") {
+        if ($ovaFile != "box.ova" && $ovaFile != "box.ovf") {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
             $logging->log("Changing ova file name from $ovaFile to box.ova...", $this->getModuleName());

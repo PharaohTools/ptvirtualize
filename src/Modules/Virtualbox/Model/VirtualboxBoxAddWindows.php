@@ -29,6 +29,7 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
     }
 
     protected function extractMetadata($source, $boxDir) {
+        // @todo needs vagrant update from linux version
         $boxFile = $source ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         $start_directory = getcwd() ;
@@ -68,20 +69,21 @@ class VirtualboxBoxAddWindows extends VirtualboxBoxAddLinuxMac {
         return null ;
     }
 
-    protected function extractOVA($source, $boxDir, $ovaFile) {
+    protected function extractAll($source, $boxDir) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("Extracting ova file $ovaFile from box file...", $this->getModuleName()) ;
+        $logging->log("Extracting all files from box file...", $this->getModuleName()) ;
         $tarExe = '"'.dirname(dirname(dirname(__FILE__))).'\Tar\Packages\TarGnu\bin\Tar.exe"' ;
         if (!file_exists($boxDir)) {
             $command = "mkdir \"$boxDir\"" ;
             self::executeAndOutput($command); }
         $start_directory = getcwd() ;
-        chdir(BASE_TEMP_DIR) ;
+        mkdir(BASE_TEMP_DIR.DS."extr") ;
+        chdir(BASE_TEMP_DIR."extr") ;
         $csource = substr($source, 2) ;
-        $command = "$tarExe --extract --file=\"$csource\" ./$ovaFile" ;
+        $command = "$tarExe --extract --file=\"$csource\" ./*" ;
         self::executeAndOutput($command);
-        $command = "move ".BASE_TEMP_DIR."$ovaFile \"$boxDir\"" ;
+        $command = "move ".BASE_TEMP_DIR.DS."extr".DS."* \"$boxDir\"" ;
         self::executeAndOutput($command);
         $logging->log("Extraction complete...", $this->getModuleName()) ;
         chdir($start_directory) ;
