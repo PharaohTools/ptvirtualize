@@ -25,35 +25,53 @@ class AutoSSHAllOS extends BaseLinuxApp {
     public function autoSSHCli() {
         if ($this->loadFiles() == false) { return false; }
         // try the connection
+//        var_dump("vfile", $this->virtufile->config["ssh"]) ;
         $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
-        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
 
-        if ($sshWorks == true) {
+        $thisPort = (isset($this->virtufile->config["ssh"]["port"]))
+            ? $this->virtufile->config["ssh"]["port"] :
+            null ;
+        $thisPort = ($thisPort==null && isset($this->papyrus["ssh"]["port"]))
+            ? $this->papyrus["port"] :
+            $thisPort ;
+
+//        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
+//
+//        if ($sshWorks == true) {
             $sshParams = $this->params ;
             // try papyrus first. if box specified in virtufile exists there, try its connection details.
             $srv = array(
-                "user" => $this->papyrus["username"] ,
-                "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );;
+                "user" => $this->virtufile->config["ssh"]["user"] ,
+                "password" => $this->virtufile->config["ssh"]["password"] ,
+                "target" => $this->virtufile->config["ssh"]["target"]  ,
+                "driver" => $this->virtufile->config["ssh"]["driver"]  );
             $sshParams["yes"] = true ;
             $sshParams["guess"] = true ;
-            $sshParams["servers"] = serialize(array($srv)) ;
-            if (isset($this->papyrus["port"])) {
-                $srv["port"] =
-                    (isset($this->papyrus["port"]))
-                        ? $this->papyrus["port"] : 22; }
-            if (isset($this->papyrus["timeout"])) {
-                $srv["timeout"] = $this->papyrus["timeout"] ; }
+            if (isset($this->papyrus["port"]) || isset($this->virtufile->config["ssh"]["port"])) {
 
+                // @todo two ternarys and an if - bleurgh
+                $srv["port"] = (isset($this->virtufile->config["ssh"]["port"]))
+                    ? $this->virtufile->config["ssh"]["port"] :
+                    null ;
+                $srv["port"] = ($srv["port"]==null && isset($this->papyrus["port"]))
+                    ? $this->papyrus["port"] :
+                    $srv["port"] ; }
+                if ($srv["port"] == null) { $srv["port"] = 22 ;}
+
+            if (isset($this->virtufile->config["timeout"])) {
+                $srv["timeout"] = $this->virtufile->config["timeout"] ; }
+
+            $sshParams["servers"] = serialize(array($srv)) ;
             $sshFactory = new \Model\Invoke();
             $ssh = $sshFactory->getModel($sshParams) ;
             $ssh->performInvokeSSHShell() ;
             return true ;
-        }
+//        }
 
     }
 
     // @todo this needs testing
+    // @todo this should work like the above
     public function autoSSHData() {
         if ($this->loadFiles() == false) { return false; }
         // try the connection
@@ -87,6 +105,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
     }
 
     // @todo this needs testing
+    // @todo this should work like the cli one
     public function autoSSHScript() {
         if ($this->loadFiles() == false) { return false; }
         // try the connection
