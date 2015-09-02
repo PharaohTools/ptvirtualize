@@ -39,9 +39,11 @@ class HaltAllOS extends BaseFunctionModel {
             $sshParams = $this->params ;
 
             $srv = array(
-                "user" => $this->papyrus["username"] ,
-                "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );
+                "user" => $this->virtufile->config["ssh"]["user"] ,
+                "password" => $this->virtufile->config["ssh"]["password"] ,
+                "target" => $this->virtufile->config["ssh"]["target"]  ,
+                "port" => $this->virtufile->config["ssh"]["port"]  ,
+                "driver" => $this->virtufile->config["ssh"]["driver"] );
             $sshParams["yes"] = true ;
             $sshParams["guess"] = true ;
             $sshParams["servers"] = serialize(array($srv)) ;
