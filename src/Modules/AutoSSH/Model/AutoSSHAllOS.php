@@ -22,85 +22,58 @@ class AutoSSHAllOS extends BaseLinuxApp {
         $this->initialize();
     }
 
-    public function autoSSHCli() {
-        if ($this->loadFiles() == false) { return false; }
-        // try the connection
-//        var_dump("vfile", $this->virtufile->config["ssh"]) ;
-        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
+    protected function findSshParams($include_sftp = false) {
 
-        $thisPort = (isset($this->virtufile->config["ssh"]["port"]))
-            ? $this->virtufile->config["ssh"]["port"] :
-            null ;
-        $thisPort = ($thisPort==null && isset($this->papyrus["ssh"]["port"]))
-            ? $this->papyrus["port"] :
-            $thisPort ;
+        $sshParams = $this->params ;
+        // try papyrus first. if box specified in virtufile exists there, try its connection details.
+        $srv = array(
+            "user" => $this->virtufile->config["ssh"]["user"] ,
+            "password" => $this->virtufile->config["ssh"]["password"] ,
+            "target" => $this->virtufile->config["ssh"]["target"]  ,
+            "driver" => $this->virtufile->config["ssh"]["driver"]  );
+        $sshParams["yes"] = true ;
+        $sshParams["guess"] = true ;
+        if (isset($this->papyrus["port"]) || isset($this->virtufile->config["ssh"]["port"])) {
 
-//        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
-//
-//        if ($sshWorks == true) {
-            $sshParams = $this->params ;
-            // try papyrus first. if box specified in virtufile exists there, try its connection details.
-            $srv = array(
-                "user" => $this->virtufile->config["ssh"]["user"] ,
-                "password" => $this->virtufile->config["ssh"]["password"] ,
-                "target" => $this->virtufile->config["ssh"]["target"]  ,
-                "driver" => $this->virtufile->config["ssh"]["driver"]  );
-            $sshParams["yes"] = true ;
-            $sshParams["guess"] = true ;
-            if (isset($this->papyrus["port"]) || isset($this->virtufile->config["ssh"]["port"])) {
+            // @todo two ternarys and an if - bleurgh
+            $srv["port"] = (isset($this->virtufile->config["ssh"]["port"]))
+                ? $this->virtufile->config["ssh"]["port"] :
+                null ;
+            $srv["port"] = ($srv["port"]==null && isset($this->papyrus["port"]))
+                ? $this->papyrus["port"] :
+                $srv["port"] ; }
+        if ($srv["port"] == null) { $srv["port"] = 22 ;}
 
-                // @todo two ternarys and an if - bleurgh
-                $srv["port"] = (isset($this->virtufile->config["ssh"]["port"]))
-                    ? $this->virtufile->config["ssh"]["port"] :
-                    null ;
-                $srv["port"] = ($srv["port"]==null && isset($this->papyrus["port"]))
-                    ? $this->papyrus["port"] :
-                    $srv["port"] ; }
-                if ($srv["port"] == null) { $srv["port"] = 22 ;}
+        if (isset($this->virtufile->config["timeout"])) {
+            $srv["timeout"] = $this->virtufile->config["timeout"] ; }
 
-            if (isset($this->virtufile->config["timeout"])) {
-                $srv["timeout"] = $this->virtufile->config["timeout"] ; }
+        $sshParams["servers"] = serialize(array($srv)) ;
 
-            $sshParams["servers"] = serialize(array($srv)) ;
-            $sshFactory = new \Model\Invoke();
-            $ssh = $sshFactory->getModel($sshParams) ;
-            $ssh->performInvokeSSHShell() ;
-            return true ;
-//        }
+        if ($include_sftp==true) {
+            $sshParams["source"] = $this->getSourceFilePath() ;
+            $sshParams["target"] = $this->getTargetFilePath() ; }
+
+        return $sshParams ;
 
     }
 
+    public function autoSSHCli() {
+        if ($this->loadFiles() == false) { return false; }
+        $sshParams = $this->findSshParams() ;
+        $sshFactory = new \Model\Invoke();
+        $ssh = $sshFactory->getModel($sshParams) ;
+        $ssh->performInvokeSSHShell() ;
+        return true ;
+    }
+
     // @todo this needs testing
-    // @todo this should work like the above
     public function autoSSHData() {
         if ($this->loadFiles() == false) { return false; }
-        // try the connection
-        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
-        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
-
-        // @todo need to set the SSH Data we're sending
-        if ($sshWorks == true) {
-            $sshParams = $this->params ;
-            // try papyrus first. if box specified in virtufile exists there, try its connection details.
-            $srv = array(
-                "user" => $this->papyrus["username"] ,
-                "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );
-            $sshParams["yes"] = true ;
-            $sshParams["guess"] = true ;
-            $sshParams["servers"] = serialize(array($srv)) ;
-            if (isset($this->papyrus["port"])) {
-                $srv["port"] =
-                    (isset($this->papyrus["port"]))
-                        ? $this->papyrus["port"] : 22; }
-            if (isset($this->papyrus["timeout"])) {
-                $srv["timeout"] = $this->papyrus["timeout"] ; }
-
-            $sshFactory = new \Model\Invoke();
-            $ssh = $sshFactory->getModel($sshParams) ;
-            $ssh->performInvokeSSHData() ;
-            return true ;
-        }
+        $sshParams = $this->findSshParams() ;
+        $sshFactory = new \Model\Invoke();
+        $ssh = $sshFactory->getModel($sshParams) ;
+        $ssh->performInvokeSSHData() ;
+        return true ;
 
     }
 
@@ -108,102 +81,31 @@ class AutoSSHAllOS extends BaseLinuxApp {
     // @todo this should work like the cli one
     public function autoSSHScript() {
         if ($this->loadFiles() == false) { return false; }
-        // try the connection
-        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
-        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
-
-        // @todo need to set the SSH Data we're sending
-        if ($sshWorks == true) {
-            $sshParams = $this->params ;
-            // try papyrus first. if box specified in virtufile exists there, try its connection details.
-            $srv = array(
-                "user" => $this->papyrus["username"] ,
-                "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );
-            $sshParams["yes"] = true ;
-            $sshParams["guess"] = true ;
-            $sshParams["servers"] = serialize(array($srv)) ;
-            if (isset($this->papyrus["port"])) {
-                $srv["port"] =
-                    (isset($this->papyrus["port"]))
-                        ? $this->papyrus["port"] : 22; }
-            if (isset($this->papyrus["timeout"])) {
-                $srv["timeout"] = $this->papyrus["timeout"] ; }
-
-            $sshFactory = new \Model\Invoke();
-            $ssh = $sshFactory->getModel($sshParams) ;
-            $ssh->performInvokeSSHScript() ;
-            return true ;
-        }
-
+        $sshParams = $this->findSshParams() ;
+        $sshFactory = new \Model\Invoke();
+        $ssh = $sshFactory->getModel($sshParams) ;
+        $ssh->performInvokeSSHScript() ;
+        return true ;
     }
 
     // @todo this and method below can be rolled into one
     public function autoSFTPPut() {
         if ($this->loadFiles() == false) { return false; }
-        // try the connection
-        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
-        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
-
-        if ($sshWorks == true) {
-            $sftpParams = $this->params ;
-            // try papyrus first. if box specified in virtufile exists there, try its connection details.
-            $srv = array(
-                "user" => $this->papyrus["username"] ,
-                "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );
-            $sftpParams["yes"] = true ;
-            $sftpParams["guess"] = true ;
-            $sftpParams["servers"] = serialize(array($srv)) ;
-            $sftpParams["source"] = $this->getSourceFilePath() ;
-            $sftpParams["target"] = $this->getTargetFilePath() ;
-            if (isset($this->papyrus["port"])) {
-                $srv["port"] =
-                    (isset($this->papyrus["port"]))
-                        ? $this->papyrus["port"] : 22; }
-            if (isset($this->papyrus["timeout"])) {
-                $srv["timeout"] = $this->papyrus["timeout"] ; }
-
-            $sshFactory = new \Model\SFTP();
-            $ssh = $sshFactory->getModel($sftpParams) ;
-            $ssh->performSFTPPut() ;
-            return true ;
-        }
-
+        $sshFactory = new \Model\SFTP();
+        $sshParams = $this->findSshParams() ;
+        $ssh = $sshFactory->getModel($sshParams) ;
+        $ssh->performSFTPPut() ;
+        return true ;
     }
 
     // @todo this and method above can be rolled into one
     public function autoSFTPGet() {
         if ($this->loadFiles() == false) { return false; }
-        // try the connection
-        $thisPort = (isset($this->papyrus["port"])) ? : 22 ;
-        $sshWorks = $this->waitForSsh($this->papyrus["target"], $thisPort);
-
-        if ($sshWorks == true) {
-            $sftpParams = $this->params ;
-            // try papyrus first. if box specified in virtufile exists there, try its connection details.
-            $srv = array(
-                "user" => $this->papyrus["username"] ,
-                "password" => $this->papyrus["password"] ,
-                "target" => $this->papyrus["target"] );;
-            $sftpParams["yes"] = true ;
-            $sftpParams["guess"] = true ;
-            $sftpParams["servers"] = serialize(array($srv)) ;
-            $sftpParams["source"] = $this->getSourceFilePath() ;
-            $sftpParams["target"] = $this->getTargetFilePath() ;
-            if (isset($this->papyrus["port"])) {
-                $srv["port"] =
-                    (isset($this->papyrus["port"]))
-                        ? $this->papyrus["port"] : 22; }
-            if (isset($this->papyrus["timeout"])) {
-                $srv["timeout"] = $this->papyrus["timeout"] ; }
-
-            $sshFactory = new \Model\SFTP();
-            $ssh = $sshFactory->getModel($sftpParams) ;
-            $ssh->performSFTPPut() ;
-            return true ;
-        }
-
+        $sshFactory = new \Model\SFTP();
+        $sshParams = $this->findSshParams() ;
+        $ssh = $sshFactory->getModel($sshParams) ;
+        $ssh->performSFTPGet() ;
+        return true ;
     }
 
     public function loadFiles() {
