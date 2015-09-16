@@ -69,45 +69,29 @@ COMPLETION;
                 $this->$property = $step[$property] ; } }
     }
 
-
     protected function executeAsShell($multiLineCommand, $message=null) {
-        $loggingFactory = new \Model\Logging();
-        $this->params["echo-log"] = true ;
-        $logging = $loggingFactory->getModel($this->params);
-        $tempFile = $this->tempDir.DS."ptconfigure-temp-script-".mt_rand(100, 99999999999).".sh";
-        $logging->log("Creating $tempFile", $this->getModuleName());
+        $tempFile = $this->tempDir."/ptconfigure-temp-script-".mt_rand(100, 99999999999).".sh";
+        echo "Creating $tempFile\n";
         $fileVar = "";
-        $multiLineCommand = str_replace("\r", "", $multiLineCommand) ;
-        $multiLineCommand = explode("\r\n", $multiLineCommand) ;
-        foreach ($multiLineCommand as $command) { $fileVar .= $command."\n" ; }
-        file_put_contents($tempFile, $fileVar) ;
-        //@note these chmods are required to make bash run scripts
-        // echo "chmod 755 $tempFile 2>/dev/null\n";
-        if (!is_executable($tempFile)) {
-            // @todo this wont work on windows
-            shell_exec("chmod 755 $tempFile 2>/dev/null");
-            // echo "chmod +x $tempFile 2>/dev/null\n";
-            shell_exec("chmod +x $tempFile 2>/dev/null"); }
-        $logging->log("Changing $tempFile Permissions", $this->getModuleName());
-        $logging->log("Executing $tempFile", $this->getModuleName());
-        // @todo this should refer to the actual shell we are running
-        $commy = "{$tempFile}" ;
-        $rc = $this->executeAndGetReturnCode($commy, true) ;
-        if ($message !== null) { echo $message."\n"; }
+        if (is_array($multiLineCommand) && count($multiLineCommand)>0) {
+            foreach ($multiLineCommand as $command) { $fileVar .= $command."\n" ; } }
+        file_put_contents($tempFile, $fileVar);
+        echo "chmod 755 $tempFile 2>/dev/null\n";
+        shell_exec("chmod 755 $tempFile 2>/dev/null");
+        echo "Changing $tempFile Permissions\n";
+        echo "Executing $tempFile\n";
+        $outputText = shell_exec($tempFile);
+        if ($message !== null) { $outputText .= "$message\n"; }
+        echo $outputText;
         shell_exec("rm $tempFile");
-        $logging->log("Temp File $tempFile Removed", $this->getModuleName());
-        return $rc["rc"] ;
+        echo "Temp File $tempFile Removed\n";
     }
 
     protected function executeAndOutput($command, $message=null) {
-        $loggingFactory = new \Model\Logging();
-        $this->params["echo-log"] = true ;
-        $logging = $loggingFactory->getModel($this->params);
         $outputText = shell_exec($command);
-        print $outputText;
         if ($message !== null) {
-            $outputText .= "$message\n";
-            $logging->log("", $this->getModuleName());}
+            $outputText .= "$message\n"; }
+        print $outputText;
         return $outputText;
     }
 
@@ -125,12 +109,16 @@ COMPLETION;
         if ($show_output==true) {
             stream_set_blocking($pipes[1], true);
             $data = "";
-            while ($buf = fread($pipes[1], 4096)) {
-                $data .= $buf;
-                echo $buf ;
-                $buf2 = "STDERR: ". fread($pipes[2], 4096);
-                if ($buf2) {
+
+            while ( ($buf = fread($pipes[1], 32768)) || ( $buf2 = fread($pipes[2], 32768))) {
+                if (isset($buf) && $buf !== false) {
+                    $data .= $buf;
+                    echo $buf ; }
+                if ( (isset($buf2)) || $buf2 = fread($pipes[2], 32768) ) {
+                    $buf2 = "ERR: ".$buf2;
+                    $data .= $buf2;
                     echo $buf2 ; } } }
+
         $stdout = stream_get_contents($pipes[1]);
         fclose($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
