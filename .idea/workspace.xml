@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebeb255-8a30-4d15-a711-5406bd4887ed" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/golden.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/golden.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Modules/Virtualbox/Model/BoxUpImportLinux.php" afterPath="$PROJECT_DIR$/src/Modules/Virtualbox/Model/BoxUpImportLinux.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Modules/Virtualbox/Model/BoxUpImportMac.php" afterPath="$PROJECT_DIR$/src/Modules/Virtualbox/Model/BoxUpImportMac.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/LICENSE" afterPath="$PROJECT_DIR$/LICENSE" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Modules/Provision/Views/ProvisionView.tpl.php" afterPath="$PROJECT_DIR$/src/Modules/Provision/Views/ProvisionView.tpl.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="phlagrant.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1411040677536" ignored="false" />
+    <file path="/Dummy.txt" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442758572360" ignored="false" />
     <file path="/UpModifyVMAllLinux.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1410012228714" ignored="false" />
     <file path="/var/www/workplace-systems/papyrusfile" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1410922197920" ignored="false" />
     <file path="/var/www/workplace-systems/build/config/dapperstrano/dapperfy/autopilots/generated/phlagrant-box-phlagrant-install-code-no-dbconf.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1409940121683" ignored="false" />
@@ -14,7 +25,7 @@
     <file path="/README.md" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1410863680292" ignored="false" />
     <file path="/DestroyAllLinux.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1409947282111" ignored="false" />
     <file path="$PROJECT_DIR$/../../cleopatra/cleopatra/src/Modules/Virtualbox/Model/VirtualboxUbuntu.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1409951971626" ignored="false" />
-    <file path="/a.dummy" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1411058003010" ignored="false" />
+    <file path="/a.dummy" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442483193962" ignored="false" />
     <file path="$PROJECT_DIR$/../../cleopatra/cleopatra/src/Modules/VNC/Controller/Virtualbox.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1409951551146" ignored="false" />
     <file path="$PROJECT_DIR$/../../cleopatra/cleopatra/src/Modules/VNC/info.Virtualbox.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1409951551146" ignored="false" />
     <file path="$PROJECT_DIR$/../../cleopatra/cleopatra/src/Modules/VNC/Model/Virtualbox.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1409951551146" ignored="false" />
@@ -104,6 +115,39 @@
     <file path="$PROJECT_DIR$/../../cleopatra/cleopatra/src/Modules/Yum/Model/YumCentos.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1411058450659" ignored="false" />
     <file path="/YumCentos.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1411058302321" ignored="false" />
     <file path="$PROJECT_DIR$/../../cleopatra/cleopatra/src/Modules/CleopatraRequired/Model/BaseComposerApp.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1411060852806" ignored="false" />
+    <file path="$PROJECT_DIR$/../../ptconfigure/ptconfigure/src/Core/Base/Model/Base.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442375869918" ignored="false" />
+    <file path="$PROJECT_DIR$/../../ptbuild/ptbuild/.idea/workspace.xml" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442546175356" ignored="false" />
+    <file path="$PROJECT_DIR$/../../ptbuild/ptbuild/src/Core/Base/Model/Base.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442376365719" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/pharaohtools/src/configuration.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442399686563" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/behat-single.yml" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442409151536" ignored="false" />
+    <file path="/behat-single.yml" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442409151536" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/application_pages.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442452518538" ignored="false" />
+    <file path="/application_pages.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442431418313" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/bootstrap/DefaultPageChecksContext.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442429694314" ignored="false" />
+    <file path="/DefaultPageChecksContext.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442421230570" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/config/NUConfigFactory.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442448537108" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/tagreader.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442421469209" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/bootstrap/PageCMSContext.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442483502755" ignored="false" />
+    <file path="/PageCMSContext.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442483503162" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/application_users.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442445317544" ignored="false" />
+    <file path="/application_users.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442445317221" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/bootstrap/LoginContext.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442427502759" ignored="false" />
+    <file path="/LoginContext.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442427462440" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/application_general_settings.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442431236038" ignored="false" />
+    <file path="/application_general_settings.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442431225708" ignored="false" />
+    <file path="/NUConfigFactory.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442446545397" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/nu-wordpress-platform/build/tests/behat/features/application_posts.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442452535120" ignored="false" />
+    <file path="/application_posts.feature" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442452535120" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/wordpress3.9/Virtufile" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442758885977" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/wordpress3.9/build/config/ptdeploy/custom/ptvbox-install-code-data.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442756295068" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/wordpress3.9/build/config/ptbuild/pipes/wordpress_dev_build/defaults" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442756418215" ignored="false" />
+    <file path="/defaults" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442756416501" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/wordpress3.9/build/config/ptconfigure/cm-ptvbox.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442756471122" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/wordpress3.9/build/config/ptdeploy/custom/ptvbox-install-code-dbconf.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442756531503" ignored="false" />
+    <file path="/ProvisionView.tpl.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442757689280" ignored="false" />
+    <file path="$USER_HOME$/WebStuff/wordpress3.9/build/config/ptdeploy/custom/ptvhost-install-host-file-entry.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442757763504" ignored="false" />
+    <file path="$PROJECT_DIR$/../../ptdeploy/ptdeploy/src/Modules/HostEditor/info.HostEditor.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442758752673" ignored="false" />
+    <file path="$PROJECT_DIR$/../../ptdeploy/ptdeploy/src/Modules/HostEditor/Controller/HostEditor.php" changelist="3ebeb255-8a30-4d15-a711-5406bd4887ed" time="1442758693151" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +162,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -155,6 +198,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -164,46 +208,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BaseTestInit.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Modules/PhlagrantRequired/Model/BaseTestInit.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PhlagrantfileBase.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Modules/PhlagrantRequired/Model/PhlagrantfileBase.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="48" selection-start="1385" selection-end="1633" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SFTPAllLinux.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPAllLinux.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="95" column="35" selection-start="4269" selection-end="4284" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InvokeNativeWrapperAllLinux.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Modules/Invoke/Model/InvokeNativeWrapperAllLinux.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="57" column="27" selection-start="0" selection-end="3334" vertical-scroll-proportion="0.87890625">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Base.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Core/Base/Model/Base.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="6" selection-start="31" selection-end="31" vertical-scroll-proportion="0.0">
+            <state line="144" column="5" selection-start="4878" selection-end="4878" vertical-scroll-proportion="-0.5714286">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UpView.tpl.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Modules/Up/Views/UpView.tpl.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProvisionView.tpl.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Modules/Provision/Views/ProvisionView.tpl.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="18" selection-start="64" selection-end="64" vertical-scroll-proportion="0.11111111">
               <folding />
             </state>
           </provider>
@@ -213,24 +239,6 @@
         <entry file="file://$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPNativeWrapperAllLinux.php">
           <provider selected="true" editor-type-id="text-editor">
             <state line="42" column="0" selection-start="1404" selection-end="1760" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="custom-cleo-dapper.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Modules/Flirtify/Templates/Phlagrantfiles/custom-cleo-dapper.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BoxUbuntu.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Modules/Box/Model/BoxUbuntu.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="37" selection-start="1316" selection-end="1642" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -262,17 +270,18 @@
         <option value="$PROJECT_DIR$/src/Modules/Provision/Model/ProvisionDefaultLinux.php" />
         <option value="$PROJECT_DIR$/src/Modules/Box/Model/BoxUbuntu.php" />
         <option value="$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPAllLinux.php" />
-        <option value="$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPNativeWrapperAllLinux.php" />
         <option value="$PROJECT_DIR$/src/Modules/Invoke/Model/InvokeNativeWrapperAllLinux.php" />
+        <option value="$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPNativeWrapperAllLinux.php" />
+        <option value="$PROJECT_DIR$/src/Core/Base/Model/Base.php" />
+        <option value="$PROJECT_DIR$/src/Modules/Provision/Views/ProvisionView.tpl.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
-    <option name="y" value="52" />
-    <option name="width" value="1301" />
-    <option name="height" value="716" />
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="709" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -300,31 +309,32 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -334,29 +344,11 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -367,18 +359,14 @@
               <option name="myItemId" value="Modules" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SFTP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -390,21 +378,17 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="SFTP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Model" />
+              <option name="myItemId" value="Up" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -416,17 +400,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="PhlagrantRequired" />
+              <option name="myItemId" value="Up" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -438,21 +426,17 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="PhlagrantRequired" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Model" />
+              <option name="myItemId" value="Provision" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="ptvirtualize" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -464,56 +448,33 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Invoke" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="phlagrant" />
+              <option name="myItemId" value="Provision" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Invoke" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Model" />
+              <option name="myItemId" value="Views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Global Libraries" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="71" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="93" />
     <property name="project.structure.proportion" value="0.0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="93" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="77" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="77" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="/var/www/workplace-systems" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="98" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="956" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="971" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="956" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="104" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="96" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -540,6 +501,12 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner />
       <method />
@@ -553,6 +520,34 @@
       <method />
     </configuration>
     <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
       <method />
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
@@ -569,6 +564,7 @@
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
@@ -582,49 +578,65 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
     <list size="0" />
-    <configuration name="&lt;template&gt;" type="JUnit" default="true" selected="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    </configuration>
-    <configuration name="&lt;template&gt;" type="TestNG" default="true" selected="false">
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    </configuration>
-    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
-    </configuration>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3ebeb255-8a30-4d15-a711-5406bd4887ed" name="Default" comment="" />
+      <created>1442375848260</created>
+      <updated>1442375848260</updated>
+    </task>
+    <servers />
+  </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="52" width="1301" height="716" extended-state="6" />
-    <editor active="false" />
+    <frame x="0" y="23" width="1280" height="709" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Amazon EC2" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23275863" sideWeight="0.95476574" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23662885" sideWeight="0.95476574" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32956383" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Amazon EC2" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -692,32 +704,37 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Modules/Up/Model/UpImportBaseBoxAllLinux.php">
+    <entry file="file://$PROJECT_DIR$/src/Core/Base/Model/Base.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Up/Model/UpAllLinux.php">
+    <entry file="file://$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPNativeWrapperAllLinux.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="5" selection-start="4644" selection-end="4906" vertical-scroll-proportion="0.0" />
+        <state line="42" column="0" selection-start="1404" selection-end="1760" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Up/Model/UpModifyVMAllLinux.php">
+    <entry file="file://$PROJECT_DIR$/src/Core/Base/Model/Base.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="30" selection-start="1348" selection-end="1348" vertical-scroll-proportion="-0.625" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPNativeWrapperAllLinux.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="0" selection-start="1404" selection-end="1760" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state line="37" column="39" selection-start="1736" selection-end="1736" vertical-scroll-proportion="1.0373832" />
-      </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Destroy/Model/DestroyAllLinux.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="8" selection-start="655" selection-end="655" vertical-scroll-proportion="-15.625" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Modules/Provision/OSProvisioners/Ubuntu_64.php">
@@ -730,42 +747,9 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Provision/Model/ProvisionDefaultLinux.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="51" selection-start="1609" selection-end="1609" vertical-scroll-proportion="20.833334" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/PhlagrantRequired/Model/BaseTestInit.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Flirtify/Templates/Phlagrantfiles/custom-cleo-dapper.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Box/Model/BoxUbuntu.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="37" selection-start="1316" selection-end="1642" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Core/Base/Model/Base.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="6" selection-start="31" selection-end="31" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/SFTP/Model/SFTPAllLinux.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="35" selection-start="4269" selection-end="4284" vertical-scroll-proportion="0.0">
+        <state line="144" column="5" selection-start="4878" selection-end="4878" vertical-scroll-proportion="-0.5714286">
           <folding />
         </state>
       </provider>
@@ -777,16 +761,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/PhlagrantRequired/Model/PhlagrantfileBase.php">
+    <entry file="file://$PROJECT_DIR$/src/Modules/Up/Views/UpView.tpl.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="48" selection-start="1385" selection-end="1633" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Modules/Invoke/Model/InvokeNativeWrapperAllLinux.php">
+    <entry file="file://$PROJECT_DIR$/src/Modules/Provision/Views/ProvisionView.tpl.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="27" selection-start="0" selection-end="3334" vertical-scroll-proportion="0.87890625">
+        <state line="5" column="18" selection-start="64" selection-end="64" vertical-scroll-proportion="0.11111111">
           <folding />
         </state>
       </provider>

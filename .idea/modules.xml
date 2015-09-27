@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/phlagrant.iml" filepath="$PROJECT_DIR$/phlagrant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ptvirtualize.iml" filepath="$PROJECT_DIR$/ptvirtualize.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ptvirtualize.iml" filepath="$PROJECT_DIR$/.idea/ptvirtualize.iml" />
     </modules>
   </component>
 </project>
+
