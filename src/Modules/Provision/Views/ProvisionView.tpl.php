@@ -1,6 +1,6 @@
 <?php
 
-   echo $pageVars["result"] ;
+   var_dump($pageVars["result"]) ;
 ?>
 
 In Virtualize Provision
