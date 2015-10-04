@@ -25,6 +25,7 @@ class BaseFunctionModel extends BaseLinuxApp {
 
     protected function loadFiles() {
         $this->virtufile = $this->loadVirtufile();
+        if ($this->virtufile==false) { return false ; }
         $this->papyrus = $this->loadPapyrusLocal();
     }
 
