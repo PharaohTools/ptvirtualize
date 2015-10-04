@@ -42,32 +42,42 @@ class VirtufileLoaderAllLinux extends BaseLinuxApp {
     protected function findFile() {
         $virtufile = $this->getPfile() ;
         if (file_exists(getcwd().DS."$virtufile") && is_file(getcwd().DS."$virtufile")) {
-            require_once(getcwd().DS."$virtufile");
-            return true; }
-        else if (file_exists($virtufile)) {
-            require_once($virtufile);
-            return true; }
-        else if (!is_null($virtufile)) {
-            require_once(getcwd().DS."Virtufile");
-            return true; }
-        else if (file_exists(getcwd().DS."Virtufile")) {
-            require_once(getcwd().DS."Virtufile");
-            return true; }
-        else if (file_exists(getcwd().DS."virtufile")) {
-            require_once(getcwd().DS."virtufile");
-            return true; }
-        else if (file_exists(getcwd().DS."build/config/ptvirtualize/Virtufile")) {
-            require_once(getcwd().DS."build/config/ptvirtualize/Virtufile");
-            return true; }
-        else if (file_exists(getcwd().DS."build/config/ptvirtualize/virtufile")) {
-            require_once(getcwd().DS."build/config/ptvirtualize/virtufile");
-            return true; }
-        else {
-            $loggingFactory = new \Model\Logging();
-            $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("Unable to find Virtufile", $this->getModuleName()) ;
-            \Core\BootStrap::setExitCode(1) ;
-            return false ; }
+            $res = $this->tryRequiring(getcwd().DS."$virtufile");
+            if ($res==true) return $res ; }
+        if (file_exists($virtufile)) {
+            $res = $this->tryRequiring($virtufile);
+            if ($res==true) return $res ; }
+        if (!is_null($virtufile)) {
+            $res = $this->tryRequiring(getcwd().DS."Virtufile");
+            if ($res==true) return $res ; }
+        if (file_exists(getcwd().DS."Virtufile")) {
+            $res = $this->tryRequiring(getcwd().DS."Virtufile");
+            if ($res==true) return $res ; }
+        if (file_exists(getcwd().DS."virtufile")) {
+            $res = $this->tryRequiring(getcwd().DS."virtufile");
+            if ($res==true) return $res ; }
+        if (file_exists(getcwd().DS."build".DS."config".DS."ptvirtualize".DS."Virtufile")) {
+            $res = $this->tryRequiring(getcwd().DS."build".DS."config".DS."ptvirtualize".DS."Virtufile");
+            if ($res==true) return $res ; }
+        if (file_exists(getcwd().DS."build".DS."config".DS."ptvirtualize".DS."virtufile")) {
+            $res = $this->tryRequiring(getcwd().DS."build".DS."config".DS."ptvirtualize".DS."virtufile");
+            if ($res==true) return $res ; }
+
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Unable to find Virtufile", $this->getModuleName()) ;
+        \Core\BootStrap::setExitCode(1) ;
+        return false ;
+    }
+
+    private function tryRequiring($fyley) {
+        try {
+            $res = include_once($fyley);
+            return $res ;
+        }
+        catch (\Exception $e) {
+            return false ;
+        }
     }
 
 }
