@@ -22,7 +22,8 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     public function doUp() {
-        $this->loadFiles();
+        $res = $this->loadFiles();
+        if ($res == false) { return false ; }
         $this->findProvider("UpOther");
         $this->setLogSource();
         $o = $this->virtufile ;
