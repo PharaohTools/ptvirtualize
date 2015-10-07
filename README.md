@@ -1,3 +1,5 @@
+![alt text](http://www.pharaohtools.com/images/logo-pharaoh.png "Pharaoh Tools Virtual Machine Management")
+
 # PTVirtualize, Pharaoh Tools
 
 ## About:
