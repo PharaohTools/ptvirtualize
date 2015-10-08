@@ -47,7 +47,7 @@ class VirtufileLoaderAllLinux extends BaseLinuxApp {
         if (file_exists($virtufile)) {
             $res = $this->tryRequiring($virtufile);
             if ($res==true) return $res ; }
-        if (!is_null($virtufile)) {
+        if (!is_null($virtufile) && file_exists($virtufile)) {
             $res = $this->tryRequiring(getcwd().DS."Virtufile");
             if ($res==true) return $res ; }
         if (file_exists(getcwd().DS."Virtufile")) {
