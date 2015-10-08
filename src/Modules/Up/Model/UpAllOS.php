@@ -22,8 +22,12 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     public function doUp() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $res = $this->loadFiles();
-        if ($res == false) { return false ; }
+        if ($res === false) {
+            $logging->log("Up module was unable to load a Virtufile", $this->getModuleName()) ;
+            return false ; }
         $this->findProvider("UpOther");
         $this->setLogSource();
         $o = $this->virtufile ;
