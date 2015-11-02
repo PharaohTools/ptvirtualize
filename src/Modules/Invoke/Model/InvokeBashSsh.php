@@ -43,6 +43,11 @@ class InvokeBashSsh {
 		$launcher .= " -T -p {$this->server->port} ";
 		$launcher .= escapeshellarg($this->server->username.'@'.$this->server->host);
 		$pipe = "tail -f {$this->commandsPipe}";
+        if (!function_exists("pcntl_fork")) {
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params);
+            $logging->log("Unable to use pcntl_fork, ending", $this->getModuleName()) ;
+            return false ; }
 		if(!pcntl_fork()){
 			$fp = popen("$pipe | $launcher" ,"r");
 			while (!feof($fp)) {
