@@ -188,12 +188,11 @@ class InvokeAllOS extends Base {
 //      $server = new \Invoke\Server();
 //		$driverString = isset($this->params["driver"]) ? $this->params["driver"] : 'seclib';
 //      $options = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
-        $driverString = $this->findDriver() ;
-        $driver = $invokeFactory->getModel($this->params, $driverString) ;
+        $driver = $this->findUsableDriver() ;
         $driver->setServer($serverObj);
         $serverObj->setDriver($driver);
-        $connection_attempts = 30 ;
-        $interval = 3 ;
+        $connection_attempts = 5 ;
+        $interval = 5 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         for ($i=1; $i < $connection_attempts ; $i++) {
@@ -206,7 +205,30 @@ class InvokeAllOS extends Base {
         return false;
     }
 
-    private function findDriver() {
+    private function findUsableDriver() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $driverString = $this->findRequestedDriverString() ;
+        $invokeFactory = new \Model\Invoke() ;
+        $driver = $invokeFactory->getModel($this->params, $driverString) ;
+        if ($driver !== false) {
+            return $driver ; }
+        else {
+            $use_default = true ;
+            if ($this->params["force-driver"]==true) { $use_default = false ; }
+            if ($use_default == true) {
+                $loggingFactory = new \Model\Logging();
+                $logging = $loggingFactory->getModel($this->params);
+                $logging->log("Unable to use requested driver, switching to default...", $this->getModuleName()) ;
+                $driver = $this->findDefaultDriver() ;
+                return $driver ; }
+            else {
+                $logging->log("Unable to use requested driver, switching to default is disabled...", $this->getModuleName()) ;
+                \Core\BootStrap::setExitCode(1) ;
+                return false ; } }
+    }
+
+    private function findRequestedDriverString() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $optionsKeep = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
@@ -216,22 +238,20 @@ class InvokeAllOS extends Base {
             if (in_array($system->os, array("WINNT", "Windows")) && $this->params["driver"] == "os") {
                 $logging->log("Windows does not support requested OS level SSH driver, switching to seclib...", $this->getModuleName()) ;
                 return "DriverSecLib" ; }
-            $logging->log("Using requested {$optionsKeep[$this->params["driver"]]} driver...", $this->getModuleName()) ;
+            $logging->log("Attempting to use requested {$optionsKeep[$this->params["driver"]]} driver...", $this->getModuleName()) ;
             return $optionsKeep[$this->params["driver"]]; }
-        // if (isset($this->params["guess"]) && $this->params["guess"] == true) {
-            if (in_array($system->os, array("WINNT", "Windows"))) {
-                $logging->log("Using default driver for Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-                return "DriverSecLib" ; }
-//            @todo fix bash properly
-            $logging->log("Using default driver for Non-Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-            return "DriverNativeSSH" ;
-//            $logging->log("Using default driver for non-windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-//            return "DriverSecLib";
-//        }
-//        $question = 'Which SSH Driver should I use?';
-//        $ofound = self::askForArrayOption($question, $optionsAsk);
-//        $ofound = $optionsKeep[$ofound] ;
-//        return $ofound ;
+        return false ;
+    }
+
+    private function findDefaultDriver() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $system = new \Model\SystemDetectionAllOS() ;
+        if (in_array($system->os, array("WINNT", "Windows"))) {
+            $logging->log("Using default driver for Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
+            return "DriverSecLib" ; }
+        $logging->log("Using default driver for Non-Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
+        return "DriverNativeSSH" ;
     }
 
 	private function askForSSHShellExecute() {
