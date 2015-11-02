@@ -49,16 +49,16 @@ class InvokeSsh2 extends BaseLinuxApp {
             $comm = SUDOPREFIX.PTCCOMM.'phpssh install -yg' ;
             $rc = $this->executeAndGetReturnCode($comm, true, true);
             if ($rc["rc"] == 0) {
-                $logging->log('PHP Native SSH Driver Loaded', "Invoke - PHP SSH") ;
+                $logging->log('PHP Native SSH Driver Installed', "Invoke - PHP SSH") ;
                 $sys = new \Model\SystemDetectionAllOS();
                 if ($sys->os=="Darwin") {
                     $logging->log('As an OSX User your installation will require you to re-run this command, to use the newly installed Native SSH PHP Extension', "Invoke - PHP SSH") ;
                     \Core\BootStrap::setExitCode(1) ;
-                    return false; } }
+                    return false ; } }
             else {
                 $logging->log('Cannot use the PHP Native SSH Driver.', "Invoke - PHP SSH") ;
                 \Core\BootStrap::setExitCode(1) ;
-                return false; } }
+                return false ; } }
         if (!($this->connection = ssh2_connect($this->server->host, $this->server->port))) {
             $logging->log('Cannot connect to server', "Invoke - PHP SSH") ;
             \Core\BootStrap::setExitCode(1) ;
