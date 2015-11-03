@@ -173,6 +173,7 @@ class InvokeAllOS extends Base {
 				$logging->log("Connection to Server {$server["target"]} successful.", $this->getModuleName()) ;
 //				echo $this->changeBashPromptToPharaoh($server["ssh2Object"]);
 //				if (!isset($this->isNativeSSH) || (isset($this->isNativeSSH) && $this->isNativeSSH != true)) {
+//
 //				}
 				echo $this->doSSHCommand($server["ssh2Object"],
 					'echo "Pharaoh Remote SSH on ...' . $server["target"] . '"', true); } }
@@ -188,7 +189,48 @@ class InvokeAllOS extends Base {
 //      $server = new \Invoke\Server();
 //		$driverString = isset($this->params["driver"]) ? $this->params["driver"] : 'seclib';
 //      $options = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
-        $driver = $this->findUsableDriver() ;
+        $driver = $this->findUsableDriver($serverObj) ;
+        $try = $this->tryConnection($driver, $serverObj) ;
+        if ($driver !==false && $driver !==null) { return $driver ; }
+        return false;
+    }
+
+    private function findUsableDriver($serverObj) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $driverString = $this->findRequestedDriverString() ;
+        $invokeFactory = new \Model\Invoke() ;
+        $driver = $invokeFactory->getModel($this->params, $driverString) ;
+        if ($driver !== false) {
+            $logging->log("Found Requested Driver {$driverString}...", $this->getModuleName()) ;
+            $driver->setServer($serverObj) ;
+            $serverObj->setDriver($driver) ;
+            $conn = $serverObj->connect() ;
+                if ($conn == true ) {
+                    $logging->log("Test Connection Successful...", $this->getModuleName()) ;
+                    return $driver; }
+                else if ($conn == false) {
+                    $logging->log("Test Connection Failed...", $this->getModuleName()) ; }
+                else if ($conn == null) {
+                    $logging->log("Test Connection Unusable...", $this->getModuleName()) ; }
+                else {
+                    $logging->log("Test Connection Result Unknown...", $this->getModuleName()) ; } }
+        $use_default = true ;
+        if ($this->params["force-driver"]==true) { $use_default = false ; }
+        if ($use_default == true) {
+            $loggingFactory = new \Model\Logging();
+            $logging = $loggingFactory->getModel($this->params);
+            $logging->log("Unable to use requested driver, switching to default...", $this->getModuleName()) ;
+            $driver = $this->findDefaultDriver() ;
+            return $driver ; }
+        else {
+            $logging->log("Unable to use requested driver, switching to default is disabled...", $this->getModuleName()) ;
+            \Core\BootStrap::setExitCode(1) ;
+            return false ; }
+    }
+
+    private function tryConnection($driver, $serverObj) {
+//        var_dump($driver, $serverObj) ;
         $driver->setServer($serverObj);
         $serverObj->setDriver($driver);
         $connection_attempts = 5 ;
@@ -197,35 +239,17 @@ class InvokeAllOS extends Base {
         $logging = $loggingFactory->getModel($this->params);
         for ($i=1; $i < $connection_attempts ; $i++) {
             $logging->log("Connection attempt {$i}...", $this->getModuleName()) ;
-            if ($serverObj->connect() == true ){
+            $conn = $serverObj->connect() ;
+            if ($conn == true ) {
                 $logging->log("Connection attempt {$i} Successful...", $this->getModuleName()) ;
                 return $serverObj; }
+            else if ($conn == false) {
+                $logging->log("Connection attempt {$i} Failed...", $this->getModuleName()) ; }
+            else if ($conn == null) {
+                $logging->log("Connection unusable...", $this->getModuleName()) ;
+                return null ; }
             sleep($interval) ; }
-//        var_dump($serverObj) ;
-        return false;
-    }
-
-    private function findUsableDriver() {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params);
-        $driverString = $this->findRequestedDriverString() ;
-        $invokeFactory = new \Model\Invoke() ;
-        $driver = $invokeFactory->getModel($this->params, $driverString) ;
-        if ($driver !== false) {
-            return $driver ; }
-        else {
-            $use_default = true ;
-            if ($this->params["force-driver"]==true) { $use_default = false ; }
-            if ($use_default == true) {
-                $loggingFactory = new \Model\Logging();
-                $logging = $loggingFactory->getModel($this->params);
-                $logging->log("Unable to use requested driver, switching to default...", $this->getModuleName()) ;
-                $driver = $this->findDefaultDriver() ;
-                return $driver ; }
-            else {
-                $logging->log("Unable to use requested driver, switching to default is disabled...", $this->getModuleName()) ;
-                \Core\BootStrap::setExitCode(1) ;
-                return false ; } }
+        return null ;
     }
 
     private function findRequestedDriverString() {
@@ -247,11 +271,14 @@ class InvokeAllOS extends Base {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $system = new \Model\SystemDetectionAllOS() ;
+        $invokeFactory = new \Model\Invoke() ;
         if (in_array($system->os, array("WINNT", "Windows"))) {
             $logging->log("Using default driver for Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-            return "DriverSecLib" ; }
+            $driver = $invokeFactory->getModel($this->params, "DriverSecLib") ;
+            return $driver ; }
         $logging->log("Using default driver for Non-Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-        return "DriverNativeSSH" ;
+        $driver = $invokeFactory->getModel($this->params, "DriverNativeSSH") ;
+        return $driver ;
     }
 
 	private function askForSSHShellExecute() {
