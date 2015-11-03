@@ -190,9 +190,16 @@ class InvokeAllOS extends Base {
 //		$driverString = isset($this->params["driver"]) ? $this->params["driver"] : 'seclib';
 //      $options = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
         $driver = $this->findUsableDriver($serverObj) ;
-        $try = $this->tryConnection($driver, $serverObj) ;
-        if ($driver !==false && $driver !==null) { return $driver ; }
-        return false;
+        if ($driver !==false && $driver !==null) {
+            $try = $this->tryConnection($driver, $serverObj) ;
+            if ($try !==false && $try !==null) {
+                return $try ; }
+            else {
+                // try didnt work
+                return false ; } }
+        else {
+            // unable to find usable driver
+            return false ; }
     }
 
     private function findUsableDriver($serverObj) {
@@ -233,7 +240,7 @@ class InvokeAllOS extends Base {
 //        var_dump($driver, $serverObj) ;
         $driver->setServer($serverObj);
         $serverObj->setDriver($driver);
-        $connection_attempts = 5 ;
+        $connection_attempts = 10 ;
         $interval = 5 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
@@ -242,7 +249,7 @@ class InvokeAllOS extends Base {
             $conn = $serverObj->connect() ;
             if ($conn == true ) {
                 $logging->log("Connection attempt {$i} Successful...", $this->getModuleName()) ;
-                return $serverObj; }
+                return $driver; }
             else if ($conn == false) {
                 $logging->log("Connection attempt {$i} Failed...", $this->getModuleName()) ; }
             else if ($conn == null) {
@@ -277,7 +284,7 @@ class InvokeAllOS extends Base {
             $driver = $invokeFactory->getModel($this->params, "DriverSecLib") ;
             return $driver ; }
         $logging->log("Using default driver for Non-Windows systems, Seclib SSH driver...", $this->getModuleName()) ;
-        $driver = $invokeFactory->getModel($this->params, "DriverNativeSSH") ;
+        $driver = $invokeFactory->getModel($this->params, "DriverSecLib") ;
         return $driver ;
     }
 
