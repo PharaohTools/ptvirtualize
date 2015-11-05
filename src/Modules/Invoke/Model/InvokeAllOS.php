@@ -223,7 +223,8 @@ class InvokeAllOS extends Base {
                 else {
                     $logging->log("Test Connection Result Unknown...", $this->getModuleName()) ; } }
         $use_default = true ;
-        if ($this->params["force-driver"]==true) { $use_default = false ; }
+        if (isset($this->params["force-driver"]) && $this->params["force-driver"]==true) {
+            $use_default = false ; }
         if ($use_default == true) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params);
