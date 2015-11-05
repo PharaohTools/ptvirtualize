@@ -17,7 +17,7 @@ class ProvisionInfo extends PTConfigureBase {
   }
 
   public function routeAliases() {
-    return array("provision"=>"Provision");
+    return array("provision"=>"Provision", "pro"=>"Provision");
   }
 
   public function helpDefinition() {
