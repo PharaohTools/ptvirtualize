@@ -2,7 +2,7 @@
 
 foreach ($pageVars["result"] as $key => $value) {
     ?>
-    Step <?php echo $key ; ?> : <?php echo ($value==true) ? "Success" : "Failure" ; ?>/
+    Step <?php echo $key ; ?> : <?php echo ($value==true) ? "Success" : "Failure" ; ?>
 <?php
 }
 
