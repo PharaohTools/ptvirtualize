@@ -1,11 +1,14 @@
-Virtualize by Golden Contact Computing
+Virtualize from Pharaoh Tools
 -------------------
 
-About:
------------------
-Virtualize is for controlling Virtual Machines in Development Environments.
+Pharaoh Virtualize Development Environments.
+
+
+
+
 
 -------------------------------------------------------------
+
 
 Available Commands:
 ---------------------------------------
