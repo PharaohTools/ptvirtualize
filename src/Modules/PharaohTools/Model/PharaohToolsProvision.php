@@ -122,8 +122,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
             self::executeAndOutput($command) ;
             $rc = self::executeAndLoad("echo $?") ;
-            $logging->log("Provisioning Host with PTConfigure Complete...", $this->getModuleName()) ;
-            return $rc ;}
+            $logging->log("Provisioning Host with Pharaoh Configure Complete...", $this->getModuleName()) ;
+            return ($rc==0) ? true : false ; }
     }
 
     // @todo this and the above method should be one
@@ -157,8 +157,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
             self::executeAndOutput($command) ;
             $rc = self::executeAndLoad("echo $?") ;
-            $logging->log("Provisioning Host with PTDeploy Complete...", $this->getModuleName()) ;
-            return $rc ;}
+            $logging->log("Provisioning Host with Pharaoh Deploy Complete...", $this->getModuleName()) ;
+            return ($rc==0) ? true : false ; }
     }
 
     protected function sftpProvision($provisionerSettings, $init) {
