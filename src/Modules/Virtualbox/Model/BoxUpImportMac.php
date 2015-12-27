@@ -16,12 +16,15 @@ class BoxUpImportMac extends BaseFunctionModel {
 
     //@todo need windows version
     public function import($file, $ostype, $name) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $command  = VBOXMGCOMM."import {$file} --vsys 0 --ostype {$ostype}" ;
         $command .= " --vmname {$name}" ;
-        $ret = $this->executeAndGetReturnCode($command);
+        $logging->log("Performing Virtualbox import command {$command}", $this->getModuleName()) ;
+        $ret = $this->executeAndGetReturnCode($command, true, true);
 //        $command = "echo $?" ;
 //        $ret = $this->executeAndLoad($command);
-        return (in_array($ret, array("0","1"))) ? true : false ;
+        return (in_array($ret["rc"], array("0"))) ? true : false ;
     }
 
     public function getResumableStates() {
