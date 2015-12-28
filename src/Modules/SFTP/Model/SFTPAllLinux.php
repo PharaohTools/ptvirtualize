@@ -71,8 +71,7 @@ class SFTPAllLinux extends Base {
                 $logging->log($msg, $this->getModuleName());
                 $logging->log("[".$server["target"]."] SFTP Put Completed...", $this->getModuleName()); }
             else {
-                $logging->log("[".$server["target"]."] Connection failure. Will not execute commands on this box...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
-            } }
+                $logging->log("[".$server["target"]."] Connection failure. Will not execute commands on this box...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE); } }
         $logging->log("All SFTP Puts Completed", $this->getModuleName());
         return "All SFTP Puts Completed";
     }
@@ -196,7 +195,7 @@ class SFTPAllLinux extends Base {
             else {
                 $logging->log("Connection to Server {$server["target"]} successful.", $this->getModuleName());
                 $server["sftpObject"] = $attempt ; } }
-        return true;
+            return true;
     }
 
     // @todo it currently looks for both pword and password lets stick to one
