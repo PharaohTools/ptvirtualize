@@ -73,7 +73,7 @@ class HaltAllOS extends BaseFunctionModel {
             return true ; }
         $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You may need to use ".
             "ptvirtualize halt hard. You can also use the parameter --fail-hard to do this automatically." ;
-        $logging->log($lmsg, $this->getModuleName()) ;
+        $logging->log($lmsg, $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
         $this->runHook("halt", "post") ;
         return false ;
 

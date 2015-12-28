@@ -31,8 +31,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
             return $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
-            $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName()) ;
-            return null ; }
+            $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
     }
 
     protected function initialisePharaohProvision($provisionerSettings) {
@@ -123,6 +123,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             self::executeAndOutput($command) ;
             $rc = self::executeAndLoad("echo $?") ;
             $logging->log("Provisioning Host with Pharaoh Configure Complete...", $this->getModuleName()) ;
+            if ($rc!==0) {  $logging->log("Provisioning Host with Pharaoh Configure Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
             return ($rc==0) ? true : false ; }
     }
 
@@ -158,6 +159,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             self::executeAndOutput($command) ;
             $rc = self::executeAndLoad("echo $?") ;
             $logging->log("Provisioning Host with Pharaoh Deploy Complete...", $this->getModuleName()) ;
+            if ($rc!==0) {  $logging->log("Provisioning Host with Pharaoh Deploy Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
             return ($rc==0) ? true : false ; }
     }
 
@@ -190,7 +192,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $logging->log("Found $methodName method in OS Provisioner", $this->getModuleName()) ;
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams) ; }
             else {
-                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName()) ;
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return false ; } }
         else {
             $tool = ucfirst($provisionerSettings["tool"]) ;
@@ -200,7 +202,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $logging->log("Found $methodName method in OS Provisioner", $this->getModuleName()) ;
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams ) ; }
             else {
-                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName()) ;
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return false ; } }
 
         $sshParams["yes"] = true ;

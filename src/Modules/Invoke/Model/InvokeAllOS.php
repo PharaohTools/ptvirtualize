@@ -77,7 +77,15 @@ class InvokeAllOS extends Base {
                         echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
                         $logging->log(  "[" . $server["target"] . "] $sshCommand Completed...", $this->getModuleName()) ; }
                     else {
-                        $logging->log( "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...", $this->getModuleName()) ; } } }}
+                        $logging->log(
+                            "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...",
+                            $this->getModuleName() ) ;
+                        if (!isset($this->params["ignore-connection-failures"]) ||
+                            $this->params["ignore-connection-failures"]==false) {
+                            $logging->log(
+                                "No ignore-connection-failures flag set. SSH Invoke Failure.",
+                                $this->getModuleName(), LOG_FAILURE_EXIT_CODE ) ;
+                            return false ; } } } } }
         else {
             $logging->log("No successful connections available", $this->getModuleName()) ;
             \Core\BootStrap::setExitCode(1) ;
@@ -105,10 +113,8 @@ class InvokeAllOS extends Base {
                     else {
                         $logging->log(  "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...", $this->getModuleName()) ; } } }        }
         else {
-            $logging->log("No successful connections available", $this->getModuleName()) ;
-            \Core\BootStrap::setExitCode(1) ;
+            $logging->log("No successful connections available", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
-
         $logging->log( "Data by SSH Completed", $this->getModuleName()) ;;
 		return true;
 	}
@@ -165,7 +171,7 @@ class InvokeAllOS extends Base {
 					continue; } }
 			$attempt = $this->attemptSSH2Connection($server);
 			if ($attempt == null || $attempt == false) {
-                $logging->log("Connection to Server {$server["target"]} failed. Removing from pool.", $this->getModuleName()) ;
+                $logging->log("Connection to Server {$server["target"]} failed. Removing from pool.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 unset($this->servers[$srvId]);
                 return false ;}
             else {
@@ -232,8 +238,7 @@ class InvokeAllOS extends Base {
             $driver = $this->findDefaultDriver() ;
             return $driver ; }
         else {
-            $logging->log("Unable to use requested driver, switching to default is disabled...", $this->getModuleName()) ;
-            \Core\BootStrap::setExitCode(1) ;
+            $logging->log("Unable to use requested driver, switching to default is disabled...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
     }
 

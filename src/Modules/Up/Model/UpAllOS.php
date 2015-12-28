@@ -26,13 +26,14 @@ class UpAllOS extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params) ;
         $res = $this->loadFiles();
         if ($res === false) {
-            $logging->log("Up module was unable to load a Virtufile", $this->getModuleName()) ;
+            $logging->log("Up module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
         $this->findProvider("UpOther");
         $this->setLogSource();
         $o = $this->virtufile ;
-        if (property_exists($o, "files")) { $this->doMultiUp() ; }
-        else { $this->doSingleUp() ; }
+        if (property_exists($o, "files")) { $res = $this->doMultiUp() ; }
+        else { $res = $this->doSingleUp() ; }
+        return $res ;
     }
 
     public function setLogSource() {
@@ -48,21 +49,31 @@ class UpAllOS extends BaseFunctionModel {
             if ($this->vmExistsInProvider()) {
                 if ($this->vmIsRunning()) {
                     $logging->log("This VM is already up and running.", $this->getModuleName());
-                    return; }
+                    return true ; }
                 $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
-                $this->runHook("up", "pre") ;
+                $res = $this->runHook("up", "pre") ;
+                if ($res == false) { return false ; }
+                $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
                 $this->modifyVm(true);
                 $this->startVm();
                 $this->provisionVm(true);
-                $this->runHook("up", "post") ;
+                $res = $this->runHook("up", "post") ;
+                if ($res == false) { return false ; }
                 $this->postUpMessage();
-                return ;}
+                return true ; }
             $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
             $this->deleteFromPapyrus();
-            $this->completeBuildUp();
-            return ; }
+            $res = $this->completeBuildUp();
+            if ($res==true) { return true ; }
+            else {
+                $logging->log("Up module failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return false ; } }
         $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.", $this->getModuleName());
-        $this->completeBuildUp();
+        $res = $this->completeBuildUp();
+        if ($res==true) { return true ; }
+        else {
+            $logging->log("Up module failed ", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
     }
 
     protected function doMultiUp() {
@@ -86,7 +97,11 @@ class UpAllOS extends BaseFunctionModel {
             $cnum = $i + 1 ;
             $ptconfigureCommand .= "--command-{$cnum}=\"ptvirtualize up now --yes --guess --pfile={$this->virtufile->files[$i]} \" " ; }
         echo $ptconfigureCommand."\n" ;
-        self::executeAndOutput($ptconfigureCommand) ;
+        $res = self::executeAndOutput($ptconfigureCommand) ;
+        if ($res==0) { return true ; }
+        else {
+            $logging->log("Up module failed while bringing up multiple boxes", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
     }
 
     public function doReload() {

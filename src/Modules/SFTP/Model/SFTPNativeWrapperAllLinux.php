@@ -40,17 +40,14 @@ class SFTPNativeWrapperAllLinux extends Base {
         return false ;
     }
 
-
     public function exec($command) {
         $stream = ssh2_exec($this->connection, $command);
         stream_set_blocking( $stream, true );
-        $all = "" ;
-        while ( !feof($stream) ) {
-            $abit = stream_get_contents ($stream) ;
-            $all .= $abit ;
-            echo $abit ; }
+        stream_set_timeout ( $stream, 100 );
+        $out = stream_get_contents ( $stream );
+        // $out = fread($stream,4096);
         fclose($stream);
-        return $all ;
+        return $out ;
     }
 
     // @todo get the actual errors
@@ -66,8 +63,34 @@ class SFTPNativeWrapperAllLinux extends Base {
         return $res ;
     }
 
+    public function get($remotefile, $localFile) {
+        $res = ssh2_scp_recv($this->connection, $remotefile, $localFile);
+        return $res ;
+    }
+
     public function _is_dir($dn) {
-        // @todo this wont work
+
+        $command = "cd /tmp/" ;
+        $stream = ssh2_exec($this->connection, $command);
+        stream_set_blocking( $stream, true );
+        stream_set_timeout ( $stream, 100 );
+        $out = stream_get_contents ( $stream );
+        var_dump("for /tmp/", $out) ;
+
+        $command = "cd /tm/" ;
+        $stream = ssh2_exec($this->connection, $command);
+        stream_set_blocking( $stream, true );
+        stream_set_timeout ( $stream, 100 );
+        $out = stream_get_contents ( $stream );
+        var_dump("for /tm/", $out) ;
+
+        $command = "cd $dn" ;
+        $stream = ssh2_exec($this->connection, $command);
+        stream_set_blocking( $stream, true );
+        stream_set_timeout ( $stream, 100 );
+        $out = stream_get_contents ( $stream );
+        var_dump("for $dn", $out) ;
+
         $sftp = ssh2_sftp($this->connection);
         return ssh2_sftp_mkdir ($sftp, $dn, 0775, true) ;
     }

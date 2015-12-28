@@ -40,7 +40,7 @@ class ResumeAllOS extends BaseFunctionModel {
         if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $resumables) == true) {
             $logging->log("This VM is in a resumable state...", $this->getModuleName()) ;
             return true ; }
-        $logging->log("This VM is not in a resumable state...", $this->getModuleName()) ;
+        $logging->log("This VM is not in a resumable state...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
         return false ;
     }
 

@@ -38,8 +38,7 @@ class ProvisionAllOS extends BaseLinuxApp {
         $this->papyrus = $this->loadPapyrusLocal();
         $this->osProvisioner = $this->loadOSProvisioner() ;
         if (in_array(false, array($this->virtufile, $this->osProvisioner))) {
-            \Core\BootStrap::setExitCode(1);
-            $logging->log("Unable to load a required file", $this->getModuleName()) ;
+            $logging->log("Unable to load a required file", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
         return true ;
     }

@@ -53,7 +53,7 @@ class DestroyAllOS extends BaseFunctionModel {
         if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $destroyables) == true) {
             $logging->log("This VM is in a Destroyable state...", $this->getModuleName()) ;
             return true ; }
-        $logging->log("This VM is not in a Destroyable state...", $this->getModuleName()) ;
+        $logging->log("This VM is not in a Destroyable state...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
         return false ;
     }
 

@@ -26,8 +26,8 @@ class ShellProvision extends BaseShellAllOS {
             $init = $this->initialiseShellProvision($provisionerSettings) ;
             return $this->shellProvision($provisionerSettings, $init, $osProvisioner) ; }
         else {
-            $logging->log("Unrecognised Shell Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName());
-            return null ; }
+            $logging->log("Unrecognised Shell Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            return false ; }
     }
 
     // @todo this code is identical to the initialisePharaohTools except the provisionfile extension.
@@ -84,7 +84,7 @@ class ShellProvision extends BaseShellAllOS {
         if ($provisioner["target"] == "guest") {
             if (isset($provisioner["default"])) {
                 $logging->log("Provisioning VM with Default Shell Script for {$provisioner["default"]}...", $this->getModuleName());
-                $this->sshProvision($provisioner, $init, $osProvisioner); }
+                return $this->sshProvision($provisioner, $init, $osProvisioner); }
             else if (isset($provisioner["source"]) && $provisioner["source"]=="guest") {
                 $logging->log("Provisioning Guest with local Shell Script {$provisioner["script"]}...", $this->getModuleName()) ;
                 $init["provision_file"] = $provisioner["script"] ;
@@ -94,15 +94,17 @@ class ShellProvision extends BaseShellAllOS {
                 $logging->log("SFTP Configuration Management .sh file to VM for Shell...", $this->getModuleName());
                 $this->sftpProvision($provisioner, $init);
                 $logging->log("SSH Execute Provisioning VM with Shell script...", $this->getModuleName());
-                $this->sshProvision($provisioner, $init, $osProvisioner); } }
+                return $this->sshProvision($provisioner, $init, $osProvisioner); } }
         else if ($provisioner["target"] == "host") {
             $logging->log("Provisioning Host with Shell...", $this->getModuleName());
             $command = "sh {$provisioner["script"]}" ;
-            self::executeAndOutput($command) ; }
+            return self::executeAndOutput($command) ; }
         return true ;
     }
 
     protected function sftpProvision($provisionerSettings, $init) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
         $sftpParams = $this->params ;
         $sftpParams["yes"] = true ;
         $sftpParams["guess"] = true ;
@@ -116,7 +118,10 @@ class ShellProvision extends BaseShellAllOS {
         $sftpParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
-        $sftp->performSFTPPut();
+        $res = $sftp->performSFTPPut();
+        if ($res == false) {  $logging->log("Provisioning Shell SFTP Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
+        return ($res == true) ? true : false ;
+
     }
 
     protected function sshProvision($provisionerSettings, $init, $osProvisioner) {
@@ -130,7 +135,7 @@ class ShellProvision extends BaseShellAllOS {
                 $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner", $this->getModuleName());
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName());
+                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ; } }
         else {
             $logging->log("Attempting to use Standard shell script {$init["provision_file"]}", $this->getModuleName());
@@ -139,7 +144,7 @@ class ShellProvision extends BaseShellAllOS {
                 $logging->log("Found {$methodName} method in OS Provisioner", $this->getModuleName());
                 $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
             else {
-                $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName());
+                $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ; } }
         $sshParams["yes"] = true ;
         $sshParams["guess"] = true ;
@@ -151,7 +156,9 @@ class ShellProvision extends BaseShellAllOS {
             $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
         $sshFactory = new \Model\Invoke();
         $ssh = $sshFactory->getModel($sshParams) ;
-        $ssh->performInvokeSSHData() ;
+        $res = $ssh->performInvokeSSHData() ;
+        if ($res == false) {  $logging->log("Provisioning Shell SSH Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
+        return ($res == true) ? true : false ;
     }
 
     protected function waitUntilGetIP() {

@@ -231,10 +231,10 @@ class BoxLinuxMac extends BaseLinuxApp {
                 $this->provider = $this->getProvider($this->metadata->provider, $modGroup) ;
                 return ($this->provider !== false) ? true : false ; }
             else {
-                $logging->log("No Provider configured in Metadata object.", $this->getModuleName());
+                $logging->log("No Provider configured in Metadata object.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ;} }
         else {
-            $logging->log("No Metadata object found.", $this->getModuleName());
+            $logging->log("No Metadata object found.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             return false ;}
     }
 
@@ -260,7 +260,7 @@ class BoxLinuxMac extends BaseLinuxApp {
             $logging->log("Attempting to add box via provider {$this->metadata->provider}...", $this->getModuleName());
             return $this->provider->addBox($this->source, $this->target, $this->name) ; }
         else {
-            $logging->log("No Provider available, will not attempt to add box.", $this->getModuleName());
+            $logging->log("No Provider available, will not attempt to add box.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             return false ; }
     }
 
@@ -294,7 +294,7 @@ class BoxLinuxMac extends BaseLinuxApp {
             $logging->log("Attempting to remove box via provider {$this->metadata->provider}...", $this->getModuleName());
             return $this->provider->removeBox($this->target, $this->name) ; }
         else {
-            $logging->log("No Provider available, will not attempt to remove box.", $this->getModuleName());
+            $logging->log("No Provider available, will not attempt to remove box.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             return false ;}
     }
 
@@ -305,7 +305,7 @@ class BoxLinuxMac extends BaseLinuxApp {
             $logging->log("Attempting to package box via provider {$this->metadata->provider}...", $this->getModuleName()) ;
             return $this->provider->packageBox($this->target, $this->vmname, $this->metadata) ; }
         else {
-            $logging->log("No Provider available, will not attempt to package box.", $this->getModuleName());
+            $logging->log("No Provider available, will not attempt to package box.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             return false ;}
     }
 

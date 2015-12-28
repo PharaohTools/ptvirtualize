@@ -9,12 +9,16 @@ class ProvisionDefaultAllOS extends Base {
     protected $provisionModel ;
 
     public function provision( $hook = "") {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $provisionOuts = array() ;
         if ($hook != "") { $hook = "_$hook" ; }
         foreach ($this->virtufile->config["vm"]["provision$hook"] as $provisionerSettings) {
             $curout = $this->doSingleProvision($provisionerSettings) ;
             $provisionOuts[] = $curout ;
-            if ($curout==false) {return $provisionOuts ;}}
+            if ($curout==false) {
+                $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return $provisionOuts ;}}
         return $provisionOuts ;
     }
 
@@ -25,6 +29,8 @@ class ProvisionDefaultAllOS extends Base {
         $provisionOuts = $this->provisionVirtufile($hook, $type) ;
         $logging->log("Provisioning from hook directories if available for $hook $type", "Provision") ;
         $provisionOuts = array_merge($provisionOuts, $this->provisionHookDirs($hook, $type)) ;
+        if (in_array(false, $provisionOuts)) {
+            $logging->log("Provisioning Hooks Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
         return $provisionOuts ;
     }
 
@@ -86,7 +92,7 @@ class ProvisionDefaultAllOS extends Base {
                                         "target" => $target,
                                         "script" => "$dir".DS."$hookDirFile" );
                                 $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ;
-                                $logging->log("Executing $hookDirFile with $tool") ; } } } } } }
+                                $logging->log("Executing $hookDirFile with $tool", $this->getModuleName()) ; } } } } } }
         return $provisionOuts ;
     }
 
