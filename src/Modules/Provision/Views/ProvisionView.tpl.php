@@ -1,7 +1,7 @@
 <?php
 
 foreach ($pageVars["result"] as $key => $value) {
-    ?>Step <?php echo $key ; ?> : <?php echo ($value==true) ? "Success" : "Failure" ; ?><?php
+    ?>Step <?php echo $key ; ?> : <?php echo ($value==true) ? "Success\n" : "Failure\n" ; ?><?php
 }
 
 $success = !in_array(false, $pageVars["result"]) ;
