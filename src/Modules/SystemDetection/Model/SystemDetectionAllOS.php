@@ -4,7 +4,7 @@ Namespace Model;
 
 class SystemDetectionAllOS extends Base {
 
-    public $os ; // = array("any", "Linux", "Windows", "MacOS") ;
+    public $os ; // = array("any", "Linux", "Windows", "Darwin") ;
     public $linuxType ; // = array("any", "Debian", "Redhat") ;
     public $distro ; // = array("any", "Ubuntu", "Arch", "Debian", "Fedora", "CentOS") ; @todo add suse, mandriva
     public $version ; // = array("any", "11.04", "11.10", "12.04", "13.04") ; @todo win7, win2003, etc
@@ -142,18 +142,23 @@ class SystemDetectionAllOS extends Base {
                 // @todo surely captain, there must be a better way
                 exec('yum install net-tools -y', $outputArray);
             }
-            $ifComm = 'sudo ip addr list | awk \'/inet /{sub(/\/[0-9]+/,"",$2); print $2}\' ';
-            // $ifComm = "sudo ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'" ;
+            $ifComm = SUDOPREFIX.'ip addr list | awk \'/inet /{sub(/\/[0-9]+/,"",$2); print $2}\' ';
+            // $ifComm = SUDOPREFIX."ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'" ;
             exec($ifComm, $outputArray);
             foreach($outputArray as $outputLine ) {
                 $this->ipAddresses[] = $outputLine ; } }
         else if ($this->os == "Solaris") {
-            $ifComm = "sudo ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'" ;
+            $ifComm = SUDOPREFIX."ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'" ;
             exec($ifComm, $outputArray);
             foreach($outputArray as $outputLine ) {
                 $this->ipAddresses[] = $outputLine ; } }
-        else if (in_array($this->os, array("FreeBSD", "OpenBSD", "Darwin"))) {
-            $ifComm = "sudo ifconfig  | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{ print $2}'" ;
+        else if (in_array($this->os, array("FreeBSD", "OpenBSD"))) {
+            $ifComm = SUDOPREFIX." ifconfig  | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{ print $2}'" ;
+            exec($ifComm, $outputArray);
+            foreach($outputArray as $outputLine ) {
+                $this->ipAddresses[] = $outputLine ; } }
+        else if (in_array($this->os, array("Darwin"))) {
+            $ifComm = SUDOPREFIX." /sbin/ifconfig  | grep -E 'inet.[0-9]' | grep -v '127.0.0.1' | awk '{ print $2}'" ;
             exec($ifComm, $outputArray);
             foreach($outputArray as $outputLine ) {
                 $this->ipAddresses[] = $outputLine ; } }
