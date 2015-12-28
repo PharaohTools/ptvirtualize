@@ -24,6 +24,10 @@ class BootStrap {
         self::$exitCode = $exitCode ;
     }
 
+    public static function getExitCode(){
+        return (is_null(self::$exitCode)) ? 0 : self::$exitCode ;
+    }
+
     public function main($argv_or_boot_params_null) {
         $this->start = microtime(true) ;
         $routeObject = new \Core\Router();
