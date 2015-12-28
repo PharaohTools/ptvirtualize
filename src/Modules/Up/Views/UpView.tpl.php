@@ -15,13 +15,14 @@ else {
     $success = false ;
 }
 
-
 if ($success==true) { ?>
-Up Successful<?php
+Up Successful
+<?php
 }
 
 else { ?>
-Up Failed<?php
+Up Failed
+<?php
 }
 
 ?>In Pharaoh Virtualize Up
