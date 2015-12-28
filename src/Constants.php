@@ -32,3 +32,6 @@ else if (in_array(PHP_OS, array("Linux", "Solaris", "FreeBSD", "OpenBSD", "Darwi
     define('BOXDIR', '/opt/ptvirtualize/boxes') ;
     define('DS', "/");
     define('BASE_TEMP_DIR', '/tmp/'); }
+
+// LOG LEVELS
+define('LOG_FAILURE_EXIT_CODE', 1) ;
