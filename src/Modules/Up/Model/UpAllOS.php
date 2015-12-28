@@ -45,36 +45,69 @@ class UpAllOS extends BaseFunctionModel {
     protected function doSingleUp() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if ($this->isSavedInPapyrus()) {
-            if ($this->vmExistsInProvider()) {
-                if ($this->vmIsRunning()) {
-                    $logging->log("This VM is already up and running.", $this->getModuleName());
-                    return true ; }
-                $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
-                $res = $this->runHook("up", "pre") ;
-                if ($res == false) { return false ; }
-                $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
-                $this->modifyVm(true);
-                $this->startVm();
-                $this->provisionVm(true);
-                $res = $this->runHook("up", "post") ;
-                if ($res == false) { return false ; }
-                $this->postUpMessage();
-                return true ; }
-            $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
+
+        if (!$this->isSavedInPapyrus() && !$this->vmExistsInProvider()) {
+            $logging->log("Non existent machine. Creating from scratch.", $this->getModuleName());
             $this->deleteFromPapyrus();
             $res = $this->completeBuildUp();
             if ($res==true) { return true ; }
             else {
-                $logging->log("Up module failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                $logging->log("Up module failed.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return false ; } }
-        $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.", $this->getModuleName());
-        $res = $this->completeBuildUp();
-        if ($res==true) { return true ; }
-        else {
-            $logging->log("Up module failed ", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-            return false ; }
+
+        if ($this->isSavedInPapyrus()) {
+            $logging->log("This VM is saved in your Papyrus file, trying...", $this->getModuleName());
+            if ($this->vmIsRunning()) {
+                $logging->log("This VM is already up and running.", $this->getModuleName());
+                return true ; }
+            else {
+                $logging->log("This VM is not running.", $this->getModuleName()); } }
+
+        if ($this->vmExistsInProvider()) {
+            $logging->log("This VM exists in your provider, trying...", $this->getModuleName());
+            if ($this->vmIsRunning()) {
+                $logging->log("This VM is already up and running.", $this->getModuleName());
+                return true ; }
+            else {
+                $logging->log("This VM is not running.", $this->getModuleName()); }  }
+
+        $smp = $this->startModPro() ;
+
+        return $smp ;
+
+//        }
+//        $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.", $this->getModuleName());
+//
+//        $res = $this->completeBuildUp();
+//        if ($res==true) { return true ; }
+//        else {
+//            $logging->log("Up module failed ", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+//            return false ; }
+
     }
+
+    protected function startModPro() {
+        $loggingFactory = new \Model\Logging() ;
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
+        $res = $this->runHook("up", "pre") ;
+
+        var_dump("hook res pre: ", $res) ;
+
+        if (in_array(false, $res)) { return false ; }
+        $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
+        $this->modifyVm(true);
+        $this->startVm();
+        $this->provisionVm(true);
+        $res = $this->runHook("up", "post") ;
+
+        var_dump("hook res post: ", $res) ;
+
+        if (in_array(false, $res)) { return false ; }
+        $this->postUpMessage();
+        return true ;
+    }
+
 
     protected function doMultiUp() {
         $loggingFactory = new \Model\Logging() ;
