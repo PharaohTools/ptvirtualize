@@ -49,7 +49,7 @@ class BaseFunctionModel extends BaseLinuxApp {
             $logging->log("Provider {$this->virtufile->config["vm"]["provider"]} found in Virtufile", $this->getModuleName()) ;
             $this->provider = $this->getProvider($this->virtufile->config["vm"]["provider"], $modGroup) ; }
         else {
-            $logging->log("No Provider configured in Virtufile.", $this->getModuleName()); }
+            $logging->log("No Provider configured in Virtufile.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE); }
     }
 
     protected function getProvider($provider, $modGroup) {
@@ -68,7 +68,7 @@ class BaseFunctionModel extends BaseLinuxApp {
                 if (is_object($provider)) { return $provider ; }
                 else {
                     \Core\BootStrap::setExitCode(1);
-                    $logging->log("No Model in Group $modGroup available for provider $oneProvider") ;
+                    $logging->log("No Model in Group $modGroup available for provider $oneProvider", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                     break ; } } }
         return false ;
     }
