@@ -6,6 +6,7 @@ $bootStrap = new BootStrap();
 
 $argv_or_null = (isset($argv)) ? $argv : null ;
 $bootStrapParams = (isset($_ENV['ptconfigure_bootstrap'])) ? unserialize($_ENV['ptconfigure_bootstrap']) : $argv_or_null ;
+$bootStrap->setExitCode(0) ;
 $bootStrap->main($bootStrapParams);
 
 class BootStrap {
