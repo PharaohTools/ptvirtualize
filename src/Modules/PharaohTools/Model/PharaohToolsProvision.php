@@ -29,7 +29,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         else if (in_array($provisionerSettings["tool"], $ptdeploySpellings)) {
             $logging->log("Initialising Pharaoh Deploy Provision... ", $this->getModuleName()) ;
             $init = $this->initialisePharaohProvision($provisionerSettings, $osProvisioner) ;
-            return $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ; }
+            $res = $this->ptdeployProvision($provisionerSettings, $init, $osProvisioner) ;
+            return $res ; }
         else {
             $logging->log("Unrecognised Pharaoh Provisioning Tool {$provisionerSettings["tool"]} specified", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
@@ -156,11 +157,14 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
-            self::executeAndOutput($command) ;
-            $rc = self::executeAndLoad("echo $?") ;
+            echo $command."\n" ;
+//            self::executeAndOutput() ;
+            $rc = self::executeAndGetReturnCode($command, true, true) ;
             $logging->log("Provisioning Host with Pharaoh Deploy Complete...", $this->getModuleName()) ;
-            if ($rc!==0) {  $logging->log("Provisioning Host with Pharaoh Deploy Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
-            return ($rc==0) ? true : false ; }
+            if ($rc["rc"] !== 0) {
+                $logging->log("Provisioning Host with Pharaoh Deploy Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return false ; }
+            return true ; }
     }
 
     protected function sftpProvision($provisionerSettings, $init) {
