@@ -111,7 +111,6 @@ class ProvisionDefaultAllOS extends Base {
         return $provisionOuts ;
     }
 
-
     // @todo this should support other provisioners than pharaoh, provide some override here to allow
     // @todo chef solo, puppet agent, salt or ansible to get invoked
     protected function doSingleProvision($provisionerSettings) {
