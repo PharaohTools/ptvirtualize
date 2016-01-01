@@ -16,7 +16,8 @@ class ProvisionDefaultAllOS extends Base {
         foreach ($this->virtufile->config["vm"]["provision$hook"] as $provisionerSettings) {
             $curout = $this->doSingleProvision($provisionerSettings) ;
             $provisionOuts[] = $curout ;
-            if ($curout==false) {
+            $cur_xc = \Core\BootStrap::getExitCode() ;
+            if ($curout==false || $cur_xc !==0) {
                 $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return $provisionOuts ;}}
         return $provisionOuts ;
@@ -38,8 +39,6 @@ class ProvisionDefaultAllOS extends Base {
         $provisionOuts = array() ;
         if ($module=="up" && $hook == "default") { $pstr = "provision" ; }
         else { $pstr = "provision_{$module}_{$hook}" ; }
-
-//        var_dump($pstr) ;
 
         if (isset($this->virtufile->config["vm"][$pstr]) &&
             count($this->virtufile->config["vm"][$pstr]) > 0){
@@ -108,7 +107,8 @@ class ProvisionDefaultAllOS extends Base {
         $provisionObject = $provisionObjectFactory->getModel($this->params, "Provision");
         $provisionObject->virtufile = $this->virtufile;
         $provisionObject->papyrus = $this->papyrus;
-        return $provisionObject->provision($provisionerSettings, $this) ;
+        $res = $provisionObject->provision($provisionerSettings, $this) ;
+        return $res ;
     }
 
 }
