@@ -19,7 +19,7 @@ class ProvisionDefaultAllOS extends Base {
             $cur_xc = \Core\BootStrap::getExitCode() ;
             if ($curout==false || $cur_xc !==0) {
                 $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-                return $provisionOuts ;}}
+                return $provisionOuts ; } }
         return $provisionOuts ;
     }
 
@@ -30,7 +30,8 @@ class ProvisionDefaultAllOS extends Base {
         $provisionOuts = $this->provisionVirtufile($hook, $type) ;
         $logging->log("Provisioning from hook directories if available for $hook $type", "Provision") ;
         $provisionOuts = array_merge($provisionOuts, $this->provisionHookDirs($hook, $type)) ;
-        if (in_array(false, $provisionOuts)) {
+        $cur_xc = \Core\BootStrap::getExitCode() ;
+        if (in_array(false, $provisionOuts) || $cur_xc !==0) {
             $logging->log("Provisioning Hooks Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
         return $provisionOuts ;
     }
@@ -40,16 +41,26 @@ class ProvisionDefaultAllOS extends Base {
         if ($module=="up" && $hook == "default") { $pstr = "provision" ; }
         else { $pstr = "provision_{$module}_{$hook}" ; }
 
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->virtufile->config["vm"][$pstr]) &&
             count($this->virtufile->config["vm"][$pstr]) > 0){
             foreach ($this->virtufile->config["vm"][$pstr] as $provisionerSettings) {
                 if (isset($this->params["hooks"]) && in_array($hook, $this->getParameterHooks())) {
-                    $loggingFactory = new \Model\Logging();
-                    $logging = $loggingFactory->getModel($this->params) ;
                     $logging->log("Requested hooks include $module $hook, executing", "Provision") ;
-                    $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; }
+                    $curout = $this->doSingleProvision($provisionerSettings) ;
+                    $provisionOuts[] = $curout ;
+                    $cur_xc = \Core\BootStrap::getExitCode() ;
+                    if ($curout==false || $cur_xc !==0) {
+                        $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                        return $provisionOuts ; }  }
                 else {
-                    $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ; } } }
+                    $curout = $this->doSingleProvision($provisionerSettings) ;
+                    $provisionOuts[] = $curout ;
+                    $cur_xc = \Core\BootStrap::getExitCode() ;
+                    if ($curout==false || $cur_xc !==0) {
+                        $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                        return $provisionOuts ; } } } }
         return $provisionOuts ;
     }
 
@@ -90,8 +101,13 @@ class ProvisionDefaultAllOS extends Base {
                                         "tool" => $tool,
                                         "target" => $target,
                                         "script" => "$dir".DS."$hookDirFile" );
-                                $provisionOuts[] = $this->doSingleProvision($provisionerSettings) ;
-                                $logging->log("Executing $hookDirFile with $tool", $this->getModuleName()) ; } } } } } }
+                                $logging->log("Executing $hookDirFile with $tool", $this->getModuleName()) ;
+                                $curout = $this->doSingleProvision($provisionerSettings) ;
+                                $provisionOuts[] = $curout ;
+                                $cur_xc = \Core\BootStrap::getExitCode() ;
+                                if ($curout==false || $cur_xc !==0) {
+                                    $logging->log("Provisioning Hook directory Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                                    return $provisionOuts ; } } } } } } }
         return $provisionOuts ;
     }
 
