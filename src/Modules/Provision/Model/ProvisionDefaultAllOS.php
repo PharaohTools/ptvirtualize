@@ -52,6 +52,7 @@ class ProvisionDefaultAllOS extends Base {
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
                     if ($curout==false || $cur_xc !==0) {
+
                         $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; }  }
                 else {
@@ -111,7 +112,7 @@ class ProvisionDefaultAllOS extends Base {
         return $provisionOuts ;
     }
 
-    // @todo this should support other provisioners than pharaoh, provide some override here to allow
+    // @todo this should support other provisioner than pharaoh, provide some override here to allow
     // @todo chef solo, puppet agent, salt or ansible to get invoked
     protected function doSingleProvision($provisionerSettings) {
         $pharaohSpellings = array("Pharaoh", "pharaoh", "PharaohTools", "pharaohTools", "Pharaoh", "pharaoh", "PharaohTools", "pharaohTools") ;
