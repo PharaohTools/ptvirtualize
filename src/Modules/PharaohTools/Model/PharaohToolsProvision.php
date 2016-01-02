@@ -140,7 +140,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $logging->log("Provisioning VM with Default Pharaoh Deploy Autopilot for {$provisionerSettings["default"]}...", $this->getModuleName()) ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
             else if (isset($provisionerSettings["source"]) && $provisionerSettings["source"]=="guest") {
-                $logging->log("Provisioning VM with local guest Pharaoh Deploy Autopilot for {$provisionerSettings["default"]}...", $this->getModuleName()) ;
+                $logging->log("Provisioning VM with local guest Pharaoh Deploy Autopilot for {$provisionerSettings["script"]}...", $this->getModuleName()) ;
                 $init["provision_file"] = $provisionerSettings["script"] ;
                 return $this->sshProvision($provisionerSettings, $init, $osProvisioner); }
             else {
