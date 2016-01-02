@@ -48,7 +48,7 @@ class InvokePhpSecLib extends BaseLinuxApp
 
         if (!is_object($this->connection)) {
             $logging->log("Connection failed", $this->getModuleName()) ;
-            \Core\BootStrap::setExitCode(1);
+//            \Core\BootStrap::setExitCode(1);
 
             return false;
         }
@@ -57,7 +57,7 @@ class InvokePhpSecLib extends BaseLinuxApp
 
         if (!$this->connection->login($this->server->username, $this->server->password)) {
             $logging->log("Login failed", $this->getModuleName()) ;
-            \Core\BootStrap::setExitCode(1);
+//            \Core\BootStrap::setExitCode(1);
 
             return false;
         } else {

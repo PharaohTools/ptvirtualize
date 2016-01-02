@@ -190,6 +190,7 @@ class InvokeAllOS extends Base {
         $pword = (isset($server["pword"])) ? $server["pword"] : false;
         $pword = (isset($server["password"])) ? $server["password"] : $pword;
         $invokeFactory = new \Model\Invoke() ;
+
         $serverObj = $invokeFactory->getModel($this->params, "Server") ;
         $serverObj->init($server['target'], $server['user'], $pword, isset($server['port']) ? $server['port'] : 22);
 //      $server = new \Invoke\Server();
