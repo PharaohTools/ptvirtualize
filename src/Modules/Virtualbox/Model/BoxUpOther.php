@@ -16,7 +16,8 @@ class BoxUpOther extends BaseFunctionModel {
 
     public function vmExists($name) {
         $out = $this->executeAndLoad(VBOXMGCOMM." list vms");
-        if (strpos($out, $name)!= false) { return true ; }
+        $name_string = '"'.$name.'" ' ;
+        if (strpos($out, $name_string)!= false) { return true ; }
         return false ;
     }
 
