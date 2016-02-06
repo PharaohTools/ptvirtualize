@@ -20,17 +20,14 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         $sshData = "" ;
 //        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
 //            .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
-//        $all = array() ;
-//        foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
-//            $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
-//            // @todo might be better not to sudo this creation, or allow it more params (owner, perms)
-//            $one = "echo {$this->virtufile->config["ssh"]["password"]} "
-//                .'| sudo -S mkdir -p '.$guestPath."\n" ;
-//            $one .= "echo {$this->virtufile->config["ssh"]["password"]} "
-//                . '| sudo -S mount -t vboxsf ' . $sharedFolder["name"].' '.$guestPath.' ' ;
-//            $all[] = $one ; }
-//        $str = implode("\n", $all) ;
-//        $sshData .= $str ;
+        $all = array() ;
+        foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
+            $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
+            $one = "mkdir -p ".$guestPath."\n" ;
+            $one .= 'net use *: \\\\vboxsvr\\'.$sharedFolder["name"].' '.$guestPath.' ' ;
+            $all[] = $one ; }
+        $str = implode(PHP_EOL, $all) ;
+        $sshData .= $str ;
         return $sshData ;
     }
 
@@ -61,5 +58,15 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 //SSHDATA;
         return $sshData ;
     }
+
+    private function get_drives() {
+        $d='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $drives='';
+        for($i=0;$i<strlen($d);$i++)
+            if(is_dir($d[$i].':\\'))
+                $drives.=$d[$i];
+        echo $drives;
+    }
+
 
 }
