@@ -46,7 +46,13 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
 
-        if (!$this->isSavedInPapyrus() && !$this->vmExistsInProvider()) {
+        if (!$this->vmExistsInProvider()) {
+
+            if ($this->isSavedInPapyrus()) {
+                $logging->log(
+                    "This VM is saved in your Papyrus file, but does not exist in your provider...",
+                    $this->getModuleName() ) ; }
+
             $logging->log("Non existent machine. Creating from scratch.", $this->getModuleName());
             $this->deleteFromPapyrus();
             $res = $this->completeBuildUp();
@@ -55,7 +61,7 @@ class UpAllOS extends BaseFunctionModel {
                 $logging->log("Up module failed.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return false ; } }
 
-        if ($this->isSavedInPapyrus()) {
+        if ($this->isSavedInPapyrus() && $this->vmExistsInProvider()) {
             $logging->log("This VM is saved in your Papyrus file, trying...", $this->getModuleName());
             if ($this->vmIsRunning()) {
                 $logging->log("This VM is already up and running.", $this->getModuleName());
@@ -74,15 +80,6 @@ class UpAllOS extends BaseFunctionModel {
         $smp = $this->startModPro() ;
 
         return $smp ;
-
-//        }
-//        $logging->log("This VM does not exist in your Papyrus file. Creating from scratch.", $this->getModuleName());
-//
-//        $res = $this->completeBuildUp();
-//        if ($res==true) { return true ; }
-//        else {
-//            $logging->log("Up module failed ", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-//            return false ; }
 
     }
 
@@ -225,9 +222,11 @@ class UpAllOS extends BaseFunctionModel {
             else {
                 $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->getModuleName());
                 $guiMode = "headless" ; } }
+        $logging->log("Starting Virtual Machine", $this->getModuleName());
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
-        $res = $this->executeAndGetReturnCode($command);
-        return ($res == "0") ? true : false ;
+        $res = $this->executeAndGetReturnCode($command, true, true);
+//        var_dump($command, $res["rc"] == 0) ;
+        return ($res["rc"] == 0) ? true : false ;
     }
 
     protected function provisionVm($onlyIfRequestedByParam = false) {
@@ -238,7 +237,7 @@ class UpAllOS extends BaseFunctionModel {
                 $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
         if (isset($this->params["hooks"])) {
-            $logging->log("Specific execution hooks requested", $this->getModuleName());
+            $logging->log("Specific execution hooks requested, {$this->params["hooks"]}", $this->getModuleName());
             $hooks = $this->getParameterHooks();
             $pns = array();
             foreach ($hooks as $hook) {
