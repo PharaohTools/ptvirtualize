@@ -27,5 +27,4 @@ class BoxUpOther extends BaseFunctionModel {
         return false ;
     }
 
-
 }
