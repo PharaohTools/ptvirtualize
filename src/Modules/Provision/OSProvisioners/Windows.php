@@ -23,7 +23,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         $all = array() ;
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
-            $one = "mkdir -p ".$guestPath."\n" ;
+            $one = "mkdir ".$guestPath."\n" ;
             $one .= 'net use *: \\\\vboxsvr\\'.$sharedFolder["name"].' '.$guestPath.' ' ;
             $all[] = $one ; }
         $str = implode(PHP_EOL, $all) ;
