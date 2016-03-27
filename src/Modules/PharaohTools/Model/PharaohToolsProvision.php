@@ -121,11 +121,12 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
-            self::executeAndOutput($command) ;
-            $rc = self::executeAndLoad("echo $?") ;
+            $rc = self::executeAndGetReturnCode($command, true, false) ;
             $logging->log("Provisioning Host with Pharaoh Configure Complete...", $this->getModuleName()) ;
-            if ($rc!==0) {  $logging->log("Provisioning Host with Pharaoh Configure Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
-            return ($rc==0) ? true : false ; }
+            if ($rc["rc"]!==0) {
+                $logging->log("Provisioning Host with Pharaoh Configure Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return false ; }
+            return true ; }
     }
 
     // @todo this and the above method should be one
