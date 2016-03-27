@@ -24,7 +24,9 @@ class ProvisionAllOS extends BaseFunctionModel {
     public function provisionNow($hook = "") {
         if ($this->loadFiles() == false) { return false; }
         $this->findProvider("BoxProvision");
-        if ($this->currentStateIsProvisionable() == false) { return false; }
+        if ($this->currentStateIsProvisionable() == false) {
+            \Core\BootStrap::setExitCode(1) ;
+            return false; }
         return $this->osProvisioner->provision($hook);
     }
 
