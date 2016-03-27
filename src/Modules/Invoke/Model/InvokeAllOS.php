@@ -215,7 +215,7 @@ class InvokeAllOS extends Base {
         $driverString = $this->findRequestedDriverString() ;
         $invokeFactory = new \Model\Invoke() ;
         $driver = $invokeFactory->getModel($this->params, $driverString) ;
-        if ($driver !== false) {
+        if (is_object($driver)) {
             $logging->log("Found Requested Driver {$driverString}...", $this->getModuleName()) ;
             $driver->setServer($serverObj) ;
             $serverObj->setDriver($driver) ;
@@ -229,6 +229,8 @@ class InvokeAllOS extends Base {
                     $logging->log("Test Connection Unusable...", $this->getModuleName()) ; }
                 else {
                     $logging->log("Test Connection Result Unknown...", $this->getModuleName()) ; } }
+        else {
+            $logging->log("Unable to find Requested Driver {$driverString}...", $this->getModuleName()) ; }
         $use_default = true ;
         if (isset($this->params["force-driver"]) && $this->params["force-driver"]==true) {
             $use_default = false ; }
