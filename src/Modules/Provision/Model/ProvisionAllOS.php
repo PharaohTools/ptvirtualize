@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class ProvisionAllOS extends BaseLinuxApp {
+class ProvisionAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -23,6 +23,8 @@ class ProvisionAllOS extends BaseLinuxApp {
 
     public function provisionNow($hook = "") {
         if ($this->loadFiles() == false) { return false; }
+        $this->findProvider("BoxProvision");
+        if ($this->currentStateIsProvisionable() == false) { return false; }
         return $this->osProvisioner->provision($hook);
     }
 
@@ -69,6 +71,17 @@ class ProvisionAllOS extends BaseLinuxApp {
             return $osp ; }
         $logging->log("No suitable OS Provisioner found for {$this->virtufile->config["vm"]["ostype"]}", $this->getModuleName()) ;
         return null ;
+    }
+
+    protected function currentStateIsProvisionable() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $provisionables = $this->provider->getProvisionableStates();
+        if ($this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], $provisionables) == true) {
+            $logging->log("This VM is in a Provisionable state...", $this->getModuleName()) ;
+            return true ; }
+        $logging->log("This VM is not in a Provisionable state...", $this->getModuleName()) ;
+        return false ;
     }
 
 }
