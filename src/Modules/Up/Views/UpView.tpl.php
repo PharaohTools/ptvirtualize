@@ -20,7 +20,8 @@ Up Successful
 <?php
 }
 
-else { ?>
+if ( (isset($has_failure) && $has_failure==true) || \Core\BootStrap::getExitCode() !== 0 ) { ?>
+
 Up Failed
 <?php
 }
