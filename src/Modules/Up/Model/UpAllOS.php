@@ -197,7 +197,7 @@ class UpAllOS extends BaseFunctionModel {
 
     protected function modifyVm($onlyIfRequestedByParam = false) {
         if ($onlyIfRequestedByParam == true) {
-            if (!isset($this->params["modify"]) || (isset($this->params["modify"]) && $this->params["modify"] != true) ) {
+            if ($this->getParamBySynonym("modify") !== true ) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
                 $logging->log("Not modifying as modify parameter not set", $this->getModuleName());
@@ -225,7 +225,6 @@ class UpAllOS extends BaseFunctionModel {
         $logging->log("Starting Virtual Machine", $this->getModuleName());
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
         $res = $this->executeAndGetReturnCode($command, true, true);
-//        var_dump($command, $res["rc"] == 0) ;
         return ($res["rc"] == 0) ? true : false ;
     }
 
@@ -233,7 +232,7 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if ($onlyIfRequestedByParam == true) {
-            if (!isset($this->params["provision"]) || (isset($this->params["provision"]) && $this->params["provision"] != true) ) {
+            if ($this->getParamBySynonym("provision") == true ) {
                 $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
         if (isset($this->params["hooks"])) {
@@ -245,6 +244,15 @@ class UpAllOS extends BaseFunctionModel {
             return (in_array(false, $pns)) ? false : true ; }
         $pn = $this->runHook("up", "default");
         return $pn ;
+    }
+
+    protected function getParamBySynonym($param) {
+        $ray["modify"] = array("modify", "mod") ;
+        $ray["provision"] = array("provision", "pro") ;
+        foreach($ray[$param] as $entry) {
+            if (isset($this->params[$entry])) {
+                $this->params[$param] = true ; } }
+        return $this->params[$param] ;
     }
 
 
