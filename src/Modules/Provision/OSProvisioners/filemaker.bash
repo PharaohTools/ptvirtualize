@@ -1,3 +1,4 @@
+#!/bin/sh
 cp Windows7.php Windows31.php
 cp Windows7.php Windows95.php
 cp Windows7.php Windows98.php
