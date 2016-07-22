@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxStatus extends BaseFunctionModel {
+class BoxStatus extends BaseVirtualboxAllOS {
 
     // Compatibility
     public $os = array("any") ;
