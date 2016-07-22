@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxUpModify extends BaseFunctionModel {
+class BoxUpModify extends BaseVirtualboxAllOS {
 
     // Compatibility
     public $os = array("any") ;

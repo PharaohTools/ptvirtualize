@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BoxUpImportLinux extends BaseFunctionModel {
+class BoxUpImportLinux extends BaseVirtualboxAllOS {
 
     // Compatibility
     public $os = array("Linux") ;
