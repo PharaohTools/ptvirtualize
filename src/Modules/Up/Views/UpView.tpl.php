@@ -15,14 +15,11 @@ else {
     $success = false ;
 }
 
-if ($success==true) { ?>
-Up Successful
-<?php
-}
-
 if ( (isset($has_failure) && $has_failure==true) || \Core\BootStrap::getExitCode() !== 0 ) { ?>
-
 Up Failed
+<?php
+} else { ?>
+Up Successful
 <?php
 }
 
