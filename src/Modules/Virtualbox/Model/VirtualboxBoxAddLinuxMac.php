@@ -76,27 +76,26 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
             return false ; }
         else {
             $logging->log("Box directory {$boxdir} created", $this->getModuleName());
+            var_dump("sub", substr($boxdir, 1, -1)) ;
+            if (substr($boxdir, 1, -1) !== DS) { $boxdir .= DS ; }
             return $boxdir ;}
     }
 
     protected function extractMetadata($source, $boxDir) {
             $boxFile = $source ;
-            $command = "tar --extract --file=$boxFile -C ".$boxDir." .".DS."metadata.json" ;
+            $command = "tar --extract --file=$boxFile -C ".$boxDir." ./metadata.json" ;
             self::executeAndOutput($command);
             if (file_exists($boxDir."metadata.json")) {
-
                 $fData = file_get_contents($boxDir."metadata.json") ;
                 $command = "rm ".$boxDir."metadata.json" ;
                 self::executeAndOutput($command);
                 $fdo = json_decode($fData) ;
-                if (is_object($fdo)) { return $fdo ; }
-            }
+                if (is_object($fdo)) { return $fdo ; } }
             else {
 //            assume vagrant box
                 // try if its a vagrant box
-            $command = "tar --extract --file=$boxFile -C ".$boxDir." .".DS."Vagrantfile" ;
+                $command = "tar --extract --file=$boxFile -C ".$boxDir." ."."Vagrantfile" ;
 //            self::executeAndOutput($command);
-//
 //            if (file_exists($boxDir."Vagrantfile")) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
