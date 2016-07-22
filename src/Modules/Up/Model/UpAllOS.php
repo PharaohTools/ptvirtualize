@@ -28,7 +28,10 @@ class UpAllOS extends BaseFunctionModel {
         if ($res === false) {
             $logging->log("Up module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
-        $this->findProvider("UpOther");
+        $res = $this->findProvider("UpOther");
+        if ($res === false) {
+            $logging->log("Up module was unable find the specified provider", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
         $this->setLogSource();
         $o = $this->virtufile ;
         if (property_exists($o, "files")) { $res = $this->doMultiUp() ; }
