@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class BaseVirtualboxAllOS extends Base {
+class BaseVirtualboxAllOS extends BaseFunctionModel {
 
     // Compatibility
     public $os = array("any") ;
@@ -13,6 +13,19 @@ class BaseVirtualboxAllOS extends Base {
 
     // Model Group
     public $modelGroup = array("Base") ;
+
+    public function isAvailable() {
+        $command = VBOXMGCOMM ;
+        $rc = $this->executeAndGetReturnCode($command);
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if ($rc == 0) {
+            $logging->log("Virtualbox is available on this system", $this->getModuleName()) ;
+            return true ; }
+        else {
+            $logging->log("Virtualbox is not available on this system", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
+    }
 
     public function isVMInStatus($vm, $statusRequested) {
         $command = VBOXMGCOMM." showvminfo \"{$vm}\" " ;
