@@ -92,10 +92,22 @@ class UpAllOS extends BaseFunctionModel {
         $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
         $res = $this->runHook("up", "pre") ;
         if (in_array(false, $res)) { return false ; }
-        $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
-        $this->modifyVm(true);
-        $this->startVm();
-        $this->provisionVm(true);
+//        $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
+        $res = $this->modifyVm(true);
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Modifying VM Failed", $this->getModuleName());
+            return false; }
+        $res = $this->startVm();
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Starting VM Failed. This is most likely an issue", $this->getModuleName());
+            return false; }
+        $res = $this->provisionVm(true);
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Provisioning VM Failed", $this->getModuleName());
+            return false; }
         $res = $this->runHook("up", "post") ;
         if (in_array(false, $res)) { return false ; }
         $this->postUpMessage();
@@ -164,6 +176,7 @@ class UpAllOS extends BaseFunctionModel {
             $logging->log("Modifying VM Failed", $this->getModuleName());
             return false; }
         $res = $this->startVm();
+        var_dump($res) ;
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Starting Virtual Machine Failed", $this->getModuleName());
@@ -228,7 +241,19 @@ class UpAllOS extends BaseFunctionModel {
         $logging->log("Starting Virtual Machine", $this->getModuleName());
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
         $res = $this->executeAndGetReturnCode($command, true, true);
-        return ($res["rc"] == 0) ? true : false ;
+        if ($res["rc"] !== 0) {
+            $logging->log("Unable to start Virtual Machine", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            return false ; }
+        $logging->log("Start attempted, waiting 3 seconds for confirmation", $this->getModuleName());
+        sleep(3) ;
+        $res = $this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], "running");
+        var_dump("res2", $res) ;
+        if ($res == true) {
+            $logging->log("Virtual Machine has started successfully", $this->getModuleName());
+            return true ; }
+        else {
+            $logging->log("Virtual Machine has failed to start", $this->getModuleName());
+            return false ; }
     }
 
     protected function provisionVm($onlyIfRequestedByParam = false) {
@@ -255,7 +280,7 @@ class UpAllOS extends BaseFunctionModel {
         foreach($ray[$param] as $entry) {
             if (isset($this->params[$entry])) {
                 $this->params[$param] = true ; } }
-        return $this->params[$param] ;
+        return ($this->params[$param]) ? $this->params[$param] : null ;
     }
 
 
