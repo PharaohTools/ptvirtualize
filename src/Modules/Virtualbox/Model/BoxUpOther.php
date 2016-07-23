@@ -17,7 +17,7 @@ class BoxUpOther extends BaseVirtualboxAllOS {
     public function vmExists($name) {
         $out = $this->executeAndLoad(VBOXMGCOMM." list vms");
         $name_string = '"'.$name.'" ' ;
-        if (strpos($out, $name_string)!= false) { return true ; }
+        if (strpos($out, $name_string) !== false) { return true ; }
         return false ;
     }
 
