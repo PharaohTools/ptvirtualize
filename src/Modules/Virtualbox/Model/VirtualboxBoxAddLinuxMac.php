@@ -76,8 +76,7 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
             return false ; }
         else {
             $logging->log("Box directory {$boxdir} created", $this->getModuleName());
-            var_dump("sub", substr($boxdir, 1, -1)) ;
-            if (substr($boxdir, 1, -1) !== DS) { $boxdir .= DS ; }
+            if (substr($boxdir, strlen($boxdir)-1, 1) !== DS) { $boxdir .= DS ; }
             return $boxdir ;}
     }
 
