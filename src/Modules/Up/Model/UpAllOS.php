@@ -213,7 +213,7 @@ class UpAllOS extends BaseFunctionModel {
 
     protected function modifyVm($onlyIfRequestedByParam = false) {
         if ($onlyIfRequestedByParam == true) {
-            if ($this->getParamBySynonym("modify") !== true ) {
+            if ($this->getParamBySynonym("modify") != true ) {
                 $loggingFactory = new \Model\Logging();
                 $logging = $loggingFactory->getModel($this->params) ;
                 $logging->log("Not modifying as modify parameter not set", $this->getModuleName());
@@ -260,7 +260,7 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if ($onlyIfRequestedByParam == true) {
-            if ($this->getParamBySynonym("provision") == true ) {
+            if ($this->getParamBySynonym("provision") != true ) {
                 $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
         if (isset($this->params["hooks"])) {
@@ -279,8 +279,8 @@ class UpAllOS extends BaseFunctionModel {
         $ray["provision"] = array("provision", "pro") ;
         foreach($ray[$param] as $entry) {
             if (isset($this->params[$entry])) {
-                $this->params[$param] = true ; } }
-        return ($this->params[$param]) ? $this->params[$param] : null ;
+                return $this->params[$entry] ; } }
+        return null ;
     }
 
 
