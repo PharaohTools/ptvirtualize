@@ -247,7 +247,7 @@ class UpAllOS extends BaseFunctionModel {
         $logging->log("Start attempted, waiting 3 seconds for confirmation", $this->getModuleName());
         sleep(3) ;
         $res = $this->provider->isVMInStatus($this->virtufile->config["vm"]["name"], "running");
-        var_dump("res2", $res) ;
+//        var_dump("res2", $res) ;
         if ($res == true) {
             $logging->log("Virtual Machine has started successfully", $this->getModuleName());
             return true ; }
