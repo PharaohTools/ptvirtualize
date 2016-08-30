@@ -31,7 +31,7 @@ without ptconfigure, do the following. You'll need to already have php5 and git 
 
 To install ptvirtualize cli on your machine without ptconfigure do the following:
 
-sudo apt-get install php5 git
+sudo apt-get install php5 git -y
 
 git clone http://github.com/PharaohTools/ptvirtualize && sudo php ptvirtualize/install-silent
 
