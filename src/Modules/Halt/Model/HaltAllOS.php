@@ -64,7 +64,7 @@ class HaltAllOS extends BaseFunctionModel {
                 $logging->log("Successful power off SSH Shutdown...", $this->getModuleName()) ;
                 $this->runHook("halt", "post") ;
                 return true ; } }
-        if (isset($this->params["fail-hard"])) {
+        if (isset($this->params["fail-hard"]) || isset($this->params["die-hard"])) {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 "--fail-hard flag to do hard power off now." ;
             $logging->log($lmsg, $this->getModuleName()) ;
