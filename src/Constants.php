@@ -46,7 +46,7 @@ else if (in_array(PHP_OS, array("Linux", "Solaris", "FreeBSD", "OpenBSD", "Darwi
     define('PTSCOMM', "ptsource") ;
     define("DS", "/");
     define("BASE_TEMP_DIR", '/tmp/');
-    define('BOXDIR', '/ptvirtualize/boxes'.'\\') ;
+    define('BOXDIR', '/opt/ptvirtualize/boxes') ;
     define('PIPEDIR', '/opt/ptbuild/pipes') ;
     define('REPODIR', '/opt/ptsource/repositories') ; }
 
