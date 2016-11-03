@@ -7,12 +7,16 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
     public function getPTConfigureInitSSHData($provisionFile) {
+        $check_deps = "( (php -v) && (git --version) && (ptconfigure) )" ;
+        $comms  = "( " ;
+        $comms .= "apt-get update -y ; " ;
+        $comms .= "apt-get install -y php5 git ; " ;
+        $comms .= " rm -rf /tmp/ptconfigure ; " ;
+        $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
+        $comms .= "php /tmp/ptconfigure/install-silent ; " ;
+        $comms .= ") " ;
 		$sshData = "" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S apt-get update -y\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S apt-get install -y php5 git\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S rm -rf ptconfigure\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S git clone https://github.com/PharaohTools/ptconfigure.git\n" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S php ptconfigure/install-silent" ;
+        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$check_deps} || {$comms}' \n" ;
         return $sshData ;
     }
 
