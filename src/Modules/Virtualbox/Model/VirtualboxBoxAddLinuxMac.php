@@ -140,8 +140,12 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Extracting all files from box file...", $this->getModuleName());
         $command = "tar --extract --file=$source -C $boxDir " ;
-        self::executeAndOutput($command);
-        $logging->log("Extraction complete...", $this->getModuleName());
+        $rc = $this->executeAndGetReturnCode($command, true, true);
+        if ($rc["rc"] == 0) {
+            $logging->log("Extraction successful...", $this->getModuleName());
+            return true ; }
+        $logging->log("Extraction failed...", $this->getModuleName());
+        return false ;
     }
 
     protected function changeOVAName($boxDir, $ovaFile) {
