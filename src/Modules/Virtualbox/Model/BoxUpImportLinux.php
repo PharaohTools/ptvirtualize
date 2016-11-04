@@ -18,10 +18,10 @@ class BoxUpImportLinux extends BaseVirtualboxAllOS {
     public function import($file, $ostype, $name) {
         $command  = VBOXMGCOMM."import {$file} --vsys 0 --ostype {$ostype}" ;
         $command .= " --vmname {$name}" ;
-        $ret = $this->executeAndGetReturnCode($command);
+        $ret = $this->executeAndGetReturnCode($command, true, true);
 //        $command = "echo $?" ;
 //        $ret = $this->executeAndLoad($command);
-        return ($ret == "0") ? true : false ;
+        return ($ret["rc"] == "0") ? true : false ;
     }
 
     public function getResumableStates() {
