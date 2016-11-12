@@ -1,6 +1,6 @@
 <?php
 
-use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Context;
 use Behat\Behat\Context\ContextInterface;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
@@ -11,7 +11,7 @@ use Behat\MinkExtension\Context\MinkContext;
  * Behat context class.
  */
 
-class NoActionsContext extends BehatContext {
+class NoActionsContext implements Context {
 
 
     /**
