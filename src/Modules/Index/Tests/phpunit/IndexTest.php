@@ -3,7 +3,7 @@
 class IndexTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
-        require_once(dirname(__FILE__)."/../bootstrap.php");
+        require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))).DIRECTORY_SEPARATOR."Bootstrap.php");
     }
 
     public function testExecuteReturnsAValue() {
