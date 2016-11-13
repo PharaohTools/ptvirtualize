@@ -8,8 +8,8 @@
         <blacklist>
             <directory suffix=".php">../../../src/Modules/*/Views</directory>
         </blacklist>
-        <whitelist>
-            <directory suffix=".php">../../../src/Modules/*/Controller</directory>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../../src/Modules/*/Tests/phpunit</directory>
         </whitelist>
     </filter>
 </phpunit>
