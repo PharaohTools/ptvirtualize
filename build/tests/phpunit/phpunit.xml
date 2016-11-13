@@ -1,15 +1,15 @@
 <phpunit>
     <testsuites>
-        <testsuite name="Module Tests">
+        <testsuite name="modules">
             <directory suffix=".php">../../../src/Modules/*/Tests/phpunit</directory>
         </testsuite>
     </testsuites>
     <filter>
         <blacklist>
-            <directory suffix=".php">../../../src/Modules/*/Views</directory>
+            <directory suffix=".php">../../../src/Modules/*/Views/*</directory>
         </blacklist>
         <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../../src</directory>
+            <directory suffix=".php">../../../src/*</directory>
         </whitelist>
     </filter>
 </phpunit>
