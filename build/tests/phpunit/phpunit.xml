@@ -1,6 +1,19 @@
-<phpunit>
+<phpunit
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="false"
+    convertWarningsToExceptions="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    stopOnRisky="false"
+    timeoutForSmallTests="30"
+    timeoutForMediumTests="30"
+    timeoutForLargeTests="60"
+    verbose="true">
     <testsuites>
         <testsuite name="modules">
+            <directory suffix=".php">../../../build/tests/phpunit</directory>
             <directory suffix=".php">../../../src/Modules/*/Tests/phpunit</directory>
         </testsuite>
     </testsuites>
@@ -9,7 +22,7 @@
             <directory suffix=".php">../../../src/Modules/*/Views/*</directory>
         </blacklist>
         <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../../src/*</directory>
+            <directory suffix=".php">../../../src</directory>
         </whitelist>
     </filter>
 </phpunit>
