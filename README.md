@@ -88,15 +88,13 @@ That's it! you can sit back while PTVirtualize creates your virtual machine envi
 network and shared directory configuration for the Virtual Machine.
 
 
-## Available Commands:
+## Code Bits
 
-- Box - Box - Manage Base Boxes for PTVirtualize
-- Destroy - Destroy - Stop a PTVirtualize Box
-- EnvironmentConfig - Environment Configuration - Configure Environments for a project
-- Flirtify - PTVirtualize Flirtify - Generate a Phalgrantfile based on a template
-- Halt - Halt - Stop a PTVirtualize Box
-- Logging - Logging - Output errors to the logging
-- Resume - Resume - Stop a PTVirtualize Box
-- SystemDetection - System Detection - Detect the Running Operating System
-- Templating - Templating
-- Up - Up - Create and Start a PTVirtualize Box
+# Composer install is required for Behat Tests
+
+to execute behat tests...
+composer install
+behat --configuration build/tests/phpunit/phpunit.xml --log-junit=reports/junit/phpunit/output.xml  --coverage-clover reports/phpunit/xml/report.xml
+
+to execute phpunit tests...
+phpunit --configuration build/tests/phpunit/phpunit.xml --log-junit=reports/junit/phpunit/output.xml  --coverage-clover reports/phpunit/xml/report.xml
