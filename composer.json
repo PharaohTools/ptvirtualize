@@ -1,0 +1,8 @@
+{
+    "require": {
+        "behat/behat": "^3.2"
+    },
+    "autoload": {
+        "files": ["build/tests/behat/behat_custom_autoload.php"]
+    }
+}
