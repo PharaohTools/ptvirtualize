@@ -1,6 +1,7 @@
 default:
     autoload:
         '' : %paths.base%/bootstrap
+        '' : %paths.base%/../../../.../src/Modules/*/Tests/behat/bootstrap
     suites:
         core_features:
             paths: [ %paths.base%/features,%paths.base%/../../../.../src/Modules/*/Tests/behat/features ]
