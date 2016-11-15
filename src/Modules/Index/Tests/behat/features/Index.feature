@@ -4,17 +4,21 @@ Feature: Executing the program index page
   I want to execute the index page
   To see overview information about the application
 
-  Scenario: Execute with no parameters
+  Scenario: See Modules not hidden
     Given I run the application command in the shell
     Then I should see all of the modules which are not hidden
 
-  Scenario: Execute with no parameters
+  Scenario: See Application Description
     Given I run the application command in the shell
     Then I should see the application description
 
-  Scenario: Execute with no parameters
+  Scenario: See Pharaoh Tools Text
     Given I run the application command in the shell
-    Then I should see the cli text "www.pharaohtools.com"
+    Then I should see the cli text "Pharaoh Tools"
+
+  Scenario: See Pharaoh Exit Text
+    Given I run the application command in the shell
+    Then I should see the cli text "[Pharaoh Exit]"
 
   Scenario: Execute with "--only-compatible" parameter
     Given I run the application command in the shell with parameter string "--only-compatible"

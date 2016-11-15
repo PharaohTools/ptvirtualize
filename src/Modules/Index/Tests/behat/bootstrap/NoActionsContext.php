@@ -5,7 +5,6 @@ use Behat\Behat\Context\ContextInterface;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Behat\MinkExtension\Context\MinkContext;
 
 /**
  * Behat context class.
@@ -13,15 +12,17 @@ use Behat\MinkExtension\Context\MinkContext;
 
 class NoActionsContext implements Context {
 
+    private $output ;
 
     /**
      * @Given /^I run the application command in the shell$/
      */
     public function iRunTheApplicationCommandInTheShell()
     {
-        $command = PTCCOMM ;
-        exec($command, $output);
-        $this->output = trim(implode("\n", $output));
+        $command = PHARAOH_APP ;
+        $res = shell_exec($command);
+//        $this->output = trim(implode("\n", $output));
+        $this->output = $res;
     }
 
     /**
@@ -34,6 +35,8 @@ class NoActionsContext implements Context {
             if ($moduleInfo->hidden != true) {
                 $array_keys = array_keys($moduleInfo->routesAvailable()) ;
                 $command = $array_keys[0] ;
+//                var_dump($this->output) ;
+//                file_put_contents("/tmp/behatout", $this->output);
                 if (strpos($this->output, $command) === false) {
                     throw new \Exception("Expected module {$command} not found."); } } }
     }
@@ -60,7 +63,7 @@ class NoActionsContext implements Context {
      */
     public function iRunTheApplicationCommandInTheShellWithParameterString($str)
     {
-        $command = PTCCOMM." $str" ;
+        $command = PHARAOH_APP." $str" ;
         exec($command, $output);
         $this->output = trim(implode("\n", $output));
     }
@@ -78,6 +81,8 @@ class NoActionsContext implements Context {
         foreach ($compats as $compat) {
             if ($compat["hidden"] !== true) {
                 if (strpos($this->output, $compat["command"]) === false) {
+//                    var_dump($this->output) ;
+//                    file_put_contents("/tmp/behatout", $this->output);
                     throw new \Exception("Expected compatible module {$compat["command"]} not found."); } } }
     }
 
