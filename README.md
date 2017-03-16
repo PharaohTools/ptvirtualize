@@ -21,6 +21,8 @@ Currently, PTVirtualize works smoothly Windows and Ubuntu.
     
 ## Installation
 
+Our GUI Installers are almost ready
+
 The preferred way to install any of the Pharaoh apps (including this) is through ptconfigure. If you install ptconfigure
 on your machine (http://github.com/PharaohTools/ptconfigure), then you can install ptvirtualize using the following:
 
