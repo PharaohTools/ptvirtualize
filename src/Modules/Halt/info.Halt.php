@@ -13,7 +13,7 @@ class HaltInfo extends PTConfigureBase {
   }
 
   public function routesAvailable() {
-    return array( "Halt" =>  array_merge( array("now", "hard", "pause", "suspend") ) );
+    return array( "Halt" =>  array_merge(parent::routesAvailable(), array("now", "hard", "pause", "suspend") ) );
   }
 
   public function routeAliases() {
