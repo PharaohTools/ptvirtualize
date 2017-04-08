@@ -52,7 +52,14 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
         $home_url = "http://www.pharaohtools.com/virtualize/boxes/" ;
         if (isset($this->virtufile->config["vm"]["box_url"])) {
             $source = $this->virtufile->config["vm"]["box_url"] ;
-            $logging->log("Using explicit Box URL {$this->virtufile->config["vm"]["box_url"]} from Virtufile...", $this->getModuleName()) ; }
+            $logging->log("Using explicit Box URL {$this->virtufile->config["vm"]["box_url"]} from Virtufile...", $this->getModuleName()) ;
+
+            if (strpos($source, 'atlas.hashicorp.com') !== false) {
+                $source = $this->ensureTrailingSlash($source) ;
+                $source .= "providers/virtualbox.box" ;
+                $logging->log("Found Hashicorp Atlas URL, modifying to direct link {$source}...", $this->getModuleName()) ;
+            }
+        }
         else if (strpos($this->virtufile->config["vm"]["box"], "/") != false) {
             $source = $home_url.$this->virtufile->config["vm"]["box"] ;
             $logging->log("Guessing Box URL {$home_url}{$this->virtufile->config["vm"]["box"]} ...", $this->getModuleName()) ; }
