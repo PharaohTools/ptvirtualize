@@ -260,8 +260,9 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
 
     protected function waitForSsh($ips, $thisPort) {
         $t = 0;
-        $totalTime = (isset($this->virtufile->config["vm"]["ssh_find_timeout"]))
-            ? $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
+        $totalTime =
+            (isset($this->virtufile->config["vm"]["ssh_find_timeout"])) ?
+            $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...", $this->getModuleName()) ;
