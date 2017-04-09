@@ -17,11 +17,13 @@ class ProvisionDefaultAllOS extends Base {
             $curout = $this->doSingleProvision($provisionerSettings) ;
             $provisionOuts[] = $curout ;
             $cur_xc = \Core\BootStrap::getExitCode() ;
-            if ($curout==false || $cur_xc !==0) {
+            if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
                 $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return $provisionOuts ; } }
         return $provisionOuts ;
     }
+
+    // updatega
 
     public function provisionHook($hook, $type) {
         $loggingFactory = new \Model\Logging();
@@ -31,7 +33,8 @@ class ProvisionDefaultAllOS extends Base {
         $logging->log("Provisioning from hook directories if available for $hook $type", "Provision") ;
         $provisionOuts = array_merge($provisionOuts, $this->provisionHookDirs($hook, $type)) ;
         $cur_xc = \Core\BootStrap::getExitCode() ;
-        if (in_array(false, $provisionOuts) || $cur_xc !==0) {
+        if (in_array(false, $provisionOuts)) {
+//        if (in_array(false, $provisionOuts) || $cur_xc !==0) {
             $logging->log("Provisioning Hooks Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
         return $provisionOuts ;
     }
@@ -51,15 +54,14 @@ class ProvisionDefaultAllOS extends Base {
                     $curout = $this->doSingleProvision($provisionerSettings) ;
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
-                    if ($curout==false || $cur_xc !==0) {
-
+                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
                         $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; }  }
                 else {
                     $curout = $this->doSingleProvision($provisionerSettings) ;
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
-                    if ($curout==false || $cur_xc !==0) {
+                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
                         $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; } } } }
         return $provisionOuts ;
@@ -106,7 +108,7 @@ class ProvisionDefaultAllOS extends Base {
                                 $curout = $this->doSingleProvision($provisionerSettings) ;
                                 $provisionOuts[] = $curout ;
                                 $cur_xc = \Core\BootStrap::getExitCode() ;
-                                if ($curout==false || $cur_xc !==0) {
+                                if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
                                     $logging->log("Provisioning Hook directory Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                                     return $provisionOuts ; } } } } } } }
         return $provisionOuts ;
