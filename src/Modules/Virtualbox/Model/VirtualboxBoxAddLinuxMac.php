@@ -152,9 +152,14 @@ class VirtualboxBoxAddLinuxMac extends BaseVirtualboxAllOS {
         if ($ovaFile != "box.ova" && $ovaFile != "box.ovf") {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params) ;
-            $logging->log("Changing ova file name from $ovaFile to box.ova...", $this->getModuleName());
-            $command = "mv $boxDir/$ovaFile $boxDir/box.ova" ;
-            self::executeAndOutput($command); }
+            if (file_exists("$boxDir/box.ova")) {
+                $logging->log("Found box.ova, no need to change names...", $this->getModuleName());
+                return true ;
+            } else {
+                $logging->log("Changing ova file name from $ovaFile to box.ova...", $this->getModuleName());
+                $command = "mv $boxDir/$ovaFile $boxDir/box.ova" ;
+                return self::executeAndOutput($command);
+            } }
     }
 
     protected function completion() {
