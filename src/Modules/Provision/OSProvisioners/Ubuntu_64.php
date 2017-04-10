@@ -10,7 +10,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         $check_deps = "( (php -v) && (git --version) && (ptconfigure) )" ;
         $comms  = "( " ;
         $comms .= "apt-get update -y ; " ;
-        $comms .= "apt-get install -y php5 git ; " ;
+        $comms .= "( apt-get install -y php5 git ||  apt-get install -y php7.0 git ); " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
         $comms .= "php /tmp/ptconfigure/install-silent ; " ;
@@ -22,8 +22,17 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public function getMountSharesSSHData($provisionFile) {
         $sshData = "" ;
+//        $sshData .= "( (echo {$this->virtufile->config["ssh"]["password"]} | sudo -S modprobe vboxsf) || "
+////            ."(echo {$this->virtufile->config["ssh"]["password"]} | (sudo -S apt-get install -y virtualbox-guest-additions-iso) ) )"."\n" ;
+//            ."(echo {$this->virtufile->config["ssh"]["password"]} | (sudo -S apt-get install -y virtualbox-guest-x11 virtualbox-guest-additions-iso) ) )"."\n" ;
+
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | " .
+//            " sudo -S apt-get install -y virtualbox-guest-x11 virtualbox-guest-additions-iso"."\n" ;
+            " sudo -S apt-get install -y virtualbox-guest-dkms virtualbox-guest-additions-iso"."\n" ;
+
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
             .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S modprobe -a vboxguest vboxsf vboxvideo"."\n" ;
         $all = array() ;
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
