@@ -34,26 +34,43 @@ class InvokeBashSsh {
 	}
 
 	public function connect() {
-		if(file_exists($this->server->password)){
-			$launcher = 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '.escapeshellarg($this->server->password); }
-        else{
-			$launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -o UserKnownHostsFile=/dev/null ' .
-                '-o StrictHostKeyChecking=no -o PubkeyAuthentication=no'; }
-		$this->commandsPipe = tempnam(null, 'ssh');
-		$launcher .= " -T -p {$this->server->port} ";
-		$launcher .= escapeshellarg($this->server->username.'@'.$this->server->host);
+        $launcher = $this->getLauncher() ;
+        $this->commandsPipe = tempnam(null, 'ssh');
 		$pipe = "tail -f {$this->commandsPipe}";
         if (!function_exists("pcntl_fork")) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params);
             $logging->log("Unable to use pcntl_fork, ending", $this->getModuleName()) ;
             return false ; }
-		if(!pcntl_fork()){
-			$fp = popen("$pipe | $launcher" ,"r");
-			while (!feof($fp)) {
-				echo fgets($fp, 4096); }
-			pclose($fp);
-			exit; }
+//        $pcntl = pcntl_fork() ;
+//        var_dump("pcn", $pcntl) ;
+
+
+//		if(!$pcntl){
+//            $pcomm = "$pipe | $launcher" ;
+            $pcomm = "$launcher 'echo Pharaoh Tools'" ;
+
+            passthru($pcomm, $res) ;
+
+//			$fp = popen("$pcomm" ,"r");
+//            var_dump('fp', $fp) ;
+//			while (!feof($fp)) {
+//				echo fgets($fp, 4096);
+//            @ flush(); }
+//			pclose($fp);
+//			exit;
+
+//            }
+//        else {
+
+//            sleep(1) ;
+//            $fp = popen("$pipe | $launcher" ,"r");
+//            var_dump('fp', $fp) ;
+//            while (!feof($fp)) {
+//                echo fgets($fp, 4096); }
+//            pclose($fp);
+//            exit;
+//        }
         return true ;
 	}
 
@@ -62,6 +79,24 @@ class InvokeBashSsh {
 	 * @return string
 	 */
 	public function exec($command) {
-		file_put_contents($this->commandsPipe, $command.PHP_EOL, FILE_APPEND);
+        $launcher = $this->getLauncher() ;
+//        $pcomm = "$command | $launcher" ;
+        $pcomm = "$launcher $command" ;
+//        var_dump($pcomm) ;
+        passthru($pcomm, $res) ;
+//		file_put_contents($this->commandsPipe, $command.PHP_EOL, FILE_APPEND);
 	}
+
+
+	public function getLauncher() {
+        if(file_exists($this->server->password)){
+            $launcher = 'ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i '.escapeshellarg($this->server->password); }
+        else{
+            $launcher = 'sshpass -p '.escapeshellarg($this->server->password).' ssh -t -o UserKnownHostsFile=/dev/null ' .
+                '-o StrictHostKeyChecking=no -o PubkeyAuthentication=no'; }
+        $launcher .= " -T -p {$this->server->port} ";
+        $launcher .= escapeshellarg($this->server->username.'@'.$this->server->host);
+        return $launcher ;
+    }
+
 }
