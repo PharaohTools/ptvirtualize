@@ -9,9 +9,10 @@ class SystemDetection extends Base {
         $thisModel = new \Model\SystemDetectionAllOS($pageVars["route"]["extraParams"]);
 
         $isDefaultAction = parent::checkDefaultActions($pageVars, array(), $thisModel) ;
-        if ( is_array($isDefaultAction) ) { return $isDefaultAction; }
+        if ( is_array($isDefaultAction) ) {
+            return $isDefaultAction; }
 
-        if ($pageVars["route"]["action"]=="detect") {
+        if ($pageVars["route"]["action"] === "detect") {
             $this->content["result"] = $thisModel;
             return array ("type"=>"view", "view"=>"systemDetection", "pageVars"=>$this->content); }
 
