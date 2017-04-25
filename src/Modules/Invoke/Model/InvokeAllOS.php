@@ -14,8 +14,8 @@ class InvokeAllOS extends Base {
 	// Model Group
 	public $modelGroup = array("Default");
 
-	private $servers = array();
-	private $sshCommands;
+	protected $servers = array();
+	protected $sshCommands;
 	protected $isNativeSSH;
 
 	public function __construct($params = null) {
@@ -49,9 +49,15 @@ class InvokeAllOS extends Base {
                     $commandExecution = false; }
                 else {
                     foreach ($this->servers as &$server) {
-                        $logging->log( "[" . $server["target"] . "] Executing $command...", $this->getModuleName()) ;
-                        echo $this->doSSHCommand($server["ssh2Object"], $command);
-                        $logging->log( "[" . $server["target"] . "] $command Completed...", $this->getModuleName()) ; } } } }
+                        $custom_port = ($server["port"]=="22") ? "" : ":".$server["port"] ;
+                        $logging->log( "[" . $server["target"] . "$custom_port] Executing $command...", $this->getModuleName()) ;
+                        $rc = $this->doSSHCommand($server["ssh2Object"], $command);
+                        if ($rc == 0) {
+                            $logging->log(  "[" . $server["target"] . "$custom_port] $command Completed...", $this->getModuleName()) ; }
+                        else {
+                            $logging->log(  "[" . $server["target"] . "$custom_port] $command Failed with exit status {$rc}...",
+                                $this->getModuleName(),
+                                LOG_FAILURE_EXIT_CODE ) ; } } } } }
         else {
             $logging->log("No successful connections available", $this->getModuleName()) ;
             \Core\BootStrap::setExitCode(1) ;
@@ -72,13 +78,20 @@ class InvokeAllOS extends Base {
             $logging->log("Opening CLI...", $this->getModuleName()) ;
             foreach ($this->sshCommands as $sshCommand) {
                 foreach ($this->servers as &$server) {
+                    $custom_port = ($server["port"]=="22") ? "" : ":".$server["port"] ;
                     if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
-                        $logging->log(  "[" . $server["target"] . "] Executing $sshCommand...", $this->getModuleName()) ;
-                        echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
-                        $logging->log(  "[" . $server["target"] . "] $sshCommand Completed...", $this->getModuleName()) ; }
+                        $logging->log(  "[" . $server["target"] . "$custom_port] Executing $sshCommand...", $this->getModuleName()) ;
+                        $rc = $this->doSSHCommand($server["ssh2Object"], $sshCommand);
+                        if ($rc == 0) {
+                            $logging->log(  "[" . $server["target"] . "$custom_port] $sshCommand Completed...", $this->getModuleName()) ; }
+                        else {
+
+                            $logging->log(  "[" . $server["target"] . "$custom_port] $sshCommand Failed with exit status {$rc}...",
+                                $this->getModuleName(),
+                                LOG_FAILURE_EXIT_CODE ) ; } }
                     else {
                         $logging->log(
-                            "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...",
+                            "[" . $server["target"] . "$custom_port] Connection failure. Will not execute commands on this box...",
                             $this->getModuleName() ) ;
                         if (!isset($this->params["ignore-connection-failures"]) ||
                             $this->params["ignore-connection-failures"]==false) {
@@ -105,13 +118,21 @@ class InvokeAllOS extends Base {
         if (count($this->servers) > 0) {
             $logging->log("Opening CLI...", $this->getModuleName()) ;
             foreach ($this->sshCommands as $sshCommand) {
+                if ($sshCommand === "") continue ;
                 foreach ($this->servers as &$server) {
+                    $custom_port = ($server["port"]=="22") ? "" : ":".$server["port"] ;
                     if (isset($server["ssh2Object"]) && is_object($server["ssh2Object"])) {
-                        $logging->log(  "[" . $server["target"] . "] Executing $sshCommand...", $this->getModuleName()) ;
-                        echo $this->doSSHCommand($server["ssh2Object"], $sshCommand);
-                        $logging->log(  "[" . $server["target"] . "] $sshCommand Completed...", $this->getModuleName()) ; }
+                        $logging->log(  "[" . $server["target"] . "$custom_port] Executing $sshCommand...", $this->getModuleName()) ;
+                        $rc = $this->doSSHCommand($server["ssh2Object"], $sshCommand);
+                        if ($rc == 0) {
+                            $logging->log(  "[" . $server["target"] . "$custom_port] $sshCommand Completed...", $this->getModuleName()) ; }
+                        else {
+
+                            $logging->log(  "[" . $server["target"] . "$custom_port] $sshCommand Failed with exit status {$rc}...",
+                                $this->getModuleName(),
+                                LOG_FAILURE_EXIT_CODE ) ; } }
                     else {
-                        $logging->log(  "[" . $server["target"] . "] Connection failure. Will not execute commands on this box...", $this->getModuleName()) ; } } }        }
+                        $logging->log(  "[" . $server["target"] . "$custom_port] Connection failure. Will not execute commands on this box...", $this->getModuleName()) ; } } }        }
         else {
             $logging->log("No successful connections available", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
@@ -126,7 +147,7 @@ class InvokeAllOS extends Base {
 		$this->loadSSHConnections();
 	}
 
-	private function loadServerData() {
+	protected function loadServerData() {
         // @todo if the below is emoty we have no server to connect to so should not continue
 		$allProjectEnvs = \Model\AppConfig::getProjectVariable("environments");
 		if (isset($this->params["servers"])) {
@@ -148,7 +169,7 @@ class InvokeAllOS extends Base {
 					$this->askForServerInfo(); } } }
 	}
 
-	private function getEnvironmentNames($envs) {
+	protected function getEnvironmentNames($envs) {
 		$eNames = array();
 		foreach ($envs as $envKey => $env) {
 			$envName = $env["any-app"]["gen_env_name"];
@@ -156,7 +177,7 @@ class InvokeAllOS extends Base {
 		return $eNames;
 	}
 
-	private function loadSSHConnections() {
+	protected function loadSSHConnections() {
 		$loggingFactory = new \Model\Logging();
 		$logging = $loggingFactory->getModel($this->params);
 		$logging->log("Attempting to load SSH connections...", $this->getModuleName()) ;
@@ -181,8 +202,10 @@ class InvokeAllOS extends Base {
 //				if (!isset($this->isNativeSSH) || (isset($this->isNativeSSH) && $this->isNativeSSH != true)) {
 //
 //				}
-				echo $this->doSSHCommand($server["ssh2Object"],
-					'echo "Pharaoh Remote SSH on ...' . $server["target"] . '"', true); } }
+//                var_dump('serv', $server, $server["target"]) ;
+                $test_comm = 'echo "Pharaoh Remote SSH on ...' . $server["target"] . '"' ;
+				$rc = $this->doSSHCommand($server["ssh2Object"], $test_comm, true);
+                echo ($rc == 0) ? 'Success ' : 'Failure '; } }
 		return true;
 	}
 
@@ -209,7 +232,7 @@ class InvokeAllOS extends Base {
             return false ; }
     }
 
-    private function findUsableDriver($serverObj) {
+    protected function findUsableDriver($serverObj) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $driverString = $this->findRequestedDriverString() ;
@@ -408,13 +431,10 @@ QUESTION;
 		return ($input == "") ? false : $input;
 	}
 
-	private function changeBashPromptToPharaoh($sshObject) {
-		$command = 'echo "export PS1=PHARAOHPROMPT" > ~/.bash_login ';
-		return $sshObject->exec("$command\n");
-	}
-
-	private function doSSHCommand($sshObject, $command, $first = null) {
-		return $sshObject->exec($command);
-	}
+    protected function doSSHCommand($sshObject, $command, $first = null) {
+        $out = $sshObject->exec($command);
+        echo $out["data"] ;
+        return $out['rc'] ;
+    }
 
 }
