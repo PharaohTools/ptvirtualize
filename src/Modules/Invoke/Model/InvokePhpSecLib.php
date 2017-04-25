@@ -70,9 +70,9 @@ class InvokePhpSecLib extends BaseLinuxApp
     public function exec($command)
     {
         $command = "$command\n";
-        $stream = $this->connection->exec($command);
-
-        return $stream;
+        $out["data"] = $this->connection->exec($command);
+        $out['rc'] = $this->connection->exec("echo $?");
+        return $out;
     }
 
     public function __call($k, $args = array())
