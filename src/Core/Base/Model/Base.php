@@ -98,12 +98,14 @@ COMPLETION;
         return $rc["rc"] ;
     }
 
-    protected function executeAndOutput($command, $message=null) {
-        $outputText = shell_exec($command);
+    protected function executeAndOutput($command, $message=null, $get_rc=null) {
+        $out = system($command, $rc) ;
         if ($message !== null) {
-            $outputText .= "$message\n"; }
-        print $outputText;
-        return $outputText;
+            print "$message\n"; }
+        if (!is_null($get_rc)) {
+            return $rc;
+        }
+        return $out;
     }
 
     protected function executeAndLoad($command) {
