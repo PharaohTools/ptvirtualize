@@ -94,8 +94,11 @@ class InvokeSsh2 extends BaseLinuxApp {
 		while ($buf = fread($this->stream, 4096)) {
 			$data .= $buf;
             echo $buf ; }
+        $rc_stream = ssh2_exec($this->connection, 'echo $?');
+        $rc = fread($rc_stream, 4096) ;
 		fclose($this->stream);
-		return "";
+
+        return array("rc" => $rc, "data" => $data) ;
 	}
 
 	/**
