@@ -122,6 +122,8 @@ class ProvisionDefaultAllOS extends Base {
             $provisionObjectFactory = new \Model\PharaohTools() ; }
         else if (in_array($provisionerSettings["provisioner"], array("shell", "bash", "Shell", "Bash"))) {
             $provisionObjectFactory = new \Model\Shell() ; }
+        else if (in_array($provisionerSettings["provisioner"], array("VirtualKeyboard", "virtualKeyboard", "keyboard", "key"))) {
+            $provisionObjectFactory = new \Model\VirtualKeyboard() ; }
         $provisionObject = $provisionObjectFactory->getModel($this->params, "Provision");
         $provisionObject->virtufile = $this->virtufile;
         $provisionObject->papyrus = $this->papyrus;
