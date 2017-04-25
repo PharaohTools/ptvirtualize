@@ -7,7 +7,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
     public function getPTConfigureInitSSHData($provisionFile) {
-        $check_deps = "( (php -v) && (git --version) && (ptconfigure) )" ;
+        $check_deps = "( (php -v) && (git --version) && (ptconfigure > /dev/null) )" ;
         $comms  = "( " ;
         $comms .= "apt-get update -y ; " ;
         $comms .= "( apt-get install -y php5 git ||  apt-get install -y php7.0 git ); " ;
