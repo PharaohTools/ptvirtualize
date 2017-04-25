@@ -15,7 +15,7 @@ class SystemDetectionFactory {
         $groupModels = array() ;
         foreach ($allModelsOfModule as $modelOfModule) {
             if ( (isset($modelOfModule->modelGroup) && in_array($modelGroup, $modelOfModule->modelGroup) ) ||
-                (isset($modelOfModule->modelGroup) && in_array("any", $modelOfModule->modelGroup) ) ) {
+                 (isset($modelOfModule->modelGroup) && in_array("any", $modelOfModule->modelGroup) ) ) {
                 $groupModels[] = $modelOfModule ; } }
         return $groupModels;
     }
@@ -78,7 +78,7 @@ class SystemDetectionFactory {
                 $svo = new \Model\SoftwareVersion($systemVersion) ;
                 foreach ($modelVersion as $criteriaValue => $criteriaOperator) {
                     $svo->setCondition($criteriaValue, $criteriaOperator) ; }
-                $criteriaResults[] = $svo->isCompatible() ;
+                    $criteriaResults[] = $svo->isCompatible() ;
                 if (!in_array(false, $criteriaResults)) {
                     // echo "**vac 2**\n" ;
                     $matches[] = true ; } } }
