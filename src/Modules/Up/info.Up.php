@@ -32,10 +32,12 @@ class UpInfo extends PTConfigureBase {
         example: ptvirtualize up now --modify # modify the hardware settings to match the Virtufile during the up phase.
             Without it, the machine will be brought up with its previous settings. On creating new machines this will
             happen automatically regardless of the parameter.
+        example: ptvirtualize up now --mod # Alias to modify
         example: ptvirtualize up now --provision # provision an existing machine with the configuration scripts specified
             in the Virtufile. Without it, the machine will be brought up with its previous config. On creating
             new machines this will happen automatically regardless of the parameter.
-        example: ptvirtualize up now --modify --provision # modify and provision an existing box during the up phase
+        example: ptvirtualize up now --pro # Alias to provision
+        example: ptvirtualize up now --modify --pro # modify and provision an existing box during the up phase
 
 HELPDATA;
     return $help ;
