@@ -16,7 +16,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         return $sshData ;
     }
 
-    public function getMountSharesSSHData($provisionFile) {
+    public function getMountSharesSSHData($provisionFile = null) {
         $sshData = "" ;
 //        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
 //            .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
