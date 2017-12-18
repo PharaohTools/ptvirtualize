@@ -27,18 +27,17 @@ class ProvisionAllOS extends BaseFunctionModel {
         if ($this->currentStateIsProvisionable() == false) {
             \Core\BootStrap::setExitCode(1) ;
             return false; }
-        return $this->osProvisioner->provision($hook);
+//        return $this->osProvisioner->provision($hook);
+        return $this->provisionVm();
     }
 
-    public function provisionVm($onlyIfRequestedByParam = false, $extra_params) {
+    public function provisionVm($onlyIfRequestedByParam = false, $extra_params = null) {
         if (isset($extra_params) && is_array($extra_params)) {
-            $this->params = array_merge($this->params, $extra_params);
-        }
+            $this->params = array_merge($this->params, $extra_params) ; }
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if ($onlyIfRequestedByParam == true) {
             $gpsp = $this->getParamBySynonym("provision") ;
-            var_dump('params pro', $gpsp, $this->params) ;
             if ($gpsp !== true ) {
                 $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
@@ -50,9 +49,15 @@ class ProvisionAllOS extends BaseFunctionModel {
                 $pns[] = $this->runHook("up", $hook); }
             return (in_array(false, $pns)) ? false : true ; }
         $pn = $this->runHook("up", "default");
+        $this->postProvisionMessage();
         return $pn ;
     }
 
+    protected function postProvisionMessage() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("{$this->virtufile->config["vm"]["post_up_message"]}", $this->getModuleName());
+    }
     public function runHook($hook, $type) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;

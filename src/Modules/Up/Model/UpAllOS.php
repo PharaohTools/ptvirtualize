@@ -90,8 +90,6 @@ class UpAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging() ;
         $logging = $loggingFactory->getModel($this->params) ;
         $provisionFactory = new \Model\Provision();
-
-        var_dump('params up', $this->params) ;
         $provision = $provisionFactory->getModel($this->params) ;
         $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
         $res = $provision->runHook("up", "pre") ;
@@ -114,7 +112,6 @@ class UpAllOS extends BaseFunctionModel {
             return false; }
         $res = $provision->runHook("up", "post") ;
         if (in_array(false, $res)) { return false ; }
-        $this->postUpMessage();
         return true ;
     }
 
@@ -159,12 +156,6 @@ class UpAllOS extends BaseFunctionModel {
         $this->doUp();
     }
 
-    protected function postUpMessage() {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        $logging->log("{$this->virtufile->config["vm"]["post_up_message"]}", $this->getModuleName());
-    }
-
     protected function completeBuildUp() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
@@ -193,7 +184,6 @@ class UpAllOS extends BaseFunctionModel {
             $logging->log("Provisioning Virtual Machine Failed", $this->getModuleName());
             return false; }
         $provision->runHook("up", "post") ;
-        $this->postUpMessage();
     }
 
     protected function isSavedInPapyrus() {
