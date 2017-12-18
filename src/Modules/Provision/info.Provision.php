@@ -6,25 +6,25 @@ class ProvisionInfo extends PTConfigureBase {
 
   public $hidden = false;
 
-  public $name = "Provision - Stop a Virtualize Box";
+  public $name = "Provision - Provision a Running Virtualize Box";
 
   public function __construct() {
     parent::__construct();
   }
 
   public function routesAvailable() {
-    return array( "Provision" =>  array_merge( array("now", "hard", "pause") ) );
+    return array( "Provision" =>  array_merge( array("now", 'help') ) );
   }
 
   public function routeAliases() {
-    return array("provision"=>"Provision", "pro"=>"Provision");
+    return array("provision"=>"Provision", "pro"=>"Provision", "Pro"=>"Provision");
   }
 
   public function helpDefinition() {
     $help = <<<"HELPDATA"
   This command allows you to provision a ptvirtualize box
 
-  Provision, provision
+  Provision, provision, Pro, pro
 
         - now
         Provision a box now
