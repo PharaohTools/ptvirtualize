@@ -89,8 +89,12 @@ class UpAllOS extends BaseFunctionModel {
     protected function startModPro() {
         $loggingFactory = new \Model\Logging() ;
         $logging = $loggingFactory->getModel($this->params) ;
+        $provisionFactory = new \Model\Provision();
+
+        var_dump('params up', $this->params) ;
+        $provision = $provisionFactory->getModel($this->params) ;
         $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
-        $res = $this->runHook("up", "pre") ;
+        $res = $provision->runHook("up", "pre") ;
         if (in_array(false, $res)) { return false ; }
 //        $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
         $res = $this->modifyVm(true);
@@ -103,12 +107,12 @@ class UpAllOS extends BaseFunctionModel {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Starting VM Failed. This is most likely an issue", $this->getModuleName());
             return false; }
-        $res = $this->provisionVm(true);
+        $res = $provision->provisionVm(true, $this->params);
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Provisioning VM Failed", $this->getModuleName());
             return false; }
-        $res = $this->runHook("up", "post") ;
+        $res = $provision->runHook("up", "post") ;
         if (in_array(false, $res)) { return false ; }
         $this->postUpMessage();
         return true ;
@@ -164,7 +168,9 @@ class UpAllOS extends BaseFunctionModel {
     protected function completeBuildUp() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        $this->runHook("up", "pre") ;
+        $provisionFactory = new \Model\Provision();
+        $provision = $provisionFactory->getModel($this->params) ;
+        $provision->runHook("up", "pre") ;
         $res = $this->importBaseBox();
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
@@ -176,17 +182,17 @@ class UpAllOS extends BaseFunctionModel {
             $logging->log("Modifying VM Failed", $this->getModuleName());
             return false; }
         $res = $this->startVm();
-        var_dump($res) ;
+//        var_dump($res) ;
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Starting Virtual Machine Failed", $this->getModuleName());
             return false; }
-        $res = $this->provisionVm();
+        $res = $provision->provisionVm(true, $this->params);
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Provisioning Virtual Machine Failed", $this->getModuleName());
             return false; }
-        $this->runHook("up", "post") ;
+        $provision->runHook("up", "post") ;
         $this->postUpMessage();
     }
 
@@ -256,24 +262,6 @@ class UpAllOS extends BaseFunctionModel {
             return false ; }
     }
 
-    protected function provisionVm($onlyIfRequestedByParam = false) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        if ($onlyIfRequestedByParam == true) {
-            if ($this->getParamBySynonym("provision") !== true ) {
-                $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
-                return true; } }
-        if (isset($this->params["hooks"])) {
-            $logging->log("Specific execution hooks requested, {$this->params["hooks"]}", $this->getModuleName());
-            $hooks = $this->getParameterHooks();
-            $pns = array();
-            foreach ($hooks as $hook) {
-                $pns[] = $this->runHook("up", $hook); }
-            return (in_array(false, $pns)) ? false : true ; }
-        $pn = $this->runHook("up", "default");
-        return $pn ;
-    }
-
     protected function getParamBySynonym($param) {
         $ray["modify"] = array("modify", "mod") ;
         $ray["provision"] = array("provision", "pro") ;
@@ -283,27 +271,8 @@ class UpAllOS extends BaseFunctionModel {
         return null ;
     }
 
-
-    protected function getParameterHooks() {
-        if (!isset($this->params["hooks"])) { return array() ; }
-        $tags = explode(",", $this->params["hooks"]) ;
-        return $tags ;
-    }
-
     protected function deleteFromPapyrus() {
         \Model\AppConfig::deleteProjectVariable($this->virtufile->config["vm"]["name"], null, null, true) ;
-    }
-
-    protected function runHook($hook, $type) {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params) ;
-        if (isset($this->params["ignore-hooks"]) ) {
-            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->getModuleName());
-            return true ; }
-        $logging->log("Provisioning $hook $type hooks", $this->getModuleName());
-        $provisionFactory = new \Model\Provision();
-        $provision = $provisionFactory->getModel($this->params) ;
-        return $provision->provisionHook($hook, $type);
     }
 
 }

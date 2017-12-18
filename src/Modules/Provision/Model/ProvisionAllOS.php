@@ -30,6 +30,39 @@ class ProvisionAllOS extends BaseFunctionModel {
         return $this->osProvisioner->provision($hook);
     }
 
+    public function provisionVm($onlyIfRequestedByParam = false, $extra_params) {
+        if (isset($extra_params) && is_array($extra_params)) {
+            $this->params = array_merge($this->params, $extra_params);
+        }
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if ($onlyIfRequestedByParam == true) {
+            $gpsp = $this->getParamBySynonym("provision") ;
+            var_dump('params pro', $gpsp, $this->params) ;
+            if ($gpsp !== true ) {
+                $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
+                return true; } }
+        if (isset($this->params["hooks"])) {
+            $logging->log("Specific execution hooks requested, {$this->params["hooks"]}", $this->getModuleName());
+            $hooks = $this->getParameterHooks();
+            $pns = array();
+            foreach ($hooks as $hook) {
+                $pns[] = $this->runHook("up", $hook); }
+            return (in_array(false, $pns)) ? false : true ; }
+        $pn = $this->runHook("up", "default");
+        return $pn ;
+    }
+
+    public function runHook($hook, $type) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if (isset($this->params["ignore-hooks"]) ) {
+            $logging->log("Not provisioning $hook $type hooks as ignore hooks parameter is set", $this->getModuleName());
+            return true ; }
+        $logging->log("Provisioning $hook $type hooks", $this->getModuleName());
+        return $this->provisionHook($hook, $type);
+    }
+
     public function provisionHook($hook, $type) {
         if ($this->loadFiles() == false) { return false; }
         return $this->osProvisioner->provisionHook($hook, $type);
@@ -45,6 +78,15 @@ class ProvisionAllOS extends BaseFunctionModel {
             $logging->log("Unable to load a required file", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
         return true ;
+    }
+
+    protected function getParamBySynonym($param) {
+        $ray["modify"] = array("modify", "mod") ;
+        $ray["provision"] = array("provision", "pro") ;
+        foreach($ray[$param] as $entry) {
+            if (isset($this->params[$entry])) {
+                return $this->params[$entry] ; } }
+        return null ;
     }
 
     protected function loadVirtufile() {
@@ -84,6 +126,12 @@ class ProvisionAllOS extends BaseFunctionModel {
             return true ; }
         $logging->log("This VM is not in a Provisionable state...", $this->getModuleName()) ;
         return false ;
+    }
+
+    protected function getParameterHooks() {
+        if (!isset($this->params["hooks"])) { return array() ; }
+        $tags = explode(",", $this->params["hooks"]) ;
+        return $tags ;
     }
 
 }
