@@ -58,11 +58,24 @@ class InvokeSsh2 extends BaseLinuxApp {
             else {
                 $logging->log('Cannot use the PHP Native SSH Driver.', "Invoke - PHP SSH") ;
                 return false ; } }
-        if (!($this->connection = ssh2_connect($this->server->host, $this->server->port))) {
+
+            $timeout = 100 ;
+            $old_error_level = error_reporting();
+            error_reporting(0);
+            for ($i=1; $i<$timeout; $i++) {
+                $this->connection = ssh2_connect($this->server->host, $this->server->port) ;
+                if (is_resource($this->connection)) {
+                    $rt = ssh2_auth_password($this->connection, $this->server->username, $this->server->password);
+                    if ($rt) {
+                        error_reporting($old_error_level) ;
+                        return $rt ;
+                    }
+                }
+                echo "." ;
+            }
+            error_reporting($old_error_level) ;
             $logging->log('Cannot connect to server', "Invoke - PHP SSH") ;
-            return false; }
-        $rt = ssh2_auth_password($this->connection, $this->server->username, $this->server->password);
-        return $rt ;
+            return false;
     }
 
 	/**
@@ -93,7 +106,8 @@ class InvokeSsh2 extends BaseLinuxApp {
 		$data = "";
 		while ($buf = fread($this->stream, 4096)) {
 			$data .= $buf;
-            echo $buf ; }
+//            echo $buf ;
+		}
         $rc_stream = ssh2_exec($this->connection, 'echo $?');
         $rc = fread($rc_stream, 4096) ;
 		fclose($this->stream);
