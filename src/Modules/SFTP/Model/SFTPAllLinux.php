@@ -50,7 +50,7 @@ class SFTPAllLinux extends Base {
         if (is_null($sourceData)) {
             $loggingFactory = new \Model\Logging();
             $logging = $loggingFactory->getModel($this->params);
-            $logging->log("SFTP Put will cancel, no source file", $this->getModuleName());
+            $logging->log("SFTP Put will cancel, no source file: {$sourceDataPath}", $this->getModuleName());
             \Core\BootStrap::setExitCode(1) ;
             return false ;}
         $targetPath = $this->getTargetFilePath("remote", $this->getModuleName());
@@ -179,6 +179,8 @@ class SFTPAllLinux extends Base {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Attempting to load SFTP connections...", $this->getModuleName());
+        $current_error_level = error_reporting();
+        error_reporting(0) ;
         foreach ($this->servers as $srvId => &$server) {
             if (isset($this->params["environment-box-id-include"])) {
                 if ($srvId != $this->params["environment-box-id-include"] ) {
@@ -195,6 +197,7 @@ class SFTPAllLinux extends Base {
             else {
                 $logging->log("Connection to Server {$server["target"]} successful.", $this->getModuleName());
                 $server["sftpObject"] = $attempt ; } }
+            error_reporting($current_error_level) ;
             return true;
     }
 
