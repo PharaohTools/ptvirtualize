@@ -91,7 +91,7 @@ class ShellProvision extends BaseShellAllOS {
                 return $this->sshProvision($provisioner, $init, $osProvisioner); }
             else {
                 $logging->log("Starting Provisioning VM with Shell...", $this->getModuleName());
-                $logging->log("SFTP Configuration Management .sh file to VM for Shell...", $this->getModuleName());
+                $logging->log("SFTP shell script file to VM for Shell...", $this->getModuleName());
                 $this->sftpProvision($provisioner, $init);
                 $logging->log("SSH Execute Provisioning VM with Shell script...", $this->getModuleName());
                 return $this->sshProvision($provisioner, $init, $osProvisioner); } }
