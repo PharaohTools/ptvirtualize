@@ -24,7 +24,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
 //            $one = "mkdir ".$guestPath." \n" ;
-            $one = 'net use '.$guestPath.' \\\\VBOXSVR\\'.$sharedFolder["name"].' ' ;
+            $one = 'net use '.$guestPath.' \'\\\\VBOXSVR\\'.$sharedFolder["name"].'\' ' ;
             $all[] = $one ; }
         $str = implode(PHP_EOL, $all) ;
         $sshData .= $str ;
@@ -34,10 +34,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public function getStandardPTConfigureSSHData($provisionFile, $params = array() ) {
         $paramString = "" ;
         foreach ($params as $paramKey => $paramValue) { $paramString .= " --$paramKey=$paramValue" ;}
-        $sshData =
-            'echo '.$this->virtufile->config["ssh"]["password"].' | sudo -S ptconfigure auto x --af='.
-            $provisionFile.$paramString ;
-        $sshData = "" ;
+        $sshData = '/cygdrive/c/PharaohTools/ptconfigure.cmd auto x --af='.$provisionFile.$paramString ;
         return $sshData ;
     }
 
@@ -52,10 +49,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     }
 
     public function getStandardShellSSHData($provisionFile) {
-        $sshData = "" ;
-//        $sshData = <<<"SSHDATA"
-//echo {$this->virtufile->config["ssh"]["password"]} | sudo -S sh $provisionFile
-//SSHDATA;
+        $sshData = "$provisionFile" ;
         return $sshData ;
     }
 
