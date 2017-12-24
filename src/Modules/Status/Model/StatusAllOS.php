@@ -20,13 +20,23 @@ class StatusAllOS extends BaseFunctionModel {
     }
 
     public function statusShow() {
-        $this->loadFiles();
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $res = $this->loadFiles();
+        if ($res === false) {
+            $logging->log("Status module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
         $this->findProvider("BoxStatus");
         return $this->provider->statusShow($this->virtufile->config["vm"]["name"]);
     }
 
     public function statusFull() {
-        $this->loadFiles();
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $res = $this->loadFiles();
+        if ($res === false) {
+            $logging->log("Status module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
         $this->findProvider("BoxStatus");
         return $this->provider->statusFull($this->virtufile->config["vm"]["name"]);
     }
