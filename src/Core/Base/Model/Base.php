@@ -113,7 +113,23 @@ COMPLETION;
         return $outputText;
     }
 
-    public static function executeAndGetReturnCode($command, $show_output = null, $get_output = null) {
+    public static function executeAndGetReturnCode($command, $show_output = null, $get_output = null) {            if (in_array(PHP_OS, array("Windows", "WINNT"))) {
+        if ($get_output == true) {
+            ob_start();
+        }
+        exec ( $command , $output, $return_var) ;
+        if ($get_output == true) {
+            $output = ob_get_clean();
+            return array("rc"=>$return_var, "output"=>$output) ;
+        }
+        if ($show_output == true) {
+            if (isset($output) ) {
+                echo $output ;
+            }
+        }
+        return $return_var ;
+    }
+    else {
         $proc = proc_open($command, array(
             0 => array("pipe","r"),
             1 => array("pipe",'w'),
@@ -156,6 +172,8 @@ COMPLETION;
             return array("rc"=>$retVal, "output"=>$output) ;}
         else {
             return $retVal; }
+    }
+
     }
 
     protected function setCmdLineParams($params) {
