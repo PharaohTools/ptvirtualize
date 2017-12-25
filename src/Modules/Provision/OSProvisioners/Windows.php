@@ -14,17 +14,16 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 //        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S git clone https://github.com/PharaohTools/ptconfigure.git\n" ;
 //        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S php ptconfigure/install-silent" ;
         return $sshData ;
-    }
+    }//        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
+//            .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
 
     public function getMountSharesSSHData($provisionFile = null) {
         $sshData = "" ;
-//        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
-//            .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
         $all = array() ;
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
-//            $one = "mkdir ".$guestPath." \n" ;
-            $one = 'net use '.$guestPath.' \'\\\\VBOXSVR\\'.$sharedFolder["name"].'\' ' ;
+            $one = 'net use '.$guestPath.' /delete '."\n" ;
+            $one .= 'net use '.$guestPath.' \'\\\\VBOXSVR\\'.$sharedFolder["name"].'\' ' ;
             $all[] = $one ; }
         $str = implode(PHP_EOL, $all) ;
         $sshData .= $str ;
