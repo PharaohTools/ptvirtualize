@@ -15,7 +15,7 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     exec($command, $outputArray);
     define('SUDOPREFIX', "");
     if ($outputArray[0] == '') {
-        define('VBOXMGCOMM', '') ;
+        define('VBOXMGCOMM', 'exit 1') ;
     } else {
         define('VBOXMGCOMM', "\"{$outputArray[0]}\" ") ;
     }
