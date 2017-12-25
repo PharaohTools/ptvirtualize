@@ -181,6 +181,8 @@ class InvokeAllOS extends Base {
 		$loggingFactory = new \Model\Logging();
 		$logging = $loggingFactory->getModel($this->params);
 		$logging->log("Attempting to load SSH connections...", $this->getModuleName()) ;
+        $current_error_level = error_reporting();
+        error_reporting(0) ;
 		foreach ($this->servers as $srvId => &$server) {
 			if (isset($this->params["environment-box-id-include"])) {
 				if ($srvId != $this->params["environment-box-id-include"]) {
@@ -206,6 +208,7 @@ class InvokeAllOS extends Base {
                 $test_comm = 'echo "Pharaoh Remote SSH on ...' . $server["target"] . '"' ;
 				$rc = $this->doSSHCommand($server["ssh2Object"], $test_comm, true);
                 echo ($rc == 0) ? 'Success ' : 'Failure '; } }
+        error_reporting($current_error_level) ;
 		return true;
 	}
 
