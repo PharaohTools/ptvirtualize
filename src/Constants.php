@@ -14,10 +14,10 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
     $outputArray = array();
     exec($command, $outputArray);
     define('SUDOPREFIX', "");
-    if ($outputArray[0] == '') {
-        define('VBOXMGCOMM', 'exit 1') ;
-    } else {
+    if (is_array($outputArray) && isset($outputArray[0])) {
         define('VBOXMGCOMM', "\"{$outputArray[0]}\" ") ;
+    } else {
+        define('VBOXMGCOMM', 'exit 1') ;
     }
     define('PFILESDIR', $sd."\\PharaohTools\\") ;
     define('PTCCOMM', PFILESDIR.'ptconfigure.cmd"') ;
