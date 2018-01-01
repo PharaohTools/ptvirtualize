@@ -42,6 +42,9 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
                 return false; }
             $baseBoxPath = $this->findBaseBox(); }
         $ovaFile = $this->findOVAFile($baseBoxPath) ;
+        if ($ovaFile === false) {
+            return false ;
+        }
         $out = $this->doImport($ovaFile) ;
         return $out ;
     }
@@ -105,10 +108,13 @@ class UpImportBaseBoxAllOS extends BaseFunctionModel {
         if (file_exists($ovaFile)) {
             $logging->log("Found OVA file {$ovaFile}", $this->getModuleName()) ;
             return $ovaFile ; }
-        if (file_exists($ovfFile)) {
+        else if (file_exists($ovfFile)) {
             $logging->log("Found OVF file {$ovfFile}", $this->getModuleName()) ;
             return $ovfFile ; }
-        return null ;
+        else {
+            $logging->log("Unable to find either OVA file {$ovaFile} or OVF file {$ovfFile}. Cannot Continue.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ;
+        }
     }
 
     protected function doImport($ovaFile) {
