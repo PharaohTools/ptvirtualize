@@ -161,7 +161,13 @@ class UpAllOS extends BaseFunctionModel {
         $logging = $loggingFactory->getModel($this->params) ;
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
-        $provision->runHook("up", "pre") ;
+        $res = $provision->runHook("up", "pre") ;
+
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Hooks labelled up pre failed", $this->getModuleName());
+            return false; }
+
         $res = $this->importBaseBox();
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
@@ -183,7 +189,13 @@ class UpAllOS extends BaseFunctionModel {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Provisioning Virtual Machine Failed", $this->getModuleName());
             return false; }
-        $provision->runHook("up", "post") ;
+
+        $res = $provision->runHook("up", "post") ;
+
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Hooks labelled up post failed", $this->getModuleName());
+            return false; }
     }
 
     protected function isSavedInPapyrus() {
