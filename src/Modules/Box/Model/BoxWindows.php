@@ -19,28 +19,73 @@ class BoxWindows extends BoxLinuxMac {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (substr($this->source, 0, 7) == "http://" || substr($this->source, 0, 8) == "https://") {
-            $this->source = $this->ensureTrailingSlash($this->source);
             $logging->log("Box is remote not local, will download to temp directory before adding...", $this->getModuleName()) ;
             set_time_limit(0); // unlimited max execution time
             $tmpFile = BASE_TEMP_DIR.'file.box' ;
-
-            $logging->log("Mock Downloading File ...", $this->getModuleName()) ;
-
-//            $logging->log("Downloading File ...");
-//            if (substr($this->source, strlen($this->source)-1, 1) == DS) {
-//                $this->source = substr($this->source, 0, strlen($this->source)-1) ; }
-//            // @todo error return false
-//            $wgetExe = '"'.dirname(dirname(dirname(__FILE__))).'\WgetWin\Packages\WgetWin\wget.exe"' ;
-//            $comm = "$wgetExe -O $tmpFile {$this->source}" ;
-//            $rt = self::executeAndGetReturnCode($comm, true, true) ;
-//            if ($rt["rc"] !== 0) {
-//                $logging->log("File Download Failed", $this->getModuleName());
-//                return false; }
-
-            $this->source = $tmpFile ;
-            $logging->log("Download complete ...", $this->getModuleName());
-            return true ;}
+            $res = $this->packageDownload($this->source, $tmpFile) ;
+            if ($res == true) {
+                $this->source = $tmpFile ;
+                $logging->log("Download complete ...", $this->getModuleName());
+                return true ;
+            } else {
+                $logging->log("File Download Failed", $this->getModuleName());
+                return false; } }
+        $logging->log("File Path is local not remote, no download required", $this->getModuleName());
         return true ;
+    }
+
+    public function packageDownload($remote_source, $temp_exe_file) {
+        if (file_exists($temp_exe_file)) {
+            unlink($temp_exe_file) ;
+        }
+        # var_dump('BWA packageDownload 2', $_ENV, $temp_exe_file) ;
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Downloading From {$remote_source}", $this->getModuleName() ) ;
+
+        echo "Download Starting ...".PHP_EOL;
+        ob_start();
+        ob_flush();
+        flush();
+
+        $fp = fopen ($temp_exe_file, 'w') ;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $remote_source);
+        // curl_setopt($ch, CURLOPT_BUFFERSIZE,128);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, array($this, 'progress'));
+        curl_setopt($ch, CURLOPT_NOPROGRESS, false); // needed to make progress function work
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $downloaded = curl_exec($ch);
+        # $error = curl_error($ch) ;
+        # var_dump('downloaded', $downloaded, $error) ;
+        fwrite($fp, $downloaded) ;
+        curl_close($ch);
+
+        ob_flush();
+        flush();
+
+        echo "Done".PHP_EOL ;
+        return $temp_exe_file ;
+    }
+
+    public function progress($resource, $download_size, $downloaded, $upload_size, $uploaded) {
+        $is_quiet = (isset($this->params['quiet']) && ($this->params['quiet'] == true) ) ;
+        if ($is_quiet == false) {
+            if($download_size > 0) {
+                $dl = ($downloaded / $download_size)  * 100 ;
+                # var_dump('downloaded', $dl) ;
+                $perc = round($dl, 2) ;
+                # var_dump('perc', $perc) ;
+                echo "{$perc} % \r" ;
+            }
+            ob_flush();
+            flush();
+        }
     }
 
     protected function extractMetadata() {
