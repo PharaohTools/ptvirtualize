@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class BoxUpImportMac extends BaseVirtualboxAllOS {
+class BoxUpImportAllOS extends BaseVirtualboxAllOS {
 
     // Compatibility
-    public $os = array("Darwin") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
