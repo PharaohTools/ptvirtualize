@@ -113,66 +113,69 @@ COMPLETION;
         return $outputText;
     }
 
-    public static function executeAndGetReturnCode($command, $show_output = null, $get_output = null) {            if (in_array(PHP_OS, array("Windows", "WINNT"))) {
-        if ($get_output == true) {
-            ob_start();
-        }
-        exec ( $command , $output, $return_var) ;
-        if ($get_output == true) {
-            $output = ob_get_clean();
-            return array("rc"=>$return_var, "output"=>$output) ;
-        }
-        if ($show_output == true) {
-            if (isset($output) ) {
-                echo $output ;
+    public static function executeAndGetReturnCode($command, $show_output = null, $get_output = null) {
+        if (in_array(PHP_OS, array("Windows", "WINNT"))) {
+            if ($get_output == true) {
+                ob_start();
             }
-        }
-        return $return_var ;
-    }
-    else {
-        $proc = proc_open($command, array(
-            0 => array("pipe","r"),
-            1 => array("pipe",'w'),
-            2 => array("pipe",'w'),
-        ),$pipes);
-        if ($show_output==true) {
-            stream_set_blocking($pipes[1], true);
-            stream_set_blocking($pipes[2], true);
-            $data = "";
-            while ( ($buf = fread($pipes[1], 32768)) || ( $buf2 = fread($pipes[2], 32768))) {
-                if (isset($buf) && $buf !== false) {
-                    $data .= $buf;
-                    echo $buf ; }
-                if ( (isset($buf2) && $buf2 !== false) || $buf2 = fread($pipes[2], 32768) ) {
-//                    $buf2 = "ERR: ".$buf2;
-                    $data .= "ERR: ".$buf2;
-                    echo "ERR: ".$buf2 ;
-                    unset($buf2) ;} } }
-
-        $stdout = stream_get_contents($pipes[1]);
-        fclose($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
-        fclose($pipes[2]);
-        $retVal = proc_close($proc);
-        $output = (isset($stderr)) ? $stdout.$stderr : $stdout ;
-        $output = explode("\n", $output) ;
-        if ($show_output == true) {
-//            $stdout = explode("\n", $stdout) ;
-//            foreach ($stdout as $stdoutline) {
-//                echo $stdoutline."\n" ; }
-            if (strlen($stderr)>0) {
-//                echo "ERRORS:\n";
-                $stderr = explode("\n", $stderr) ;
-                foreach ($stderr as $stderrline) {
-//                    echo $stderrline."\n" ;
+            exec ( $command , $output, $return_var) ;
+            if ($get_output == true) {
+                $output = ob_get_clean();
+                return array("rc"=>$return_var, "output"=>$output) ;
+            }
+            if ($show_output == true) {
+                if (isset($output) ) {
+                    foreach ($output as $output_line) {
+                        echo $output_line.PHP_EOL ;
+                    }
                 }
             }
-            return array("rc"=>$retVal, "output"=>$output) ; }
-        if ($get_output == true) {
-            return array("rc"=>$retVal, "output"=>$output) ;}
+            return $return_var ;
+        }
         else {
-            return $retVal; }
-    }
+            $proc = proc_open($command, array(
+                0 => array("pipe","r"),
+                1 => array("pipe",'w'),
+                2 => array("pipe",'w'),
+            ),$pipes);
+            if ($show_output==true) {
+                stream_set_blocking($pipes[1], true);
+                stream_set_blocking($pipes[2], true);
+                $data = "";
+                while ( ($buf = fread($pipes[1], 32768)) || ( $buf2 = fread($pipes[2], 32768))) {
+                    if (isset($buf) && $buf !== false) {
+                        $data .= $buf;
+                        echo $buf ; }
+                    if ( (isset($buf2) && $buf2 !== false) || $buf2 = fread($pipes[2], 32768) ) {
+    //                    $buf2 = "ERR: ".$buf2;
+                        $data .= "ERR: ".$buf2;
+                        echo "ERR: ".$buf2 ;
+                        unset($buf2) ;} } }
+
+            $stdout = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+            $retVal = proc_close($proc);
+            $output = (isset($stderr)) ? $stdout.$stderr : $stdout ;
+            $output = explode("\n", $output) ;
+            if ($show_output == true) {
+    //            $stdout = explode("\n", $stdout) ;
+    //            foreach ($stdout as $stdoutline) {
+    //                echo $stdoutline."\n" ; }
+                if (strlen($stderr)>0) {
+    //                echo "ERRORS:\n";
+                    $stderr = explode("\n", $stderr) ;
+                    foreach ($stderr as $stderrline) {
+    //                    echo $stderrline."\n" ;
+                    }
+                }
+                return array("rc"=>$retVal, "output"=>$output) ; }
+            if ($get_output == true) {
+                return array("rc"=>$retVal, "output"=>$output) ;}
+            else {
+                return $retVal; }
+        }
 
     }
 
