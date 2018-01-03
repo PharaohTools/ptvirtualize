@@ -43,7 +43,9 @@ class LoggingAll extends BaseLinuxApp {
         if (!is_null($log_exit_code)) {
             \Core\BootStrap::setExitCode($log_exit_code) ; }
         $stx = (strlen($source)>0) ? "[$source] " : "" ;
-        $fullMessage = "[Pharaoh Logging] " . $stx . $message . "\n" ;
+        $friendly = substr(PHARAOH_APP, 2) ;
+        $friendly = ucfirst($friendly) ;
+        $fullMessage = "[Pharaoh {$friendly}] " . $stx . $message . "\n" ;
         file_put_contents("php://stderr", $fullMessage );
         if (isset($this->params["php-log"])) {
             error_log($fullMessage) ; }
