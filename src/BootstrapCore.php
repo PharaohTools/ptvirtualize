@@ -8,8 +8,8 @@ class BootStrap {
     private $start ;
 
     public function __construct() {
-        require_once("Constants.php");
-        require_once("AutoLoad.php");
+        require_once(__DIR__.DIRECTORY_SEPARATOR."Constants.php");
+        require_once(__DIR__.DIRECTORY_SEPARATOR."AutoLoad.php");
         $autoLoader = new autoLoader();
         $autoLoader->launch();
     }
