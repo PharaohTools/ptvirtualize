@@ -22,7 +22,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public function getMountSharesSSHData($provisionFile) {
         $sshData = "" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S apt-get update "."\n" ;
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S apt-get -qq update "."\n" ;
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | " .
             " sudo -S apt-get install -y virtualbox-guest-dkms virtualbox-guest-additions-iso"."\n" ;
 
