@@ -20,8 +20,8 @@ if (in_array(PHP_OS, array("Windows", "WINNT"))) {
         define('VBOXMGCOMM', 'exit 1') ;
     }
     define('PFILESDIR', $sd."\\PharaohTools\\") ;
-    define('PTCCOMM', PFILESDIR.'ptconfigure.cmd"') ;
-    define('PTBCOMM', PFILESDIR.'ptbuild.cmd"') ;
+    define('PTCCOMM', PFILESDIR.'ptconfigure.cmd') ;
+    define('PTBCOMM', PFILESDIR.'ptbuild.cmd') ;
     define('PTDCOMM',  PFILESDIR."ptdeploy.cmd") ;
     define('PTVCOMM',  PFILESDIR."ptvirtualize.cmd") ;
     define('PTTRCOMM',  PFILESDIR."pttrack.cmd") ;
