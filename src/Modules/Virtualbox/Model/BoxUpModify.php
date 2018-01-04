@@ -14,14 +14,12 @@ class BoxUpModify extends BaseVirtualboxAllOS {
     // Model Group
     public $modelGroup = array("UpModify") ;
 
-    //@todo need windows version
     public function modify($name, $key, $value) {
         $command = VBOXMGCOMM." modifyvm {$name} --$key \"$value\"" ;
         $ret = $this->executeAndGetReturnCode($command, true);
         return $ret ;
     }
 
-    //@todo need windows version
     public function getShares($name) {
         $command  = VBOXMGCOMM." showvminfo {$name}" ;
         $out = $this->executeAndLoad($command);
@@ -44,16 +42,12 @@ class BoxUpModify extends BaseVirtualboxAllOS {
         return $names ;
     }
 
-    //@todo need windows version
     public function removeShare($name, $share) {
         $command  = VBOXMGCOMM." sharedfolder remove {$name} --name {$share} " ;
-        $this->executeAndOutput($command);
-        $command = "echo $?" ;
-        $ret = $this->executeAndLoad($command);
+        $ret = $this->executeAndGetReturnCode($command, true);
         return ($ret == "0") ? true : false ;
     }
 
-    //@todo need windows version
     public function addShare($name, $sharedFolder) {
         $command  = VBOXMGCOMM." sharedfolder add {$name} --name {$sharedFolder["name"]} " ;
         $command .= " --hostpath {$sharedFolder["host_path"]}" ;
@@ -61,16 +55,18 @@ class BoxUpModify extends BaseVirtualboxAllOS {
         foreach ($flags as $flag) {
             if (isset($sharedFolder[$flag])) {
                 $command .= " --$flag" ; } }
-        $this->executeAndOutput($command);
-        $command = "echo $?" ;
-        $ret = $this->executeAndLoad($command);
-        return ($ret == "0") ? true : false ;
+        $ret = $this->executeAndGetReturnCode($command, true);
+        $res1 = ($ret == "0") ? true : false ;
+        if ($res1 == false) {
+            return $res1 ;
+        }
+        return true ;
     }
 
     //@todo need windows version
     public function getDisks($name) {
         $command  = VBOXMGCOMM." showvminfo {$this->virtufile->config["vm"]["name"]}" ;
-        $out = $this->executeAndLoad($command);
+        $out = $this->executeAndLoad($command) ;
         $lines = explode("\n", $out) ;
 
         foreach ($lines as $oneline) {
@@ -78,24 +74,20 @@ class BoxUpModify extends BaseVirtualboxAllOS {
                 $start = strpos($oneline, '(UUID: ')+6 ;
                 $end = strpos($oneline, ')') ;
                 $uuid = substr($oneline, $start, $end) ;
-
                 $uuids[] = $uuid ; } }
 
     }
 
-    //@todo need windows version
     public function modifyDisk($disk, $size) {
         $command = VBOXMGCOMM." modifyhd $disk --resize {$size}" ;
-        $this->executeAndOutput($command);
-        $command = "echo $?" ;
-        $ret = $this->executeAndLoad($command);
+        $ret = $this->executeAndGetReturnCode($command, true) ;
         return ($ret == "0") ? true : false ;
     }
 
     /// @todo can we pull this information from vboxmanage, then we dont have to udate this method when vboxmanage changes
     public function getAvailableModifications() {
         return array(
-            "name", "ostype", "memory", "vram", "cpus", "cpuexecutioncap", "boot", "graphicscontroller", "monitorcount",
+            "name", "ostype", "memory", "vram", "cpus", "cpuexecutioncap", "boot", "graphicscontroller","monitorcount",
             "draganddrop", "usb", "usbehci", "snapshotfolder", "autostart-enabled", "autostart-delay", "groups",
             "iconfile", "pagefusion", "acpi", "ioapic", "hpet", "triplefaultreset", "hwvirtex", "nestedpaging",
             "largepages", "vtxvpid", "vtxux", "pae", "longmode", "synthcpu", "cpuidset", "cpuidremove",
