@@ -304,9 +304,6 @@ class InvokeAllOS extends Base {
             if (in_array($system->os, array("WINNT", "Windows")) && $this->params["driver"] == "os") {
                 $logging->log("Windows does not support requested OS level SSH driver, switching to seclib...", $this->getModuleName()) ;
                 return "DriverSecLib" ; }
-            if (in_array($system->os, array("WINNT", "Windows")) && $this->params["driver"] == "native") {
-                $logging->log("Windows does not support requested Native SSH driver, switching to seclib...", $this->getModuleName()) ;
-                return "DriverSecLib" ; }
             $logging->log("Attempting to use requested {$optionsKeep[$this->params["driver"]]} driver...", $this->getModuleName()) ;
             return $optionsKeep[$this->params["driver"]]; }
         return false ;
