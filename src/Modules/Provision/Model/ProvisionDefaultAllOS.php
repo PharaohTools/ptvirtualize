@@ -30,22 +30,21 @@ class ProvisionDefaultAllOS extends Base {
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("Provisioning from Virtufile settings if available for $hook $type", "Provision") ;
         $provisionOuts1 = $this->provisionVirtufile($hook, $type) ;
-        $logging->log("Provisioning from hook directories if available for $hook $type", "Provision") ;
-        $provisionOuts2 = $this->provisionHookDirs($hook, $type) ;
+//        $logging->log("Provisioning from hook directories if available for $hook $type", "Provision") ;
+//        $provisionOuts2 = $this->provisionHookDirs($hook, $type) ;
         $cur_xc = \Core\BootStrap::getExitCode() ;
-        $provisionOuts3 = array_merge($provisionOuts1, $provisionOuts2) ;
-        if ($provisionOuts3 == false) {
+//        $provisionOuts3 = array_merge($provisionOuts1, $provisionOuts2) ;
+        if ($provisionOuts1 == false) {
             $logging->log("Failure executing hooks", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
         }
-        if (count($provisionOuts3) == 0) {
+        if (count($provisionOuts1) == 0) {
             $logging->log("No hooks run", $this->getModuleName()) ;
             return true ;
         }
-        $res = (in_array(false, $provisionOuts3)) ? false : true ;
+        $res = (in_array(false, $provisionOuts1)) ? false : true ;
         if ($res == false) {
-            $logging->log("Provisioning Hooks Failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
-        $logging->log("Provisioning Hooks Successful", $this->getModuleName()) ;
-        return true ;
+            $logging->log("Provisioning One Hook Failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
+        return $provisionOuts1 ;
     }
 
     protected function provisionVirtufile($module, $hook) {
@@ -63,6 +62,7 @@ class ProvisionDefaultAllOS extends Base {
                     $curout = $this->doSingleProvision($provisionerSettings) ;
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
+                    // var_dump('pf1', $curout, $cur_xc) ;
                     if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
                         $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; }  }
@@ -70,6 +70,7 @@ class ProvisionDefaultAllOS extends Base {
                     $curout = $this->doSingleProvision($provisionerSettings) ;
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
+                    // var_dump('pf2', $curout, $cur_xc) ;
                     if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
                         $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; } } } }
