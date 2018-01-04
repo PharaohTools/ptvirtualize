@@ -53,7 +53,7 @@ class BoxWindows extends BoxLinuxMac {
         curl_setopt($ch, CURLOPT_URL, $remote_source);
         // curl_setopt($ch, CURLOPT_BUFFERSIZE,128);
         // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+//        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, array($this, 'progress'));
         curl_setopt($ch, CURLOPT_NOPROGRESS, false); // needed to make progress function work
