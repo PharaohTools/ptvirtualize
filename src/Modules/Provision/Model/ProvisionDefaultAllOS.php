@@ -34,8 +34,10 @@ class ProvisionDefaultAllOS extends Base {
 //        $provisionOuts2 = $this->provisionHookDirs($hook, $type) ;
         $cur_xc = \Core\BootStrap::getExitCode() ;
 //        $provisionOuts3 = array_merge($provisionOuts1, $provisionOuts2) ;
-        if ($provisionOuts1 == false) {
+//        var_dump('pvo1: ', $provisionOuts1) ;
+        if ($provisionOuts1 === false) {
             $logging->log("Failure executing hooks", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ;
         }
         if (count($provisionOuts1) == 0) {
             $logging->log("No hooks run", $this->getModuleName()) ;
