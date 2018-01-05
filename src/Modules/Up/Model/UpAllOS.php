@@ -56,7 +56,10 @@ class UpAllOS extends BaseFunctionModel {
                     "This VM is saved in your Papyrus file, but does not exist in your provider...",
                     $this->getModuleName() ) ; }
 
-            $logging->log("Non existent machine. Creating from scratch.", $this->getModuleName());
+            $logging->log("Non existent machine. Creating from scratch, enabling Modify and Provision.", $this->getModuleName());
+            $this->params['provision'] = true ;
+            $this->params['modify'] = true ;
+
             $this->deleteFromPapyrus();
             $res = $this->completeBuildUp();
             if ($res==true) { return true ; }
@@ -196,6 +199,8 @@ class UpAllOS extends BaseFunctionModel {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Hooks labelled up post failed", $this->getModuleName());
             return false; }
+
+        return true ;
     }
 
     protected function isSavedInPapyrus() {
