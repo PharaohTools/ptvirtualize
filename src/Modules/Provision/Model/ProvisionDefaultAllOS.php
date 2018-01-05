@@ -40,7 +40,7 @@ class ProvisionDefaultAllOS extends Base {
             return false ;
         }
         if (count($provisionOuts1) == 0) {
-            $logging->log("No hooks run", $this->getModuleName()) ;
+//            $logging->log("No hooks run", $this->getModuleName()) ;
             return true ;
         }
         $res = (in_array(false, $provisionOuts1)) ? false : true ;
