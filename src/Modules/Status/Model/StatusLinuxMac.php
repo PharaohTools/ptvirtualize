@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class StatusAllOS extends BaseFunctionModel {
+class StatusLinuxMac extends BaseFunctionModel {
 
     // Compatibility
-    public $os = array("any") ;
+    public $os = array("Linux", 'Darwin') ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -54,7 +54,6 @@ class StatusAllOS extends BaseFunctionModel {
         //
         $comm = 'find / -name Virtufile 2>&1 > '.$timefile ;
         $res = self::executeAndGetReturnCode($comm) ;
-
 
         if ($res === false) {
             return false ;}

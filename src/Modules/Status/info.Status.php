@@ -13,7 +13,7 @@ class StatusInfo extends PTConfigureBase {
   }
 
   public function routesAvailable() {
-    return array( "Status" =>   array("show", "full", "help") );
+    return array( "Status" =>   array("show", "full", "help", 'list-vms', 'vms') );
   }
 
   public function routeAliases() {
@@ -33,6 +33,10 @@ class StatusInfo extends PTConfigureBase {
         - full
         Show full status information of your Virtualize VM
         example: ptvirtualize status full
+
+        - vms, list-vms
+        Find Available Virtual Machine Configurations
+        example: ptvirtualize status list-vms
 
 HELPDATA;
     return $help ;

@@ -1,5 +1,6 @@
 <?php
 
+var_dump($pageVars) ;
    echo $pageVars["result"] ;
 ?>
 
