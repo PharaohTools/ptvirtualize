@@ -46,8 +46,12 @@ class ProvisionAllOS extends BaseFunctionModel {
             $hooks = $this->getParameterHooks();
             $pns = array();
             foreach ($hooks as $hook) {
-                $pns[] = $this->runHook("up", $hook); }
-            return (in_array(false, $pns)) ? false : true ; }
+                $res = $this->runHook("up", $hook);
+                $pns[] = $res ;
+                if ($res == false) {
+                    return false ;
+                } } }
+//        return (in_array(false, $pns)) ? false : true ;
         $pn = $this->runHook("up", "default");
         $this->postProvisionMessage();
         return $pn ;
