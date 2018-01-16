@@ -23,11 +23,13 @@ class BootStrap {
     }
 
     public function main($argv_or_boot_params_null) {
-        $this->start = time() ;
-        $date_format = date('H:i:s, d/m/Y', $this->start) ;
-        $friendly = substr(PHARAOH_APP, 2) ;
-        $friendly = ucfirst($friendly) ;
-        echo "[Pharaoh {$friendly}] [Start] Execution begun at ".$date_format.PHP_EOL;
+        if (in_array('--step-times', $argv_or_boot_params_null)) {
+            $this->start = time() ;
+            $date_format = date('H:i:s, d/m/Y', $this->start) ;
+            $friendly = substr(PHARAOH_APP, 2) ;
+            $friendly = ucfirst($friendly) ;
+            echo "[Pharaoh {$friendly}] [Start] Execution begun at ".$date_format.PHP_EOL;
+        }
         $routeObject = new \Core\Router();
         $route = $routeObject->run($argv_or_boot_params_null);
         $emptyPageVars = array("messages"=>array(), "route"=>$route);
@@ -54,12 +56,14 @@ class BootStrap {
 
     private function exitGracefully() {
         // @note this must be the last executed line as it sets exit code
-        $cur = time() ;
-        $finish = $cur - $this->start ;
-        $date_format = date('H:i:s, d/m/Y', $cur) ;
-        $friendly = substr(PHARAOH_APP, 2) ;
-        $friendly = ucfirst($friendly) ;
-        echo "[Pharaoh {$friendly}] [Exit] Execution finished at {$date_format}, after ".$finish." seconds ".PHP_EOL;
+        if (isset($this->start)) {
+            $cur = time() ;
+            $finish = $cur - $this->start ;
+            $date_format = date('H:i:s, d/m/Y', $cur) ;
+            $friendly = substr(PHARAOH_APP, 2) ;
+            $friendly = ucfirst($friendly) ;
+            echo "[Pharaoh {$friendly}] [Exit] Execution finished at {$date_format}, after ".$finish." seconds ".PHP_EOL;
+        }
         if (self::$exitCode == null) {
             exit(0) ; }
         else if (!is_int(self::$exitCode)) {
