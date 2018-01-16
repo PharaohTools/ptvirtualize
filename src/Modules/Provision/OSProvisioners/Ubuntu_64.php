@@ -10,7 +10,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         $check_deps = "( (php -v) && (git --version) && (ptconfigure > /dev/null) )" ;
         $comms  = "( " ;
         $comms .= "apt-get update -y ; " ;
-        $comms .= "( apt-get -qq install -y php5 git || apt-get -qq install -y php7.0 git ); " ;
+        $comms .= "( apt-get -qq install -y php5 php5-curl git || apt-get -qq install -y php7.0 php7.0-curl php7.0-xml git ); " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
         $comms .= "php /tmp/ptconfigure/install-silent ; " ;
