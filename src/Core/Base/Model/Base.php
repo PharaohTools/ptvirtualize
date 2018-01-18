@@ -180,13 +180,13 @@ COMPLETION;
     }
 
     protected function setCmdLineParams($params) {
+
         $cmdParams = array();
         if (!is_array($params)) {
 //            var_dump($params) ;
 //            debug_print_backtrace() ;
         }
         foreach ($params as $paramKey => $paramValue) {
-//            var_dump($paramValue);
             if (is_array($paramValue)) {
                 // if the value is a php array, the param must be already formatted so do nothing
             }
@@ -207,8 +207,11 @@ COMPLETION;
             else if (substr($paramValue, 0, 2)=="--" && strpos($paramValue, '=') == false ) {
                 $paramKey = substr($paramValue, 2) ;
                 $paramValue = true ; }
-            $cmdParams = array_merge($cmdParams, array($paramKey => $paramValue)); }
+
+            $cmdParams = array_merge($cmdParams, array($paramKey => $paramValue));
+        }
         $this->params = (is_array($this->params)) ? array_merge($this->params, $cmdParams) : $cmdParams;
+        $this->params = array_merge($this->params, $params) ;
     }
 
     protected function askYesOrNo($question) {
