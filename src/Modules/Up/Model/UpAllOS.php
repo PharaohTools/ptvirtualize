@@ -281,6 +281,9 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     protected function ensureHostOnlyNetworks() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        $logging->log("Ensuring existence of Host Only networks", $this->getModuleName());
         $comm = VBOXMGCOMM.' list hostonlyifs' ;
         exec($comm, $output, $return) ;
         $names = array() ;
@@ -295,6 +298,7 @@ class UpAllOS extends BaseFunctionModel {
         foreach ($should_have_nets as $one_net) {
             if (!in_array($one_net, $names)) {
                 $comm = VBOXMGCOMM.' hostonlyif create' ;
+                $logging->log("Creating Host Only Network: {$one_net}", $this->getModuleName());
                 self::executeAndLoad($comm) ;
             }
         }
