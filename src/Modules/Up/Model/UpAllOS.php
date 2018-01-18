@@ -251,6 +251,8 @@ class UpAllOS extends BaseFunctionModel {
             else {
                 $logging->log("No GUI mode or Guess parameter set, defaulting to headless GUI mode...", $this->getModuleName());
                 $guiMode = "headless" ; } }
+
+        $this->ensureHostOnlyNetworks() ;
         $logging->log("Starting Virtual Machine", $this->getModuleName());
         $command = VBOXMGCOMM." startvm {$this->virtufile->config["vm"]["name"]} --type $guiMode" ;
         $res = $this->executeAndGetReturnCode($command, true, true);
@@ -276,6 +278,26 @@ class UpAllOS extends BaseFunctionModel {
             if (isset($this->params[$entry])) {
                 return $this->params[$entry] ; } }
         return null ;
+    }
+
+    protected function ensureHostOnlyNetworks() {
+        $comm = VBOXMGCOMM.' list hostonlyifs' ;
+        exec($comm, $output, $return) ;
+        $names = array() ;
+        foreach ($output as $line) {
+            if (strpos($line, 'Name:') === 0) {
+                $names[] = str_replace('Name:            ', '', $line) ;
+            }
+        }
+        //var_dump($names) ;
+        // BUG this is different on Windows
+        $should_have_nets = array('vboxnet0', 'vboxnet1') ;
+        foreach ($should_have_nets as $one_net) {
+            if (!in_array($one_net, $names)) {
+                $comm = VBOXMGCOMM.' hostonlyif create' ;
+                self::executeAndLoad($comm) ;
+            }
+        }
     }
 
     protected function deleteFromPapyrus() {
