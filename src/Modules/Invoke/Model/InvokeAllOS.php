@@ -224,15 +224,11 @@ class InvokeAllOS extends Base {
 //      $options = array("os" => "DriverBashSSH", "native" => "DriverNativeSSH", "seclib" => "DriverSecLib") ;
         $driver = $this->findUsableDriver($serverObj) ;
         if ($driver !==false && $driver !==null) {
-            $try = $this->tryConnection($driver, $serverObj) ;
-            if ($try !==false && $try !==null) {
-                return $try ; }
+                return $driver ;
+            }
             else {
-                // try didnt work
-                return false ; } }
-        else {
-            // unable to find usable driver
-            return false ; }
+                return false ;
+            }
     }
 
     protected function findUsableDriver($serverObj) {
@@ -245,7 +241,7 @@ class InvokeAllOS extends Base {
             $logging->log("Found Requested Driver {$driverString}...", $this->getModuleName()) ;
             $driver->setServer($serverObj) ;
             $serverObj->setDriver($driver) ;
-            $conn = $serverObj->connect() ;
+            $conn = $this->tryConnection($driver, $serverObj) ;
                 if ($conn == true ) {
                     $logging->log("Test Connection Successful...", $this->getModuleName()) ;
                     return $driver; }
