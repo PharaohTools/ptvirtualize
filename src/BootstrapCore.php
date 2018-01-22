@@ -57,12 +57,12 @@ class BootStrap {
 
     private function exitGracefully() {
         // @note this must be the last executed line as it sets exit code
+        $friendly = substr(PHARAOH_APP, 2) ;
+        $friendly = ucfirst($friendly) ;
         if (isset($this->start)) {
             $cur = time() ;
             $finish = $cur - $this->start ;
             $date_format = date('H:i:s, d/m/Y', $cur) ;
-            $friendly = substr(PHARAOH_APP, 2) ;
-            $friendly = ucfirst($friendly) ;
             echo "[Pharaoh {$friendly}] [Exit] Execution finished at {$date_format}, after ".$finish." seconds ".PHP_EOL;
         }
         if (self::$exitCode == null) {
