@@ -114,7 +114,8 @@ class UpAllOS extends BaseFunctionModel {
             $logging->log("Provisioning VM Failed", $this->getModuleName());
             return false; }
         $res = $provision->runHook("up", "post") ;
-        if (in_array(false, $res)) { return false ; }
+        if (in_array(false, $res) || $res === false) {
+            return false ; }
         return true ;
     }
 
