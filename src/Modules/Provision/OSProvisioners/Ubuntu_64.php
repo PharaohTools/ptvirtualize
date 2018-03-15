@@ -6,17 +6,25 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
-    public function getPTConfigureInitSSHData($provisionFile) {
+    public function getPTConfigureInitSSHData($provisionFile, $provisionerSettings) {
         $check_deps = "( (php -v) && (git --version) && (ptconfigure > /dev/null) )" ;
         $comms  = "( " ;
-        $comms .= "apt-get update -y ; " ;
+        $comms .= "apt-get -qq update -y ; " ;
         $comms .= "( apt-get -qq install -y php5 php5-curl git || apt-get -qq install -y php7.0 php7.0-curl php7.0-xml git ); " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
         $comms .= "php /tmp/ptconfigure/install-silent ; " ;
         $comms .= ") " ;
 		$sshData = "" ;
-        $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$check_deps} || {$comms}' \n" ;
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $is_force = isset($provisionerSettings['force']) && ($provisionerSettings['force']==true || $provisionerSettings['force']==true) ;
+        if ($is_force == false) {
+            $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$check_deps} || {$comms}' \n" ;
+        } else {
+            $logging->log("Force install for Pharaoh Configure", $this->getModuleName());
+            $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' \n" ;
+        }
         return $sshData ;
     }
 
