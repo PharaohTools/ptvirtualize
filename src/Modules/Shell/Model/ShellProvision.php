@@ -133,7 +133,9 @@ class ShellProvision extends BaseShellAllOS {
             $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
                 $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner", $this->getModuleName());
-                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
+//                var_dump('init is', $init);
+//                var_dump('pset is', $provisionerSettings);
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $provisionerSettings) ; }
             else {
                 $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ; } }
