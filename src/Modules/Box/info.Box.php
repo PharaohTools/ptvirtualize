@@ -41,7 +41,7 @@ class BoxInfo extends Base {
         - package
         Packages a box as usable by Virtualize
         example: ptvirtualize box package
-        example ptvirtualize box package --yes --guess
+        example: ptvirtualize box package --yes --guess
             --name="Vanilla Ubuntu 12.04 amd 64"
             --vmname="a4dc638f-2721-40c4-a943-2f2565c83fee" # use name or id of virtual machine
             --provider="virtualbox" # guess will use virtualbox
@@ -49,7 +49,9 @@ class BoxInfo extends Base {
             --slug="" # guess can generate this based on name field
             --description="A Vanilla install of Ubuntu..."
             --home-location="http://www.pharaohtools.com/virtualize/boxes" # guess will set this to http://www.pharaohtools.com/virtualize/boxes
-            --target="/opt/ptvirtualize/boxes" # save location, will guess /opt/ptvirtualize/boxes (C:\PharaohTools\boxes) on Windows
+            --target="/opt/ptvirtualize/boxes" # save location, will guess /opt/ptvirtualize/boxes (C:\\PharaohTools\\boxes) on Windows
+        example: ptvirtualize box package --yes --name="Desktop Ubuntu 16.04.4 64 Bit" --vmname="ubuntu_16_04_4_desktop" --provider="virtualbox" --group="ptvirtualize" --slug="desktop_ubuntu_16_04_4_64bit" --description="A Desktop install of Ubuntu, 64 Bit, with the default PTV User only" --home-location="http://www.pharaohtools.com/virtualize/boxes" --target="/opt/ptvirtualize/boxes"
+        example: ptvirtualize box package -yg --name="Desktop Ubuntu 16.04.4 64 Bit" --vmname="ubuntu_16_04_4_desktop" --group="ptvirtualize" --description="A Desktop install of Ubuntu, 64 Bit, with the default PTV User only"
 
         - list
         List boxes installed in Virtualize
