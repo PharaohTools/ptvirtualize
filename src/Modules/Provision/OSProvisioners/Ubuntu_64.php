@@ -9,8 +9,8 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public function getPTConfigureInitSSHData($provisionFile, $provisionerSettings) {
         $check_deps = "( (php -v) && (git --version) && (ptconfigure > /dev/null) )" ;
         $comms  = "( " ;
-        $comms .= "apt-get -qq update -y ; " ;
-        $comms .= "( apt-get -qq install -y php5 php5-curl git || apt-get -qq install -y php7.0 php7.0-curl php7.0-xml git ); " ;
+        $comms .= "apt-get -qq update -y ; sleep 3  ; " ;
+        $comms .= "( (apt-get -qq install -y php5 php5-curl git && sleep 3) || apt-get -qq install -y php7.0 php7.0-curl php7.0-xml git ); " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
         $comms .= "php /tmp/ptconfigure/install-silent ; " ;
