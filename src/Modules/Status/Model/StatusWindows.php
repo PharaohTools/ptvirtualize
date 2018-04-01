@@ -17,21 +17,11 @@ class StatusWindows extends StatusLinuxMac {
     public function listVms() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-//        $res = $this->loadFiles();
-//        if ($res === false) {
-//            $logging->log("Status module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-//            return false ; }
-//        $this->findProvider("BoxStatus");
-//        $logging->log("Looking for Virtufiles...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-        $timefile = '/tmp/vf'.time() ;
-        //
-        $comm = 'find / -name Virtufile 2>&1 > '.$timefile ;
-        $res = self::executeAndGetReturnCode($comm) ;
-
-        if ($res === false) {
-            return false ;}
-
-        $raw = file_get_contents($timefile) ;
+        $logging->log("Status module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+        $comm = 'cd/ && dir /s/b Virtufile ' ;
+        $res = self::executeAndLoad($comm) ;
+        if ($res === '') { return false ; }
+        $raw = $res ;
         $lines = explode("\n", $raw) ;
         $vms = array() ;
         foreach ($lines as $line) {
