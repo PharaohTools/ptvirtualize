@@ -271,8 +271,19 @@ class InvokeAllOS extends Base {
 //        var_dump($driver, $serverObj) ;
         $driver->setServer($serverObj);
         $serverObj->setDriver($driver);
+
         $connection_attempts = 10 ;
         $interval = 5 ;
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+
+        if (isset($this->params["retries"])) {
+            $logging->log("Trying up to {$this->params["retries"]} times as specified by Virtufile...", $this->getModuleName()) ;
+            $connection_attempts = $this->params["retries"] ; }
+        if (isset($this->params["interval"])) {
+            $logging->log("Interval of {$this->params["interval"]} seconds as specified by Virtufile...", $this->getModuleName()) ;
+            $interval = $this->params["interval"] ; }
+
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         for ($i=1; $i < $connection_attempts ; $i++) {
