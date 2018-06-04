@@ -115,6 +115,10 @@ class ShellProvision extends BaseShellAllOS {
             $sftpParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
         if (isset($this->virtufile->config["ssh"]["timeout"])) {
             $sftpParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
+        if (isset($this->virtufile->config["ssh"]["retries"])) {
+            $sftpParams["retries"] = $this->virtufile->config["ssh"]["retries"] ; }
+        if (isset($this->virtufile->config["ssh"]["interval"])) {
+            $sftpParams["interval"] = $this->virtufile->config["ssh"]["interval"] ; }
         $sftpParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         $sftpFactory = new \Model\SFTP();
         $sftp = $sftpFactory->getModel($sftpParams) ;
@@ -156,6 +160,10 @@ class ShellProvision extends BaseShellAllOS {
             $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
         if (isset($this->virtufile->config["ssh"]["timeout"])) {
             $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
+        if (isset($this->virtufile->config["ssh"]["retries"])) {
+            $sshParams["retries"] = $this->virtufile->config["ssh"]["retries"] ; }
+        if (isset($this->virtufile->config["ssh"]["interval"])) {
+            $sshParams["interval"] = $this->virtufile->config["ssh"]["interval"] ; }
         $sshFactory = new \Model\Invoke();
         $ssh = $sshFactory->getModel($sshParams) ;
         $res = $ssh->performInvokeSSHData() ;
