@@ -86,8 +86,16 @@ class BaseFunctionModel extends BaseLinuxApp {
         $provisionFactory = new \Model\Provision();
         $provision = $provisionFactory->getModel($this->params) ;
         $res = $provision->provisionHook($hook, $type);
-        if (in_array(false, $res)) {
-            $logging->log("Provisioning $hook $ut hooks failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE); }
+
+        if(!is_array($res)) {
+            if ($res === false) {
+                $logging->log("Provisioning $hook $ut hooks failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            }
+        } else {
+            if (in_array(false, $res)) {
+                $logging->log("Provisioning $hook $ut hooks failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            }
+        }
         return $res ;
     }
 
