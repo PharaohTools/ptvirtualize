@@ -6,10 +6,15 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public $ostype = "Ubuntu 64 or 32 Bit from 10.04 onwards" ;
 
+    public $updated = null ;
+
     public function getPTConfigureInitSSHData($provisionFile, $provisionerSettings) {
         $check_deps = "( (php -v) && (git --version) && (ptconfigure > /dev/null) )" ;
         $comms  = "( " ;
-        $comms .= "apt-get -qq update -y ; sleep 3  ; " ;
+        if ($this->updated !== true) {
+            $comms .= "apt-get -qq update -y ; sleep 3  ; " ;
+            $this->updated = true ;
+        }
         $comms .= "( (apt-get -qq install -y php5 php5-curl git && sleep 3) || apt-get -qq install -y php7.0 php7.0-curl php7.0-xml git ); " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
@@ -30,7 +35,11 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public function getMountSharesSSHData($provisionFile) {
         $sshData = "" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S apt-get -qq update "."\n" ;
+
+        if ($this->updated !== true) {
+            $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S apt-get -qq update "."\n" ;
+            $this->updated = true ;
+        }
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | " .
             " sudo -S apt-get -qq install -y virtualbox-guest-dkms virtualbox-guest-additions-iso"."\n" ;
 
