@@ -96,7 +96,8 @@ class UpAllOS extends BaseFunctionModel {
         $provision = $provisionFactory->getModel($this->params) ;
         $logging->log("Virtualize will start and optionally modify and provision your existing VM.", $this->getModuleName());
         $res = $provision->runHook("up", "pre") ;
-        if (in_array(false, $res)) { return false ; }
+        if (is_bool($res) && $res===false) { return false ; }
+        if (is_array($res) && in_array(false, $res)) { return false ; }
 //        $logging->log("This VM has been deleted outside of Virtualize. Re-creating from scratch.", $this->getModuleName());
         $res = $this->modifyVm(true);
         if ($res == false) {
@@ -114,8 +115,8 @@ class UpAllOS extends BaseFunctionModel {
             $logging->log("Provisioning VM Failed", $this->getModuleName());
             return false; }
         $res = $provision->runHook("up", "post") ;
-        if (in_array(false, $res) || $res === false) {
-            return false ; }
+        if (is_bool($res) && $res===false) { return false ; }
+        if (is_array($res) && in_array(false, $res)) { return false ; }
         return true ;
     }
 
