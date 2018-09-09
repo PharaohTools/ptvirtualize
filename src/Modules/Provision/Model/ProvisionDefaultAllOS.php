@@ -32,7 +32,7 @@ class ProvisionDefaultAllOS extends Base {
         $provisionOuts1 = $this->provisionVirtufile($hook, $type) ;
 //        $logging->log("Provisioning from hook directories if available for $hook $type", "Provision") ;
 //        $provisionOuts2 = $this->provisionHookDirs($hook, $type) ;
-        $cur_xc = \Core\BootStrap::getExitCode() ;
+//        $cur_xc = \Core\BootStrap::getExitCode() ;
 //        $provisionOuts3 = array_merge($provisionOuts1, $provisionOuts2) ;
 //        var_dump('pvo1: ', $provisionOuts1) ;
         if ($provisionOuts1 === false) {
