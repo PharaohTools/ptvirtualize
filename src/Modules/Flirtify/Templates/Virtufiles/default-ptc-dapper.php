@@ -13,7 +13,7 @@ class Virtufile extends VirtufileBase {
     private function setConfig() {
         $this->setDefaultConfig();
         # $this->config["vm"]["gui_mode"] = "gui" ;
-        $this->config["vm"]["box"] = "pharaohubuntu14041amd64" ;
+        $this->config["vm"]["box"] = "<%tpl.php%>ptdeployfile-host</%tpl.php%>" ;
         # Shared folder - This should map to the workstation environment vhost path parent...
         $this->config["vm"]["shared_folders"][] =
             array(

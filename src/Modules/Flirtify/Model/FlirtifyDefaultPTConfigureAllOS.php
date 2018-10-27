@@ -34,20 +34,31 @@ class FlirtifyDefaultPTConfigureAllOS extends Base {
         return self::askYesOrNo($question, true);
     }
 
+    private function findExtraParameters() {
+        $bu = 'https://repositories.internal.pharaohtools.com/index.php?control=BinaryServer&action=serve&item=iso_php_virtualize_boxes_-_ubuntu_16.04_server' ;
+        $defaults =
+            array(
+                'box_name' => 'pharaohubuntu14041amd64',
+                'vm_name' => 'ptv_ubuntu',
+                'vm_gui_mode' => "gui",
+                'vm_box_url' => $bu,
+                'vm_box' => "isophpexampleapp",
+            );
+        return $defaults ;
+    }
+
     private function doFlirtify() {
         $templatesDir = str_replace("Model", "Templates".DS."Virtufiles", dirname(__FILE__) ) ;
-        $template = $templatesDir . DS."default-ptconfigure.php";
+        $template = $templatesDir . DS."default-ptc.php";
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
         $targetLocation = "Virtufile" ;
+        $extra_parameters = $this->findExtraParameters() ;
         $templator->template(
             file_get_contents($template),
-            array(
-                //"env_name" => $environment["any-app"]["gen_env_name"],
-                //"first_server_target" => $environment["servers"][0]["target"],
-            ),
+            $extra_parameters,
             $targetLocation );
-        echo $targetLocation."\n";
+        echo 'Virtufile written to '.$targetLocation."\n";
     }
 
 }

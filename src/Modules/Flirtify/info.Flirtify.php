@@ -14,11 +14,14 @@ class FlirtifyInfo extends Base {
 
     public function routesAvailable() {
       return array( "Flirtify" =>  array_merge(parent::routesAvailable(), array("default-ptconfigure", "default-ptconfigure-ptdeploy",
-      "custom-ptconfigure-ptdeploy") ) );
+      "custom-ptconfigure-ptdeploy", 'now', 'file', 'virtufile') ) );
     }
 
     public function routeAliases() {
-      return array("flirt"=>"Flirtify", "flirtify"=>"Flirtify", "phlirt"=>"Flirtify", "phlirtify"=>"Flirtify");
+      return array(
+            "flirt"=>"Flirtify", "flirtify"=>"Flirtify",
+            "init"=>"Flirtify", "phlirt"=>"Flirtify", "phlirtify"=>"Flirtify"
+      );
     }
 
     public function helpDefinition() {

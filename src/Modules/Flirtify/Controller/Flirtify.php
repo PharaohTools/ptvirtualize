@@ -17,6 +17,13 @@ class Flirtify extends Base {
             $this->content["helpData"] = $helpModel->getHelpData($pageVars["route"]["control"]);
             return array ("type"=>"view", "view"=>"help", "pageVars"=>$this->content); }
 
+        $now_options = array('now', 'file', 'virtufile') ;
+        if (in_array($action, $now_options)) {
+            $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, 'Default') ;
+            $this->content["result"] = $thisModel->askWhetherToFlirtify();
+            if (is_array($thisModel)) { return $this->failDependencies($pageVars, $this->content, $thisModel) ; }
+            return array ("type"=>"view", "view"=>"flirtify", "pageVars"=>$this->content); }
+
         $actionsToModelGroups = array(
             "default-ptconfigure" => "DefaultPTConfigure", "default-ptconfigure-ptdeploy" => "DefaultPTConfigureCustomPTDeploy",
             "custom-ptconfigure-ptdeploy" => "CustomPTConfigureCustomPTDeploy" ) ;
