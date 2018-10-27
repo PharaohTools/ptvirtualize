@@ -3,7 +3,7 @@
 Namespace Model;
 
 // @todo shouldnt this extend base templater? is it missing anything?
-class FlirtifyDefaultPTConfigureAllOS extends Base {
+class InitialiseDefaultPTConfigureAllOS extends Base {
 
     // Compatibility
     public $os = array("any") ;
@@ -22,32 +22,46 @@ class FlirtifyDefaultPTConfigureAllOS extends Base {
       parent::__construct($params);
     }
 
-    public function askWhetherToFlirtify() {
-        if ($this->askToScreenWhetherToFlirtify() != true) { return false; }
-        $this->doFlirtify() ;
+    public function askWhetherToInitialise() {
+        if ($this->askToScreenWhetherToInitialise() != true) { return false; }
+        $this->doInitialise() ;
         return true;
     }
 
-    public function askToScreenWhetherToFlirtify() {
+    public function askToScreenWhetherToInitialise() {
         if (isset($this->params["yes"]) && $this->params["yes"]==true) { return true ; }
-        $question = 'Flirtify This?';
+        $question = 'Initialise This?';
         return self::askYesOrNo($question, true);
     }
 
     private function findExtraParameters() {
-        $bu = 'https://repositories.internal.pharaohtools.com/index.php?control=BinaryServer&action=serve&item=iso_php_virtualize_boxes_-_ubuntu_16.04_server' ;
+        $repo_home = 'https://repositories.internal.pharaohtools.com/index.php?control=BinaryServer&action=serve&item=' ;
+        $repo_item = 'iso_php_virtualize_boxes_-_ubuntu_16.04_server' ;
+        $repo = $repo_home.$repo_item ;
         $defaults =
             array(
                 'box_name' => 'pharaohubuntu14041amd64',
-                'vm_name' => 'ptv_ubuntu',
+                'vm_name' => 'ptvirtualize_default',
                 'vm_gui_mode' => "gui",
-                'vm_box_url' => $bu,
+                'vm_box_url' => $repo,
                 'vm_box' => "isophpexampleapp",
             );
-        return $defaults ;
+        $defaults_with_overrides = $this->applyParameterOverrides($defaults) ;
+        return $defaults_with_overrides ;
     }
 
-    private function doFlirtify() {
+    private function applyParameterOverrides($defaults) {
+        $overrides = $defaults ;
+        $default_keys = array_keys($defaults) ;
+        foreach ($default_keys as $default_key) {
+            if (isset($this->params[$default_key])) {
+                $overrides[$default_key] = $this->params[$default_key] ;
+            }
+        }
+        return $overrides ;
+    }
+
+    private function doInitialise() {
         $templatesDir = str_replace("Model", "Templates".DS."Virtufiles", dirname(__FILE__) ) ;
         $template = $templatesDir . DS."default-ptc.php";
         $templatorFactory = new \Model\Templating();

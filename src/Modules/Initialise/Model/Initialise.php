@@ -2,6 +2,6 @@
 
 Namespace Model;
 
-class Flirtify extends BaseModelFactory {
+class Initialise extends BaseModelFactory {
 
 }

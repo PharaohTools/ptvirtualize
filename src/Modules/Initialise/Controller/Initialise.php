@@ -2,7 +2,7 @@
 
 Namespace Controller ;
 
-class Flirtify extends Base {
+class Initialise extends Base {
 
     public function execute($pageVars) {
 
@@ -20,9 +20,9 @@ class Flirtify extends Base {
         $now_options = array('now', 'file', 'virtufile') ;
         if (in_array($action, $now_options)) {
             $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, 'Default') ;
-            $this->content["result"] = $thisModel->askWhetherToFlirtify();
+            $this->content["result"] = $thisModel->askWhetherToInitialise();
             if (is_array($thisModel)) { return $this->failDependencies($pageVars, $this->content, $thisModel) ; }
-            return array ("type"=>"view", "view"=>"flirtify", "pageVars"=>$this->content); }
+            return array ("type"=>"view", "view"=>"initialise", "pageVars"=>$this->content); }
 
         $actionsToModelGroups = array(
             "default-ptconfigure" => "DefaultPTConfigure", "default-ptconfigure-ptdeploy" => "DefaultPTConfigureCustomPTDeploy",
@@ -30,11 +30,11 @@ class Flirtify extends Base {
 
         if (in_array($action, array_keys($actionsToModelGroups))) {
             $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, $actionsToModelGroups[$action]) ;
-            $this->content["result"] = $thisModel->askWhetherToFlirtify();
+            $this->content["result"] = $thisModel->askWhetherToInitialise();
             if (is_array($thisModel)) { return $this->failDependencies($pageVars, $this->content, $thisModel) ; }
-            return array ("type"=>"view", "view"=>"flirtify", "pageVars"=>$this->content); }
+            return array ("type"=>"view", "view"=>"initialise", "pageVars"=>$this->content); }
 
-        $this->content["messages"][] = "Invalid Flirtify Action";
+        $this->content["messages"][] = "Invalid Initialise Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 
     }

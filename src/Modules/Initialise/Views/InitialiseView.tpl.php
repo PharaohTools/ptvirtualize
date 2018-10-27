@@ -3,4 +3,4 @@
    echo $pageVars["result"] ;
 ?>
 
-In Autopilot Flirtify
+In Autopilot Initialise

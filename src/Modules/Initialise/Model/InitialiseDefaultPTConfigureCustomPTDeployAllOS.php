@@ -3,7 +3,7 @@
 Namespace Model;
 
 // @todo shouldnt this extend base templater? is it missing anything?
-class FlirtifyDefaultPTConfigureCustomPTDeployAllOS extends Base {
+class InitialiseDefaultPTConfigureCustomPTDeployAllOS extends Base {
 
     // Compatibility
     public $os = array("any") ;
@@ -22,19 +22,19 @@ class FlirtifyDefaultPTConfigureCustomPTDeployAllOS extends Base {
       parent::__construct($params);
     }
 
-    public function askWhetherToFlirtify() {
-        if ($this->askToScreenWhetherToFlirtify() != true) { return false; }
-        $this->doFlirtify() ;
+    public function askWhetherToInitialise() {
+        if ($this->askToScreenWhetherToInitialise() != true) { return false; }
+        $this->doInitialise() ;
         return true;
     }
 
-    public function askToScreenWhetherToFlirtify() {
+    public function askToScreenWhetherToInitialise() {
         if (isset($this->params["yes"]) && $this->params["yes"]==true) { return true ; }
-        $question = 'Flirtify This?';
+        $question = 'Initialise This?';
         return self::askYesOrNo($question, true);
     }
 
-    protected function doFlirtify() {
+    protected function doInitialise() {
         $templatesDir = str_replace("Model", "Templates".DS."Virtufiles", dirname(__FILE__) ) ;
         $template = $templatesDir . DS."default-ptconfigure-ptdeploy.php";
         $templatorFactory = new \Model\Templating();
