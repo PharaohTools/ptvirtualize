@@ -3,7 +3,7 @@
 Namespace Model;
 
 // @todo shouldnt this extend base templater? is it missing anything?
-class InitialiseDefaultPTConfigureAllOS extends Base {
+class InitialiseDefaultAllOS extends Base {
 
     // Compatibility
     public $os = array("any") ;
@@ -56,6 +56,9 @@ class InitialiseDefaultPTConfigureAllOS extends Base {
             if (isset($this->params[$default_key])) {
                 $overrides[$default_key] = $this->params[$default_key] ;
             }
+        }
+        if (isset($this->params['box']) && !isset($this->params['box_url'])) {
+            unset($overrides['box_url']) ;
         }
         return $overrides ;
     }

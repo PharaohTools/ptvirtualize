@@ -24,16 +24,6 @@ class Initialise extends Base {
             if (is_array($thisModel)) { return $this->failDependencies($pageVars, $this->content, $thisModel) ; }
             return array ("type"=>"view", "view"=>"initialise", "pageVars"=>$this->content); }
 
-        $actionsToModelGroups = array(
-            "default-ptconfigure" => "DefaultPTConfigure", "default-ptconfigure-ptdeploy" => "DefaultPTConfigureCustomPTDeploy",
-            "custom-ptconfigure-ptdeploy" => "CustomPTConfigureCustomPTDeploy" ) ;
-
-        if (in_array($action, array_keys($actionsToModelGroups))) {
-            $thisModel = $this->getModelAndCheckDependencies(substr(get_class($this), 11), $pageVars, $actionsToModelGroups[$action]) ;
-            $this->content["result"] = $thisModel->askWhetherToInitialise();
-            if (is_array($thisModel)) { return $this->failDependencies($pageVars, $this->content, $thisModel) ; }
-            return array ("type"=>"view", "view"=>"initialise", "pageVars"=>$this->content); }
-
         $this->content["messages"][] = "Invalid Initialise Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 

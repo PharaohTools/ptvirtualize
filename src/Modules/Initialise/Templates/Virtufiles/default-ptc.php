@@ -19,7 +19,8 @@ class Virtufile extends VirtufileBase {
     private function setConfig() {
         $this->setDefaultConfig();
         $this->config["vm"]["name"] = "<%var.tpl.php%>name</%var.tpl.php%>" ;
-        $this->config["vm"]["gui_mode"] = "<%var.tpl.php%>gui_mode</%var.tpl.php%>" ;<%code.tpl.php%>
+        $this->config["vm"]["gui_mode"] = "<%var.tpl.php%>gui_mode</%var.tpl.php%>" ;
+<%code.tpl.php%>
         if (isset($box) && !isset($box_url)) {
             echo '        $this->config["vm"]["box"] = "<%var.tpl.php%>box</%var.tpl.php%>" ;'."\n" ;
         } else {
