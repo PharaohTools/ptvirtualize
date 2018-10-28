@@ -113,6 +113,7 @@ class TemplatingLinuxMac extends BaseTemplater {
             $one_code_set['code'] = $this->removeTags($one_code_set['raw'], $startTag, $endTag) ;
             // var_dump($one_code_set) ;
             ob_start() ;
+            extract($this->params) ;
             eval($one_code_set['code']) ;
             $parsed = ob_get_clean() ;
             $fData = substr_replace($fData, '', $one_code_set['start_pos'], $length);
