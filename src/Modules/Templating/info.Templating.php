@@ -2,11 +2,11 @@
 
 Namespace Info;
 
-class TemplatingInfo extends Base {
+class TemplatingInfo extends PTConfigureBase {
 
-    public $hidden = true;
+    public $hidden = false;
 
-    public $name = "Templating";
+    public $name = "Install files with placeholders or lines replaced at runtime";
 
     public function __construct() {
       parent::__construct();
@@ -22,14 +22,15 @@ class TemplatingInfo extends Base {
 
     public function helpDefinition() {
       $help = <<<"HELPDATA"
-  This command allows you to apply a templated file within the file system.
-
+  This module allows you to install a templated file with new values.
 
   Templating, templating, template
 
         - install
         Installs a template
-        example: ptvirtualize template install
+        example: ptconfigure template install
+        example: ptconfigure template install -yg
+        example: ptconfigure template install -yg --source="" --target=""
 
 HELPDATA;
       return $help ;
