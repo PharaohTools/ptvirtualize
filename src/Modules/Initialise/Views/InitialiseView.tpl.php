@@ -1,6 +1,6 @@
 <?php
 
-   echo $pageVars["result"] ;
+   echo ($pageVars["result"] == true) ? 'Success' : 'Failure' ;
 ?>
 
 In Autopilot Initialise

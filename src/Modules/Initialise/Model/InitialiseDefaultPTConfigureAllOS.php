@@ -40,11 +40,10 @@ class InitialiseDefaultPTConfigureAllOS extends Base {
         $repo = $repo_home.$repo_item ;
         $defaults =
             array(
-                'box_name' => 'pharaohubuntu14041amd64',
-                'vm_name' => 'ptvirtualize_default',
-                'vm_gui_mode' => "gui",
-                'vm_box_url' => $repo,
-                'vm_box' => "isophpexampleapp",
+                'name' => 'ptvirtualize_default',
+                'gui_mode' => "gui",
+                'box_url' => $repo,
+                'box' => "isophpexampleapp",
             );
         $defaults_with_overrides = $this->applyParameterOverrides($defaults) ;
         return $defaults_with_overrides ;
