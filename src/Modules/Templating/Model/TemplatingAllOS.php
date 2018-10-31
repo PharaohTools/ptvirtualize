@@ -5,7 +5,7 @@ Namespace Model;
 class TemplatingLinuxMac extends BaseTemplater {
 
     // Compatibility
-    public $os = array("Linux", "Darwin") ;
+    public $os = array("any") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
