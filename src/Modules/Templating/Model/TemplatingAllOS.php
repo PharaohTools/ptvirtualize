@@ -2,7 +2,7 @@
 
 Namespace Model;
 
-class TemplatingLinuxMac extends BaseTemplater {
+class TemplatingAllOS extends BaseTemplater {
 
     // Compatibility
     public $os = array("any") ;
