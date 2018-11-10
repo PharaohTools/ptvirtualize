@@ -11,8 +11,9 @@ class Base {
     public function __construct() {
     }
 
+    // PTConfigureBase specifies these
     public function routesAvailable() {
-      return array("help", "initialize", "init", "execute");
+        return array();
     }
 
     public function routeAliases() {
