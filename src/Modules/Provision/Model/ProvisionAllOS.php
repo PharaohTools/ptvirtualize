@@ -94,7 +94,7 @@ class ProvisionAllOS extends BaseFunctionModel {
         $ray["provision"] = array("provision", "pro") ;
         foreach($ray[$param] as $entry) {
             if (isset($this->params[$entry])) {
-                return $this->params[$entry] ; } }
+                return true ; } }
         return null ;
     }
 
