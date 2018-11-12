@@ -16,10 +16,10 @@ class BaseVirtualboxAllOS extends BaseFunctionModel {
 
     public function isAvailable() {
         $command = VBOXMGCOMM ;
-        $rc = $this->executeAndGetReturnCode($command);
+        $rc = $this->executeAndGetReturnCode($command, false, null, true);
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
-        if ($rc == 0) {
+        if ($rc['rc'] == 0) {
             $logging->log("Virtualbox is available on this system", $this->getModuleName()) ;
             return true ; }
         else {

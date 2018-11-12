@@ -16,7 +16,7 @@ class BoxUpModify extends BaseVirtualboxAllOS {
 
     public function modify($name, $key, $value) {
         $command = VBOXMGCOMM." modifyvm {$name} --$key \"$value\"" ;
-        $ret = $this->executeAndGetReturnCode($command, true);
+        $ret = $this->executeAndGetReturnCode($command, false);
         return $ret ;
     }
 
@@ -44,7 +44,7 @@ class BoxUpModify extends BaseVirtualboxAllOS {
 
     public function removeShare($name, $share) {
         $command  = VBOXMGCOMM." sharedfolder remove {$name} --name {$share} " ;
-        $ret = $this->executeAndGetReturnCode($command, true);
+        $ret = $this->executeAndGetReturnCode($command, false);
         return ($ret == "0") ? true : false ;
     }
 
@@ -55,7 +55,7 @@ class BoxUpModify extends BaseVirtualboxAllOS {
         foreach ($flags as $flag) {
             if (isset($sharedFolder[$flag])&& in_array($sharedFolder[$flag], array(true, 'true', 'yes', 'enable', 'enabled', 'y'))) {
                 $command .= " --$flag" ; } }
-        $ret = $this->executeAndGetReturnCode($command, true);
+        $ret = $this->executeAndGetReturnCode($command, false);
         $res1 = ($ret['rc'] == "0") ? true : false ;
 //        var_dump('addShare res1', $res1, 'ret', $ret, $command) ;
         if ($res1 == false) {
@@ -68,7 +68,7 @@ class BoxUpModify extends BaseVirtualboxAllOS {
             $logging->log("Enabling Virtualbox Symlinks on Share {$sharedFolder["name"]} for VM {$name}", $this->getModuleName()) ;
             //  VBoxManage setextradata VM_NAME VBoxInternal2/SharedFoldersEnableSymlinksCreate/SHARE_NAME 1
             $command  = VBOXMGCOMM." setextradata {$name} VBoxInternal2/SharedFoldersEnableSymlinksCreate/{$sharedFolder["name"]} 1" ;
-            $ret = $this->executeAndGetReturnCode($command, true);
+            $ret = $this->executeAndGetReturnCode($command, false);
             $res1 = ($ret == "0") ? true : false ;
             if ($res1 == false) {
                 return $res1 ;
@@ -94,7 +94,7 @@ class BoxUpModify extends BaseVirtualboxAllOS {
 
     public function modifyDisk($disk, $size) {
         $command = VBOXMGCOMM." modifyhd $disk --resize {$size}" ;
-        $ret = $this->executeAndGetReturnCode($command, true) ;
+        $ret = $this->executeAndGetReturnCode($command, false) ;
         return ($ret == "0") ? true : false ;
     }
 
