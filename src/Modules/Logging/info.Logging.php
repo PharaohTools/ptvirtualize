@@ -4,7 +4,7 @@ Namespace Info;
 
 class LoggingInfo extends PTConfigureBase {
 
-    public $hidden = true;
+    public $hidden = false;
 
     public $name = "Logging - Output errors to the logging";
 
