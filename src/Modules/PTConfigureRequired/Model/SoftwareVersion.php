@@ -24,7 +24,7 @@ class SoftwareVersion {
     }
 
     public function isGreaterThan(\Model\SoftwareVersion $compare) {
-        if (is_object($compare) && $compare instanceof SoftwareVersion) {
+        if (is_object($compare) && $compare instanceof \Model\SoftwareVersion) {
             $myPieces = explode(".", $this->shortVersionNumber) ;
             $comparePieces = explode(".", $compare->shortVersionNumber) ;
             $highestCount = max($myPieces, $comparePieces);
@@ -41,13 +41,13 @@ class SoftwareVersion {
     }
 
     public function isLessThan(\Model\SoftwareVersion $compare) {
-        if (is_object($compare) && $compare instanceof SoftwareVersion) {
+        if (is_object($compare) && $compare instanceof \Model\SoftwareVersion) {
             $myPieces = explode(".", $this->shortVersionNumber) ;
             $comparePieces = explode(".", $compare->shortVersionNumber) ;
             $highestCount = max($myPieces, $comparePieces);
             for ( $i=0 ; $i<=count($highestCount); $i++) {
-                $cpInt = (isset($comparePieces[$i]) && is_int($comparePieces[$i])) ? $comparePieces[$i] : 0 ;
-                $mpInt = (isset($myPieces[$i]) && is_int($myPieces[$i])) ? $myPieces[$i] : 0 ;
+                $cpInt = (isset($comparePieces[$i])) ? $comparePieces[$i] : 0 ;
+                $mpInt = (isset($myPieces[$i]) ) ? $myPieces[$i] : 0 ;
                 if ($cpInt < $mpInt ) {
                     return false ; }
                 if ($cpInt > $mpInt ) {
@@ -55,6 +55,19 @@ class SoftwareVersion {
                 else {
                     continue; } } }
         return false ;
+    }
+
+    public function isEqualTo(\Model\SoftwareVersion $compare) {
+        if (is_object($compare) && $compare instanceof \Model\SoftwareVersion) {
+            if ( $this->shortVersionNumber != "" &&
+                 $compare->shortVersionNumber != "" &&
+                 $this->shortVersionNumber == $compare->shortVersionNumber) {
+                return true ; }
+            if ( $this->fullVersionNumber == $compare->fullVersionNumber) {
+                return true ; }
+            return false ; }
+        else {
+            return false; }
     }
 
     public function setCondition($version, $operation) {
@@ -70,16 +83,20 @@ class SoftwareVersion {
             $op = $this->getOpFromSymbol($condition["operation"]) ;
             if ($op == "gt") {
                 $conditionResults[] = ($this->isGreaterThan($conditionVersion) == true) ? true : false ;  }
-            if ($op == "lt") {
-                $conditionResults[] = ($this->isLessThan($conditionVersion) == true) ? true : false ;  } }
+            else if ($op == "lt") {
+                $conditionResults[] = ($this->isLessThan($conditionVersion) == true) ? true : false ;  }
+            else if ($op == "=") {
+                $conditionResults[] = ($this->isEqualTo($conditionVersion) == true) ? true : false ;  } }
         return !in_array(false, $conditionResults) ;
     }
 
     protected function getOpFromSymbol($symbol) {
         if (in_array($symbol, array("gt", ">", "+"))) {
             return "gt" ;  }
-        if (in_array($symbol, array("lt", "<", "-"))) {
+        else if (in_array($symbol, array("lt", "<", "-"))) {
             return "lt" ;  }
+        else if (in_array($symbol, array("=", "equals"))) {
+            return "=" ;  }
         return null ;
     }
 

@@ -51,7 +51,7 @@ class AppConfig {
     }
 
     public static function getProjectVariable($variable, $isLocal=false) {
-        $value = null;
+        $value = array();
         $pFile = ($isLocal == true) ? 'papyrusfilelocal' : 'papyrusfile' ;
         if (self::checkSettingsExistOrCreateIt($pFile)) {
             $appConfigArray = self::loadProjectFile($pFile);
@@ -72,7 +72,7 @@ class AppConfig {
     public static function saveProjectFile($appConfigArray, $pfile = null, $isLocal = false) {
         if ($isLocal == true) { $pfile = 'papyrusfilelocal' ; }
         if (is_null($pfile)) {$pfile = 'papyrusfile' ; }
-        $appConfigSerialized = json_encode($appConfigArray);
+        $appConfigSerialized = json_encode($appConfigArray, JSON_PRETTY_PRINT);
         file_put_contents($pfile, $appConfigSerialized);
         // chmod($pfile, 0777);
     }
@@ -104,7 +104,7 @@ class AppConfig {
 
     private static function loadAppFile() {
         $appFile = self::getVarFileLocation();
-        if (!file_exists($appFile)){ shell_exec("touch ".$appFile); }
+        if (!file_exists($appFile)){ touch($appFile); }
         $appConfigArrayString = file_get_contents($appFile);
         $decoded = json_decode($appConfigArrayString, true);
         return $decoded;
@@ -117,12 +117,12 @@ class AppConfig {
     }
 
     private static function getVarFileLocation() {
-        $baseDir = self::getAppBaseDir().DS.PHARAOH_APP.'vars' ;
+        $baseDir = self::getAppBaseDir().DS.'ptconfigurevars' ;
         return $baseDir;
     }
 
     private static function getAppBaseDir() {
-        $baseDir = PFILESDIR.PHARAOH_APP.DS.PHARAOH_APP;
+        $baseDir = PFILESDIR."ptconfigure".DS."ptconfigure";
         return $baseDir;
     }
 

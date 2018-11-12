@@ -10,6 +10,7 @@ class BaseLinuxApp extends Base {
     protected $installUserHomeDir;
     protected $programExecutorCommand;
     public $defaultStatusCommandPrefix = "command -v";
+    public $cur_progress ;
 
     public function __construct($params) {
         parent::__construct($params);
@@ -101,18 +102,20 @@ if not doing versions
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         if (isset($this->params["version"])) { // if checking versions
-            $logging->log("Ensure install is checking versions") ;
+            $logging->log("Ensure install is checking versions", $this->getModuleName()) ;
             if ($this->askStatus() == true) {  // if already installed
-                $logging->log("Already installed, checking version constraints") ;
+                $logging->log("Already installed, checking version constraints", $this->getModuleName()) ;
                 if (!isset($this->params["version-operator"])) {
-                    $logging->log("No --version-operator is set. Assuming requested version operator is minimum") ;
+                    $logging->log("No --version-operator is set. Assuming requested version operator is minimum",
+                        $this->getModuleName()) ;
                     $this->params["version-operator"] = "+" ; }
                 $currentVersion = $this->getVersion() ;
                 if ($currentVersion !== false) {
                     $currentVersion->setCondition($this->params["version"], $this->params["version-operator"]) ; }
                 if (is_object($currentVersion) && $currentVersion->isCompatible() == true) {
                     // status 1
-                    $logging->log("Installed version {$currentVersion->shortVersionNumber} matches constraints, not installing") ; }
+                    $logging->log("Installed version {$currentVersion->shortVersionNumber} matches constraints, not installing",
+                        $this->getModuleName()) ; }
                 else {
                     $recVersion = $this->getVersion("Recommended") ;
                     if ($recVersion !== false) {
@@ -122,7 +125,7 @@ if not doing versions
                         $logging->log(
                             "Installed version {$currentVersion->shortVersionNumber} does not match constraints, but ".
                             "Recommended version {$recVersion->shortVersionNumber} matches constraints, so installing".
-                            " the old version and reinstalling the Recommended.") ;
+                            " the old version and reinstalling the Recommended.", $this->getModuleName()) ;
                         $this->unInstall() ;
                         $this->install() ;  }
                     else {
@@ -135,35 +138,36 @@ if not doing versions
                                 $logging->log(
                                     "Installed version {$currentVersion->shortVersionNumber} does not match constraints, but ".
                                     "Latest version {$latestVersion->shortVersionNumber} matches constraints, and use of Latest".
-                                    " version is allowed so installing the old version and reinstalling the Latest.") ;
+                                    " version is allowed so installing the old version and reinstalling the Latest.", $this->getModuleName()) ;
                                 $this->unInstall() ;
                                 // @todo this functionality doesnt work yet, but it should do this
                                 $this->install("Latest") ;  }
                             else {
-                                var_dump($currentVersion, $latestVersion);
+//                                var_dump($currentVersion, $latestVersion);
                                 // status 4
                                 $logging->log(
                                     "Installed version {$currentVersion->shortVersionNumber} does not match constraints, nor does ".
                                     "Recommended version {$recVersion->shortVersionNumber} or Latest version {$latestVersion->shortVersionNumber}.".
-                                    " ... No More options! Cannot Continue.") ;
+                                    " ... No More options! Cannot Continue.", $this->getModuleName()) ;
                                 \Core\BootStrap::setExitCode(1) ; } }
                         else {
                             // status 5
                             $logging->log(
                                 "Installed version {$currentVersion->shortVersionNumber} does not match constraints, nor does ".
                                 "Recommended version {$recVersion->shortVersionNumber}. Latest versions are not allowed".
-                                " ... No More options! Cannot Continue.") ;
+                                " ... No More options! Cannot Continue.", $this->getModuleName()) ;
                             \Core\BootStrap::setExitCode(1) ; } } } }
             else { // if not already installed
-                $logging->log("Not already installed, checking version constraints") ;
+                $logging->log("Not already installed, checking version constraints", $this->getModuleName()) ;
                 if (!isset($this->params["version-operator"])) {
-                    $logging->log("No --version-operator is set. Assuming requested version is minimum") ;
+                    $logging->log("No --version-operator is set. Assuming requested version is minimum", $this->getModuleName()) ;
                     $this->params["version-operator"] = "+" ; }
                 $recVersion = $this->getVersion("Recommended") ;
                 $recVersion->setCondition($this->params["version"], $this->params["version-operator"]) ;
                 if ($recVersion->isCompatible()) {
                     // status 6
-                    $logging->log("Recommended version {$recVersion->shortVersionNumber} matches constraints, installing") ;
+                    $logging->log("Recommended version {$recVersion->shortVersionNumber} matches constraints, installing",
+                        $this->getModuleName()) ;
                     $this->install() ;  }
                 else {
 
@@ -176,7 +180,8 @@ if not doing versions
                             $logging->log(
                                 "Recommended version {$recVersion->shortVersionNumber} does not match constraints, but ".
                                 "Latest version {$latestVersion->shortVersionNumber} matches constraints, and use of Latest".
-                                " version is allowed so installing the old version and reinstalling the Latest.") ;
+                                " version is allowed so installing the old version and reinstalling the Latest.",
+                                $this->getModuleName()) ;
                             $this->unInstall() ;
                             // @todo this functionality doesnt work yet, but it should do this
                             $this->install("Latest") ;  }
@@ -185,36 +190,44 @@ if not doing versions
                             $logging->log(
                                 "Recommended version {$recVersion->shortVersionNumber} does not match constraints, nor ".
                                 "does or Latest version {$latestVersion->shortVersionNumber}. ... No More options! " .
-                                "Cannot Continue.") ;
+                                "Cannot Continue.", $this->getModuleName()) ;
                             \Core\BootStrap::setExitCode(1) ; } }
                     else {
                         // status 9
                         $logging->log(
                             "Recommended version {$recVersion->shortVersionNumber} does not match constraints. Latest " .
-                            "versions are not allowed ... No More options! Cannot Continue.") ;
+                            "versions are not allowed ... No More options! Cannot Continue.", $this->getModuleName()) ;
                         \Core\BootStrap::setExitCode(1) ; } } } }
         else { // not checking version
-            $logging->log("Ensure module install is not checking versions") ;
+            $logging->log("Ensure install is not checking versions", $this->getModuleName()) ;
             if ($this->askStatus() == true) {
                 // status 10
-                $logging->log("Not installing as already installed") ; }
+                $logging->log("Not installing as already installed", $this->getModuleName()) ; }
             else {
                 // status 11
-                $logging->log("Installing as not installed") ;
+                $logging->log("Installing as not installed", $this->getModuleName()) ;
                 $this->install(); } }
         return true;
     }
 
     public function install() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
         if (isset($this->params["hide-title"])) { $this->populateTinyTitle() ; }
         $this->showTitle();
-        $this->doInstallCommand();
+        $dic = $this->doInstallCommand() ;
+        if ($dic === false) {
+            $logging->log("Install steps failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+            return false ; }
         if ($this->programDataFolder) {
             $this->changePermissions($this->programDataFolder); }
         // $this->setInstallFlagStatus(true) ; @todo we can deprecate this now as status is dynamic, and install is used by everything not just installers
         if (isset($this->params["hide-completion"])) { $this->populateTinyCompletion(); }
         $this->showCompletion();
-        return true;
+        return true ;
+        // @todo should probably return askStatus
+        // return $this->askStatus();
+        // return $this->askStatus();
     }
 
     public function unInstall() {
@@ -233,11 +246,11 @@ if not doing versions
             $serviceFactory = new Service();
             $serviceManager = $serviceFactory->getModel($this->params) ;
             foreach ($this->rebootsCommand as $rebootsCommand) {
-                $logging->log("Ensuring {$rebootsCommand} Will Run at Reboots") ;
+                $logging->log("Ensuring {$rebootsCommand} Will Run at Reboots", $this->getModuleName()) ;
                 $serviceManager->setService($rebootsCommand);
                 $serviceManager->runAtReboots(); } }
         else {
-            $logging->log("This module does not report any services which can run at reboots") ; }
+            $logging->log("This module does not report any services which can run at reboots", $this->getModuleName()) ; }
     }
 
     protected function showTitle() {
@@ -277,25 +290,56 @@ if not doing versions
     }
 
     protected function doInstallCommand(){
-        self::swapCommandArrayPlaceHolders($this->installCommands);
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        if (method_exists($this, "setInstallCommands")) { $this->setInstallCommands() ; }
+        $this->swapCommandArrayPlaceHolders($this->installCommands);
+        # var_dump('BaseLinuxApp') ;
+        $i = 1 ;
         foreach ($this->installCommands as $installCommand) {
+            # var_dump('bla do inst command current count is:', $i) ;
+            $i++ ;
+            $res = "" ;
             if ( array_key_exists("method", $installCommand)) {
-                call_user_func_array(array($installCommand["method"]["object"], $installCommand["method"]["method"]), $installCommand["method"]["params"]); }
+                # var_dump('bla before cufa', get_class($installCommand["method"]["object"]), $installCommand["method"]["method"], $installCommand["method"]["params"]);
+                $res = call_user_func_array(array($installCommand["method"]["object"], $installCommand["method"]["method"]), $installCommand["method"]["params"]);
+                # var_dump('bla res') ;
+            }
             else if ( array_key_exists("command", $installCommand)) {
                 if (!is_array($installCommand["command"])) { $installCommand["command"] = array($installCommand["command"]); }
                 $this->swapCommandArrayPlaceHolders($installCommand["command"]) ;
-                self::executeAsShell($installCommand["command"]) ; } }
+                foreach ($installCommand["command"] as $command) {
+                    // var_dump("cmm", $installCommand);
+                    $logging->log("Executing Install Command: {$command}", $this->getModuleName()) ;
+                    $rc = self::executeAndGetReturnCode($command, true, true);
+                    if ($rc["rc"] !== 0) {
+                        $res = false ;
+                        break ; } } }
+            # var_dump('dumps');
+            if ($res === false) {
+                $logging->log("Failed Install Step", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return false ; } }
+        return true ;
     }
 
     protected function doUnInstallCommand(){
-        self::swapCommandArrayPlaceHolders($this->uninstallCommands);
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        if (method_exists($this, "setUninstallCommands")) { $this->setUninstallCommands() ; }
+        $this->swapCommandArrayPlaceHolders($this->uninstallCommands);
         foreach ($this->uninstallCommands as $uninstallCommand) {
+            $res = "" ;
             if ( array_key_exists("method", $uninstallCommand)) {
-                call_user_func_array(array($uninstallCommand["method"]["object"], $uninstallCommand["method"]["method"]), $uninstallCommand["method"]["params"]); }
+                $res = call_user_func_array(array($uninstallCommand["method"]["object"], $uninstallCommand["method"]["method"]), $uninstallCommand["method"]["params"]); }
             else if ( array_key_exists("command", $uninstallCommand)) {
                 if (!is_array($uninstallCommand["command"])) { $uninstallCommand["command"] = array($uninstallCommand["command"]); }
                 $this->swapCommandArrayPlaceHolders($uninstallCommand["command"]) ;
-                self::executeAsShell($uninstallCommand["command"]) ; } }
+                $res = self::executeAsShell($uninstallCommand["command"]) ; }
+            if ($res === false) {
+                $logging->log("Failed Uninstall Step", $this->getModuleName()) ;
+                \Core\BootStrap::setExitCode(1) ;
+                return false ; } }
+        return true ;
     }
 
     protected function changePermissions($autoPilot, $target=null){
@@ -305,14 +349,14 @@ if not doing versions
     }
 
     protected function deleteExecutorIfExists(){
-        $command = 'rm -f '.$this->programExecutorFolder.DIRECTORY_SEPARATOR.$this->programNameMachine;
+        $command = 'rm -f '.$this->programExecutorFolder.DS.$this->programNameMachine;
         self::executeAndOutput($command, "Program Executor Deleted if existed");
         return true;
     }
 
     protected function saveExecutorFile(){
         $this->populateExecutorFile();
-        $executorPath = $this->programExecutorFolder.DIRECTORY_SEPARATOR.$this->programNameMachine;
+        $executorPath = $this->programExecutorFolder.DS.$this->programNameMachine;
         file_put_contents($executorPath, $this->bootStrapData);
         $this->changePermissions(null, $executorPath);
     }
@@ -322,6 +366,81 @@ if not doing versions
 <?php\n
 exec('".$this->programExecutorCommand."');\n
 ?>";
+    }
+
+    public function getPackageSearchString() {
+        if (isset($this->packageSearchString)) {
+            return $this->packageSearchString ;
+        } else {
+            return $this->programNameInstaller ;
+        }
+    }
+
+
+    public function packageDownload($remote_source, $temp_exe_file) {
+        if (file_exists($temp_exe_file)) {
+            unlink($temp_exe_file) ;
+        }
+
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Downloading From {$remote_source}", $this->getModuleName() ) ;
+
+        echo "Download Starting ...".PHP_EOL;
+        ob_start();
+        ob_flush();
+        flush();
+
+        $fp = fopen ($temp_exe_file, 'w') ;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $remote_source);
+        // curl_setopt($ch, CURLOPT_BUFFERSIZE,128);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, array($this, 'progress'));
+        curl_setopt($ch, CURLOPT_NOPROGRESS, false); // needed to make progress function work
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_exec($ch);
+        # $error = curl_error($ch) ;
+        # var_dump('downloaded', $downloaded, $error) ;
+        curl_close($ch);
+
+        ob_flush();
+        flush();
+
+        echo "Done".PHP_EOL ;
+        return $temp_exe_file ;
+    }
+
+    public function progress($resource, $download_size, $downloaded, $upload_size, $uploaded) {
+        $is_noprogress = (isset($this->params['noprogress']) ) ? true : false ;
+        if ($is_noprogress == false) {
+            if($download_size > 0) {
+                $dl = ($downloaded / $download_size)  * 100 ;
+                # var_dump('downloaded', $dl) ;
+                $perc = round($dl, 2) ;
+                # var_dump('perc', $perc) ;
+                echo "{$perc} % \r" ;
+            }
+        } else {
+            if($download_size > 0) {
+                $dl = ($downloaded / $download_size)  * 100 ;
+                # var_dump('downloaded', $dl) ;
+                $perc = round($dl) ;
+                # var_dump('perc', $perc) ;
+
+                if ($perc !== $this->cur_progress) {
+                    echo "{$perc} %  \r\n" ;
+                    $this->cur_progress = $perc ;
+                }
+
+            }
+        }
+        ob_flush();
+        flush();
     }
 
 }
