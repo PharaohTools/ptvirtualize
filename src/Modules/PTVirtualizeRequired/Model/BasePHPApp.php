@@ -17,7 +17,7 @@ class BasePHPApp extends Base {
   }
 
   private function populateStartDirectory() {
-    $this->startDirectory = str_replace("/$this->programNameMachine", "", self::tempDir);
+    $this->startDirectory = str_replace("/$this->programNameMachine", "", self::$tempDir);
   }
 
   public function askWhetherToInstallPHPApp() {
