@@ -21,9 +21,7 @@ class BoxLinuxMac extends BaseLinuxApp {
     protected $vmname ;
     protected $provider ;
     protected $metadata ;
-
-    protected $cur_progress ;
-
+    
     public function __construct($params) {
         parent::__construct($params);
         $this->actionsToMethods = $this->setActionsToMethods() ;
