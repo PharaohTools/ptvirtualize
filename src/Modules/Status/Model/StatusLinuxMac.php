@@ -52,20 +52,28 @@ class StatusLinuxMac extends BaseFunctionModel {
 //        $logging->log("Looking for Virtufiles...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
         $timefile = '/tmp/vf'.time() ;
         //
-        $comm = 'find / -name Virtufile 2>&1 > '.$timefile ;
-        $res = self::executeAndGetReturnCode($comm) ;
-
-        if ($res === false) {
-            return false ;}
-
-        $raw = file_get_contents($timefile) ;
-        $lines = explode("\n", $raw) ;
+        $home = $_SERVER['HOME'] ;
+        $default_directories = array($home, '/opt/') ;
         $vms = array() ;
-        foreach ($lines as $line) {
-            if (strpos($line, 'find: ') === 0) {
-                // nt a vm
-            } else {
-                $vms[] = $line ;
+
+        foreach ($default_directories as $default_directory) {
+
+            $comm = 'find '.$default_directory.' -name Virtufile 2>&1 > '.$timefile ;
+            ob_start() ;
+            $res = self::executeAndGetReturnCode($comm) ;
+            $empty = ob_get_clean();
+
+            if ($res === false) {
+                return false ;}
+
+            $raw = file_get_contents($timefile) ;
+            $lines = explode("\n", $raw) ;
+            foreach ($lines as $line) {
+                if (strpos($line, 'find: ') === 0) {
+                    // nt a vm
+                } else {
+                    $vms[] = $line ;
+                }
             }
         }
         return $vms;
