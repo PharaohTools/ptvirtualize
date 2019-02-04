@@ -5,9 +5,10 @@ Namespace Core;
 class View {
 
   public function executeView($view, Array $viewVars) {
-      $ep = (isset($viewVars["route"]["extraParams"])) ? $viewVars["route"]["extraParams"] : array() ;
-      $baseMod = new \Model\Base($ep) ;
-      $viewVars["params"] = $baseMod->params ;
+//      var_dump('one', $viewVars) ;
+//      $ep = (isset($viewVars["route"]["extraParams"])) ? $viewVars["route"]["extraParams"] : array() ;
+//      $baseMod = new \Model\Base($ep) ;
+//      $viewVars["params"] = $baseMod->params ;
       $vvLayoutCond1 = (isset($viewVars["params"]["output-format"])
           && $viewVars["params"]["output-format"] == "HTML") ;
       $vvLayoutCond2 = (isset($viewVars["params"]["output-format"])
@@ -32,7 +33,8 @@ class View {
           die ("View Layout Not Found\n"); }
   }
 
-  public function loadTemplate ($view, Array $pageVars) {
+  public function loadTemplate ($view, $pageVars) {
+//      var_dump('two', $pageVars) ;
     ob_start();
     $outputFormat = "" ;
     if (isset($pageVars["params"]["output-format"])) {
