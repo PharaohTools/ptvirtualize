@@ -46,7 +46,7 @@ class BaseFunctionModel extends BaseLinuxApp {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if (isset($this->virtufile->config["vm"]["provider"])) {
-            $logging->log("Provider {$this->virtufile->config["vm"]["provider"]} found in Virtufile", $this->getModuleName()) ;
+//            $logging->log("Provider {$this->virtufile->config["vm"]["provider"]} found in Virtufile", $this->getModuleName()) ;
             $this->provider = $this->getProvider($this->virtufile->config["vm"]["provider"], $modGroup) ;
             return $this->provider->isAvailable() ; }
         else {
