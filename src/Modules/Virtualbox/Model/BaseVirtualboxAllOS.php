@@ -20,7 +20,7 @@ class BaseVirtualboxAllOS extends BaseFunctionModel {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         if ($rc['rc'] == 0) {
-            $logging->log("Virtualbox is available on this system", $this->getModuleName()) ;
+//            $logging->log("Virtualbox is available on this system", $this->getModuleName()) ;
             return true ; }
         else {
             $logging->log("Virtualbox is not available on this system", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
