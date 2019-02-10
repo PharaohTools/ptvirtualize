@@ -38,7 +38,10 @@ class StatusLinuxMac extends BaseFunctionModel {
             $logging->log("Status module was unable to load a Virtufile", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
             return false ; }
         $this->findProvider("BoxStatus");
-        return $this->provider->statusFull($this->virtufile->config["vm"]["name"]);
+        $result_object = array();
+        $result_object['vm_name'] = $this->virtufile->config["vm"]["name"] ;
+        $result_object['vm_status_output'] = $this->provider->statusFull($this->virtufile->config["vm"]["name"]);
+        return $result_object ;
     }
 
     public function listVms() {
