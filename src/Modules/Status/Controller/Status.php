@@ -31,6 +31,14 @@ class Status extends Base {
             $this->content["result"] = $thisModel->listVms();
             return array ("type"=>"view", "view"=>"status", "pageVars"=>$this->content); }
 
+        if (in_array($action, array('extended', "vm-execution"))) {
+            $this->content["result"] = $thisModel->listVms(true);
+            return array ("type"=>"view", "view"=>"status", "pageVars"=>$this->content); }
+
+        if (in_array($action, array("fulldata"))) {
+            $this->content["result"] = $thisModel->statusData();
+            return array ("type"=>"view", "view"=>"status", "pageVars"=>$this->content); }
+
         $this->content["messages"][] = "Invalid Status Action";
         return array ("type"=>"control", "control"=>"index", "pageVars"=>$this->content);
 

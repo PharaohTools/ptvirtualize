@@ -14,7 +14,7 @@ class StatusWindows extends StatusLinuxMac {
     // Model Group
     public $modelGroup = array("Default") ;
 
-    public function listVms() {
+    public function listVms($extended = false) {
         error_reporting(0) ;
         $comm = 'cd/ && dir /s/b Virtufile ' ;
         $res = self::executeAndLoad($comm) ;
