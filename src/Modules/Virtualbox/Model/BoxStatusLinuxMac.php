@@ -2,10 +2,10 @@
 
 Namespace Model;
 
-class BoxStatus extends BaseVirtualboxAllOS {
+class BoxStatusLinuxMac extends BaseVirtualboxAllOS {
 
     // Compatibility
-    public $os = array("any") ;
+    public $os = array("Linux", "Darwin") ;
     public $linuxType = array("any") ;
     public $distros = array("any") ;
     public $versions = array("any") ;
@@ -45,10 +45,10 @@ class BoxStatus extends BaseVirtualboxAllOS {
     }
 
     public function getRunStateFromData($result_object) {
-        ob_start() ;
-        var_dump($result_object) ;
-        $out = ob_get_clean() ;
-        file_put_contents('/tmp/thisout', $out) ;
+//        ob_start() ;
+//        var_dump($result_object) ;
+//        $out = ob_get_clean() ;
+//        file_put_contents('/tmp/thisout', $out) ;
         if ($result_object['vm_status_output'] === []) {
             return false ;
         }
@@ -59,10 +59,10 @@ class BoxStatus extends BaseVirtualboxAllOS {
     }
 
     public function existsInProvider($result_object) {
-        ob_start() ;
-        var_dump($result_object) ;
-        $out = ob_get_clean() ;
-        file_put_contents('/tmp/thisout', $out) ;
+//        ob_start() ;
+//        var_dump($result_object) ;
+//        $out = ob_get_clean() ;
+//        file_put_contents('/tmp/thisout', $out) ;
         if (isset($result_object['vm_status_output']) &&
             is_array($result_object['vm_status_output']) &&
             count($result_object['vm_status_output'])>0) {

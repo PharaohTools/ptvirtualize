@@ -39,15 +39,9 @@ class StatusWindows extends StatusLinuxMac {
 
     public function loadStatusFromProvider($virtufile_path) {
         $virtufile_parent_path = dirname($virtufile_path) ;
-//        var_dump($virtufile_parent_path) ;
         $comm = 'cd '.$virtufile_parent_path.' && ptvirtualize status fulldata --output-format=JSON 2> /dev/null' ;
-//        var_dump($comm) ;
-        ob_start();
-        $json = self::executeAndLoad($comm) ;
-        ob_end_clean() ;
-//        var_dump($json) ;
+        $json = shell_exec($comm) ;
         $array_data = json_decode($json) ;
-//        var_dump($array_data) ;
         return $array_data ;
     }
 
