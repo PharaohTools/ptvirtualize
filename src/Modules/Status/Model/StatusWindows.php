@@ -15,7 +15,7 @@ class StatusWindows extends StatusLinuxMac {
     public $modelGroup = array("Default") ;
 
     public function listVms($extended = false) {
-//        error_reporting(0) ;
+        error_reporting(0) ;
         if (isset($this->params['search'])) {
             $directories = json_decode($this->params['search']);
             if (json_last_error() !== JSON_ERROR_NONE) {
