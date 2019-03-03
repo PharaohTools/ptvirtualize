@@ -84,31 +84,34 @@ class StatusLinuxMac extends BaseFunctionModel {
                 return false ;}
             $raw = file_get_contents($timefile) ;
             $lines = explode("\n", $raw) ;
-            foreach ($lines as $line) {
-                if (strpos($line, 'find: ') === 0) {
-                   continue ;
-                } else if (in_array($line, ['', ' '])) {
-                   continue ;
-                } else {
-                    if ($extended === true) {
-                        $one_vm = [];
-                        $virtufile = $this->loadVirtufileAsRandomClass($line) ;
-                        $one_vm['config'] = $virtufile->config ;
-//                        var_dump($one_vm['config']) ;
-//                        die() ;
-                        $one_vm['provider'] = $this->loadStatusFromProvider($line) ;
-                        $vms[$line] = $one_vm ;
-                    } else {
-                        $vms[] = $line ;
-                    }
-                }
-            }
+            $vms = $this->getVMFromLines($vms, $lines, $extended) ;
         }
         unlink($timefile) ;
         return $vms;
     }
 
-    function loadVirtufileAsRandomClass($virtufile_path) {
+    public function getVMFromLines($vms, $lines, $extended) {
+        foreach ($lines as $line) {
+            if (strpos($line, 'find: ') === 0) {
+                continue ;
+            } else if (in_array($line, ['', ' '])) {
+                continue ;
+            } else {
+                if ($extended === true) {
+                    $one_vm = [];
+                    $virtufile = $this->loadVirtufileAsRandomClass($line) ;
+                    $one_vm['config'] = $virtufile->config ;
+                    $one_vm['provider'] = $this->loadStatusFromProvider($line) ;
+                    $vms[$line] = $one_vm ;
+                } else {
+                    $vms[] = $line ;
+                }
+            }
+        }
+        return $vms ;
+    }
+
+    public function loadVirtufileAsRandomClass($virtufile_path) {
         $string = file_get_contents($virtufile_path);
         $micro = microtime(true) ;
         $micro = str_replace('.', '', $micro) ;
@@ -134,17 +137,13 @@ class StatusLinuxMac extends BaseFunctionModel {
         return $virtufile_object ;
     }
 
-    function loadStatusFromProvider($virtufile_path) {
+    public function loadStatusFromProvider($virtufile_path) {
         $virtufile_parent_path = dirname($virtufile_path) ;
-//        var_dump($virtufile_parent_path) ;
         $comm = 'cd '.$virtufile_parent_path.' && ptvirtualize status fulldata --output-format=JSON 2> /dev/null' ;
-//        var_dump($comm) ;
         ob_start();
         $json = self::executeAndLoad($comm) ;
         ob_end_clean() ;
-//        var_dump($json) ;
         $array_data = json_decode($json) ;
-//        var_dump($array_data) ;
         return $array_data ;
     }
 
