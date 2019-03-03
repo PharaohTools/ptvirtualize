@@ -63,11 +63,20 @@ class StatusLinuxMac extends BaseFunctionModel {
 
     public function listVms($extended = false) {
         $timefile = '/tmp/vf'.time() ;
-        $home = $_SERVER['HOME'] ;
-        $default_directories = array($home, '/opt/') ;
+
+        if (isset($this->params['search'])) {
+            $directories = json_decode($this->params['search']);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $directories = explode(',', $this->params['search']) ;
+            }
+        } else {
+            $home = $_SERVER['HOME'] ;
+            $directories = array($home) ;
+            // $default_directories = array('/root') ;
+        }
         $vms = array() ;
-        foreach ($default_directories as $default_directory) {
-            $comm = 'find '.$default_directory.' -name Virtufile 2>&1 > '.$timefile ;
+        foreach ($directories as $one_directory) {
+            $comm = 'find '.$one_directory.' -name Virtufile 1> '.$timefile ;
             ob_start() ;
             $res = self::executeAndGetReturnCode($comm) ;
             $empty = ob_get_clean();
