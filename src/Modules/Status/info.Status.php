@@ -45,6 +45,9 @@ class StatusInfo extends PTConfigureBase {
         - extended, vm-execution
         Return all complete Virtufile and Provider Data
         example: ptvirtualize status extended
+        example: ptvirtualize status extended --search=/opt,/home # Provide Search dirs as String
+        example: ptvirtualize status extended --search='["/opt","/home"]' # Provide Search dirs as JSON
+        example: ptvirtualize status extended --output-format=JSON # Machine Readable output
 
 HELPDATA;
     return $help ;
