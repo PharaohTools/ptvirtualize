@@ -65,7 +65,13 @@ class InitialiseDefaultAllOS extends Base {
 
     private function doInitialise() {
         $templatesDir = str_replace("Model", "Templates".DS."Virtufiles", dirname(__FILE__) ) ;
-        $template = $templatesDir . DS."default-ptc.php";
+        if (isset($this->params['default-template']) ) {
+            $template = $templatesDir . DS.$this->params['default-template'];
+        } else  if (isset($this->params['template']) ) {
+            $template = $this->params['default-template'];
+        } else {
+            $template = $templatesDir . DS."default-ptc.php";
+        }
         $templatorFactory = new \Model\Templating();
         $templator = $templatorFactory->getModel($this->params);
         $targetLocation = "Virtufile" ;
