@@ -49,11 +49,14 @@ class BoxUpModify extends BaseVirtualboxAllOS {
     }
 
     public function addShare($name, $sharedFolder) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
         $command  = VBOXMGCOMM." sharedfolder add {$name} --name {$sharedFolder["name"]} " ;
         $command .= " --hostpath {$sharedFolder["host_path"]}" ;
         $flags = array("transient", "readonly", "automount") ;
         foreach ($flags as $flag) {
             if (isset($sharedFolder[$flag])&& in_array($sharedFolder[$flag], array(true, 'true', 'yes', 'enable', 'enabled', 'y'))) {
+                $logging->log("Adding Share flag $flag for Share {$sharedFolder["name"]}", $this->getModuleName()) ;
                 $command .= " --$flag" ; } }
         $ret = $this->executeAndGetReturnCode($command, false);
         $res1 = ($ret['rc'] == "0") ? true : false ;
@@ -63,8 +66,6 @@ class BoxUpModify extends BaseVirtualboxAllOS {
         }
 //        var_dump('addShare sharedFolder', $sharedFolder) ;
         if (isset($sharedFolder["symlinks"]) && in_array($sharedFolder["symlinks"], array(true, 'true', 'yes', 'enable', 'enabled', 'y'))) {
-            $loggingFactory = new \Model\Logging();
-            $logging = $loggingFactory->getModel($this->params) ;
             $logging->log("Enabling Virtualbox Symlinks on Share {$sharedFolder["name"]} for VM {$name}", $this->getModuleName()) ;
             //  VBoxManage setextradata VM_NAME VBoxInternal2/SharedFoldersEnableSymlinksCreate/SHARE_NAME 1
             $command  = VBOXMGCOMM." setextradata {$name} VBoxInternal2/SharedFoldersEnableSymlinksCreate/{$sharedFolder["name"]} 1" ;
