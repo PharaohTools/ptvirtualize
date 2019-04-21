@@ -45,6 +45,13 @@ class Virtufile extends VirtufileBase {
                 "provisioner" => "Shell",
                 "tool" => "shell",
                 "target" => "guest",
+                "data" => "sudo mkdir /mnt/vboxisoiso/ && sudo mount -o loop /home/username/Downloads/ubuntu-desktop-amd64.iso /mnt/vboxisoiso/"
+            ) ;
+        $this->config["vm"]["provision"][] =
+            array(
+                "provisioner" => "Shell",
+                "tool" => "shell",
+                "target" => "guest",
                 "default" => "MountShares"
             ) ;
         $this->config["vm"]["provision"][] =

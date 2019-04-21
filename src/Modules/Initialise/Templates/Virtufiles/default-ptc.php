@@ -36,7 +36,17 @@ class Virtufile extends VirtufileBase {
                 "guest_path" => "/var/www/hostshare/",
                 'symlinks' => 'enable'
             ) ;
+
+        # /usr/share/virtualbox/VBoxGuestAdditions.iso
+
         # Provisioning
+//        $this->config["vm"]["provision"][] =
+//            array(
+//                "provisioner" => "Shell",
+//                "tool" => "shell",
+//                "target" => "guest",
+//                "default" => "GuestAdditions"
+//            ) ;
         $this->config["vm"]["provision"][] =
             array(
                 "provisioner" => "Shell",
