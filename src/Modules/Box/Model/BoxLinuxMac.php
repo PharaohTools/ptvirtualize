@@ -293,7 +293,7 @@ class BoxLinuxMac extends BaseLinuxApp {
         if (substr($this->source, 0, 7) == "http://" || substr($this->source, 0, 8) == "https://") {
             $logging->log("Box is remote not local, will download to temp directory before adding...", $this->getModuleName()) ;
             set_time_limit(0); // unlimited max execution time
-            $tmpFile = BASE_TEMP_DIR.'file.box' ;
+            $tmpFile = $this->target.'file.box' ;
             $res = $this->packageDownload($this->source, $tmpFile) ;
             if ($res == true) {
                 $this->source = $tmpFile ;
