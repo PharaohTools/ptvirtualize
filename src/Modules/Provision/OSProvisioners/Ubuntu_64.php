@@ -15,7 +15,9 @@ class OSProvisioner extends ProvisionDefaultAllOS {
             $comms .= "apt-get -qq update -y ; sleep 3  ; " ;
             $this->updated = true ;
         }
-        $comms .= "( (apt-get -qq install -y php5 php5-curl git && sleep 3) || apt-get -qq install -y php7.0 php7.0-curl php7.0-xml git ); " ;
+        $comms .= "( (apt-get -qq install -y php5 php5-curl git && sleep 3) || " ;
+        $comms .= "apt-get -qq install -y php7.* php7.*-curl php7.*-xml php7.*-yaml git || " ;
+        $comms .= "apt-get -qq install -y php php-curl php-xml php-yaml git ); " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
         $comms .= "php /tmp/ptconfigure/install-silent ; " ;
@@ -33,7 +35,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         return $sshData ;
     }
 
-    public function getMountSharesSSHData($provisionFile) {
+    public function getGuestAdditionsSSHData($provisionFile) {
         $sshData = "" ;
 
         if ($this->updated !== true) {
@@ -45,7 +47,21 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
             .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S modprobe -a vboxguest vboxsf vboxvideo"."\n" ;
+
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S mkdir -p /mnt/guestadditionsiso/ "."\n" ;
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt/guestadditionsiso/"."\n" ;
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S /mnt/guestadditionsiso/VBoxLinuxAdditions.run"."\n" ;
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S unmount /mnt/guestadditionsiso/ "."\n" ;
+        return $sshData ;
+    }
+
+    public function getMountSharesSSHData($provisionFile) {
+        $sshData = "" ;
+
+        if ($this->updated !== true) {
+            $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S apt-get -qq update "."\n" ;
+            $this->updated = true ;
+        }
         $all = array() ;
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
