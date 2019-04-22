@@ -9,29 +9,34 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public $updated = null ;
 
     public function getPTConfigureInitSSHData($provisionFile, $provisionerSettings) {
-        $check_deps = "( (php -v) && (git --version) && (ptconfigure > /dev/null) )" ;
-        $comms  = "( " ;
+
+        $comms  = "" ;
         if ($this->updated !== true) {
             $comms .= "apt-get -qq update -y ; sleep 3  ; " ;
             $this->updated = true ;
         }
-        $comms .= "( (apt-get -qq install -y php5 php5-curl git && sleep 3) || " ;
-        $comms .= "apt-get -qq install -y php7.* php7.*-curl php7.*-xml php7.*-yaml git || " ;
-        $comms .= "apt-get -qq install -y php php-curl php-xml php-yaml git ); " ;
+
+        $comms .= "( apt-get -qq install -y php5 php5-curl || true ) && " ;
+        $comms .= "( apt-get -qq install -y php7.* php7.*-curl php7.*-xml || true ) && " ;
+        $comms .= "( apt-get -qq install -y php php-curl php-xml || true ) ; " ;
+
+        $comms .= " apt-get -qq install -y git ; " ;
         $comms .= " rm -rf /tmp/ptconfigure ; " ;
         $comms .= " git clone https://github.com/PharaohTools/ptconfigure.git /tmp/ptconfigure ; " ;
-        $comms .= "php /tmp/ptconfigure/install-silent ; " ;
-        $comms .= ") " ;
+        $comms .= " php /tmp/ptconfigure/install-silent ; " ;
+        $comms .= "" ;
+
+
 		$sshData = "" ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $is_force = isset($provisionerSettings['force']) && ($provisionerSettings['force']==true || $provisionerSettings['force']==true) ;
-        if ($is_force == false) {
-            $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$check_deps} || {$comms}' \n" ;
-        } else {
+//        $is_force = isset($provisionerSettings['force']) && ($provisionerSettings['force']==true || $provisionerSettings['force']==true) ;
+//        if ($is_force == false) {
+//            $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$check_deps} || {$comms}' \n" ;
+//        } else {
             $logging->log("Force install for Pharaoh Configure", $this->getModuleName());
             $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' \n" ;
-        }
+//        }
         return $sshData ;
     }
 
@@ -51,7 +56,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S mkdir -p /mnt/guestadditionsiso/ "."\n" ;
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt/guestadditionsiso/"."\n" ;
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S /mnt/guestadditionsiso/VBoxLinuxAdditions.run"."\n" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S unmount /mnt/guestadditionsiso/ "."\n" ;
+        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S umount /mnt/guestadditionsiso/ "."\n" ;
         return $sshData ;
     }
 
