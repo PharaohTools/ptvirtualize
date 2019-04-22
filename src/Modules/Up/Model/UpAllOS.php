@@ -206,7 +206,8 @@ class UpAllOS extends BaseFunctionModel {
     }
 
     protected function isSavedInPapyrus() {
-        if ( count($this->papyrus)>1 ) { return true ; }
+        if ( is_array($this->papyrus) && count($this->papyrus)>1 ) {
+            return true ; }
         return false ;
     }
 
