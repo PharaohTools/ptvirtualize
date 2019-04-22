@@ -36,34 +36,40 @@ class HaltAllOS extends BaseFunctionModel {
         else {
             $logging->log("Failed soft power off by button, attempting SSH shutdown.", $this->getModuleName()) ;
 
-            $sshParams = $this->params ;
+//            $sshParams = $this->params ;
+//
+//            if (isset($this->virtufile->config["ssh"]["port"])) {
+//                $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
+//            if (isset($this->virtufile->config["ssh"]["timeout"])) {
+//                $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
+//            if (isset($this->virtufile->config["ssh"]["timeout"])) {
+//                $sshParams["target"] = '127.0.0.1' ; }
+//
+//            $srv = array(
+//                "user" => $this->virtufile->config["ssh"]["user"] ,
+//                "password" => $this->virtufile->config["ssh"]["password"] ,
+//                "target" => $sshParams["target"]  ,
+//                "port" => $sshParams["port"]  ,
+//                "driver" => $this->virtufile->config["ssh"]["driver"] );
+//            $sshParams["yes"] = true ;
+//            $sshParams["guess"] = true ;
+//            $sshParams["servers"] = serialize(array($srv)) ;
+//            $sshParams["ssh-data"] = "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S shutdown now\n";
+//
+//            $sshFactory = new \Model\Invoke();
+//            $ssh = $sshFactory->getModel($sshParams) ;
+//            $ssh->performInvokeSSHData() ;
+//
+//            $logging->log("Attempting shutdown by SSH...", $this->getModuleName()) ;
+//            $logging->log("Waiting at least {$this->virtufile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...", $this->getModuleName()) ;
+//
+//            if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["ssh_halt_timeout"], "3")==true) {
+//                $logging->log("Successful power off SSH Shutdown...", $this->getModuleName()) ;
+//                $this->runHook("halt", "post") ;
+//                return true ;
+//            }
 
-            $srv = array(
-                "user" => $this->virtufile->config["ssh"]["user"] ,
-                "password" => $this->virtufile->config["ssh"]["password"] ,
-                "target" => $this->virtufile->config["ssh"]["target"]  ,
-                "port" => $this->virtufile->config["ssh"]["port"]  ,
-                "driver" => $this->virtufile->config["ssh"]["driver"] );
-            $sshParams["yes"] = true ;
-            $sshParams["guess"] = true ;
-            $sshParams["servers"] = serialize(array($srv)) ;
-            $sshParams["ssh-data"] = "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S shutdown now\n";
-
-            if (isset($this->virtufile->config["ssh"]["port"])) {
-                $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
-            if (isset($this->virtufile->config["ssh"]["timeout"])) {
-                $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
-            $sshFactory = new \Model\Invoke();
-            $ssh = $sshFactory->getModel($sshParams) ;
-            $ssh->performInvokeSSHData() ;
-
-            $logging->log("Attempting shutdown by SSH...", $this->getModuleName()) ;
-            $logging->log("Waiting at least {$this->virtufile->config["vm"]["ssh_halt_timeout"]} seconds for machine to power off...", $this->getModuleName()) ;
-
-            if ($this->waitForStatus("powered off", $this->virtufile->config["vm"]["ssh_halt_timeout"], "3")==true) {
-                $logging->log("Successful power off SSH Shutdown...", $this->getModuleName()) ;
-                $this->runHook("halt", "post") ;
-                return true ; } }
+        }
         if (isset($this->params["fail-hard"]) || isset($this->params["die-hard"])) {
             $lmsg = "Attempts to Halt this box by both Soft Power off and SSH Shutdown have failed. You have used the " .
                 "--fail-hard flag to do hard power off now." ;
