@@ -81,24 +81,56 @@ class ShellProvision extends BaseShellAllOS {
     protected function shellProvision($provisioner, $init, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        if ($provisioner["target"] == "guest") {
+
+//        var_dump('in shell provision', $provisioner) ;
+        if (isset($provisioner["target"]) && $provisioner["target"] == "guest") {
             if (isset($provisioner["default"])) {
                 $logging->log("Provisioning VM with Default Shell Script for {$provisioner["default"]}...", $this->getModuleName());
-                return $this->sshProvision($provisioner, $init, $osProvisioner); }
-            else if (isset($provisioner["source"]) && $provisioner["source"]=="guest") {
+//                return $this->keyboardProvision($provisioner, $init, $osProvisioner);
+                return $this->sshProvision($provisioner, $init, $osProvisioner);
+
+            }
+            else if (isset($provisioner["target"]) &&
+                     $provisioner["target"]=="guest" &&
+                     isset($provisioner["script"])) {
                 $logging->log("Provisioning Guest with local Shell Script {$provisioner["script"]}...", $this->getModuleName()) ;
                 $init["provision_file"] = $provisioner["script"] ;
-                return $this->sshProvision($provisioner, $init, $osProvisioner); }
+//                return $this->keyboardProvision($provisioner, $init, $osProvisioner);
+                return $this->sshProvision($provisioner, $init, $osProvisioner);
+
+            }
+            else if (isset($provisioner["target"]) &&
+                     $provisioner["target"]=="guest" &&
+                     isset($provisioner["data"])) {
+                $logging->log("Provisioning Guest with Shell Data...", $this->getModuleName()) ;
+                $init["provision_file"] = $provisioner["data"] ;
+//                return $this->keyboardProvision($provisioner, $init, $osProvisioner);
+                return $this->sshProvision($provisioner, $init, $osProvisioner);
+
+            }
             else {
                 $logging->log("Starting Provisioning VM with Shell...", $this->getModuleName());
                 $logging->log("SFTP shell script file to VM for Shell...", $this->getModuleName());
                 $this->sftpProvision($provisioner, $init);
                 $logging->log("SSH Execute Provisioning VM with Shell script...", $this->getModuleName());
-                return $this->sshProvision($provisioner, $init, $osProvisioner); } }
+//                return $this->keyboardProvision($provisioner, $init, $osProvisioner);
+                return $this->sshProvision($provisioner, $init, $osProvisioner);
+
+            } }
         else if ($provisioner["target"] == "host") {
-            $logging->log("Provisioning Host with Shell...", $this->getModuleName());
-            $command = "sh {$provisioner["script"]}" ;
-            return self::executeAndOutput($command) ; }
+            if (isset($provisioner["data"])) {
+                $logging->log("Provisioning Host with Shell Data...", $this->getModuleName());
+                system($provisioner["data"], $exit_code) ;
+                return ($exit_code === 0) ? true : false ;
+//                "{$provisioner["script"]}" ;
+            } else if (isset($provisioner["script"])) {
+                $logging->log("Provisioning Host with Shell Script...", $this->getModuleName());
+                $command = "sh {$provisioner["script"]}" ;
+                return self::executeAndOutput($command) ;
+            } else {
+                $logging->log("Provisioning Host requires either Shell Script or Shell Data...", $this->getModuleName());
+                return false ;
+            } }
         return true ;
     }
 
@@ -109,7 +141,8 @@ class ShellProvision extends BaseShellAllOS {
         $sftpParams["yes"] = true ;
         $sftpParams["guess"] = true ;
         $sftpParams["servers"] = $init["encoded_box"] ;
-        $sftpParams["source"] = $provisionerSettings["script"] ;
+//        var_dump($provisionerSettings) ;
+        $sftpParams["source"] = $provisionerSettings["source"] ;
         $sftpParams["target"] = $init["provision_file"] ;
         if (isset($this->virtufile->config["ssh"]["port"])) {
             $sftpParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
@@ -168,6 +201,50 @@ class ShellProvision extends BaseShellAllOS {
         $ssh = $sshFactory->getModel($sshParams) ;
         $res = $ssh->performInvokeSSHData() ;
         if ($res == false) {  $logging->log("Provisioning Shell SSH Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
+        return ($res == true) ? true : false ;
+    }
+
+
+    protected function keyboardProvision($provisionerSettings, $osProvisioner) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $sshParams = $this->params ;
+        if (isset($provisionerSettings["default"])) {
+            $logging->log("Attempting to use default shell script {$provisionerSettings["default"]}", $this->getModuleName());
+            $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
+            if (method_exists($osProvisioner, $methodName)) {
+                $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner", $this->getModuleName());
+//                var_dump('init is', $init);
+//                var_dump('pset is', $provisionerSettings);
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $provisionerSettings) ; }
+            else {
+                $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+                return false ; } }
+        else {
+            $logging->log("Attempting to use Standard shell script {$init["provision_file"]}", $this->getModuleName());
+            $methodName = "getStandardShellSSHData" ;
+            if (method_exists($osProvisioner, $methodName)) {
+                $logging->log("Found {$methodName} method in OS Provisioner", $this->getModuleName());
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
+            else {
+                $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+                return false ; } }
+        $sshParams["yes"] = true ;
+        $sshParams["guess"] = true ;
+//        $sshParams["servers"] = $init["encoded_box"] ;
+//        $sshParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
+//        if (isset($this->virtufile->config["ssh"]["port"])) {
+//            $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
+//        if (isset($this->virtufile->config["ssh"]["timeout"])) {
+//            $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
+//        if (isset($this->virtufile->config["ssh"]["retries"])) {
+//            $sshParams["retries"] = $this->virtufile->config["ssh"]["retries"] ; }
+//        if (isset($this->virtufile->config["ssh"]["interval"])) {
+//            $sshParams["interval"] = $this->virtufile->config["ssh"]["interval"] ; }
+        $vkFactory = new \Model\VirtualKeyboard();
+        $vk = $vkFactory->getModel($sshParams) ;
+        $res = $vk->virtualKeyboardProvision($provisionerSettings, $osProvisioner) ;
+        if ($res == false) {  $logging->log("Provisioning Shell via Keyboard Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ; }
         return ($res == true) ? true : false ;
     }
 
