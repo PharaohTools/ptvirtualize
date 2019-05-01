@@ -33,8 +33,7 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
     protected function virtualKeyboardProvision($provisionerSettings, $osProvisioner) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Provisioning Host with VirtualKeyboard...", $this->getModuleName());
-//        $command = "sh {$provisionerSettings["script"]}" ;
+        $logging->log("Provisioning Guest with VirtualKeyboard...", $this->getModuleName());
 
         if (isset($provisionerSettings["default"])) {
             $logging->log("Attempting to use default shell script {$provisionerSettings["default"]}", $this->getModuleName());
@@ -46,23 +45,23 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
                 $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ; } }
         else {
-//            $logging->log("Attempting to use Standard shell script {$init["provision_file"]}", $this->getModuleName());
-//            $methodName = "getStandardShellSSHData" ;
-//            if (method_exists($osProvisioner, $methodName)) {
-//                $logging->log("Found {$methodName} method in OS Provisioner", $this->getModuleName());
-//                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"]) ; }
-//            else {
-//                $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
-//                return false ; }
+            $logging->log("Attempting to use Standard shell script {$provisionerSettings["default"]}", $this->getModuleName());
+            $methodName = "getStandardShellSSHData" ;
+            if (method_exists($osProvisioner, $methodName)) {
+                $logging->log("Found {$methodName} method in OS Provisioner", $this->getModuleName());
+                $keyboard_data = $osProvisioner->$methodName($provisionerSettings["default"]) ; }
+            else {
+                $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+                return false ; }
         }
 
-        var_dump("Keyboard Data", $keyboard_data) ;
-
-        $command = "VBoxManage guestcontrol {$this->virtufile->config["vm"]["name"]} " ;
+        $command = VBOXMGCOMM." guestcontrol {$this->virtufile->config["vm"]["name"]} " ;
         $command .= "--username {$this->virtufile->config["ssh"]["user"]} " ;
         $command .= "--password {$this->virtufile->config["ssh"]["password"]} " ;
-        $command .= "run --exe {$keyboard_data} " ;
+        $command .= "run --exe \"{$keyboard_data}\" " ;
         $command .= "--wait-stdout --wait-stderr " ;
+
+        var_dump("Keyboard Data", $command) ;
 
         $rc = self::executeAndOutput($command, null, true) ;
         return ($rc === 0) ? true : false ;
