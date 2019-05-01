@@ -210,8 +210,8 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
                 $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return false ; } }
 
-        $sshParams["yes"] = true ;
-        $sshParams["guess"] = true ;
+        $sshParams["yes"] = "true" ;
+        $sshParams["guess"] = "true" ;
         $sshParams["servers"] = $init["encoded_box"] ;
         $sshParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
         if (isset($this->virtufile->config["ssh"]["port"])) {
@@ -219,6 +219,45 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         if (isset($this->virtufile->config["ssh"]["timeout"])) {
             $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
         $sshFactory = new \Model\Invoke();
+        $ssh = $sshFactory->getModel($sshParams) ;
+        return $ssh->performInvokeSSHData() ;
+    }
+
+    protected function keyboardProvision($provisionerSettings, $init, $osProvisioner) {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $sshParams = $this->params ;
+        $psparams = (isset($provisionerSettings["params"])) ? $provisionerSettings["params"] : array() ;
+
+        if (isset($provisionerSettings["default"])) {
+            $logging->log("Attempting to use default {$provisionerSettings["tool"]} script {$provisionerSettings["default"]}", $this->getModuleName()) ;
+            $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
+            if (method_exists($osProvisioner, $methodName)) {
+                $logging->log("Found $methodName method in OS Provisioner", $this->getModuleName()) ;
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams) ; }
+            else {
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return false ; } }
+        else {
+            $tool = ucfirst($provisionerSettings["tool"]) ;
+            $logging->log("Attempting to use {$tool} script {$provisionerSettings["script"]}", $this->getModuleName()) ;
+            $methodName = "getStandard{$tool}SSHData" ;
+            if (method_exists($osProvisioner, $methodName)) {
+                $logging->log("Found $methodName method in OS Provisioner", $this->getModuleName()) ;
+                $sshParams["ssh-data"] = $osProvisioner->$methodName($init["provision_file"], $psparams ) ; }
+            else {
+                $logging->log("No method $methodName found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                return false ; } }
+
+        $sshParams["yes"] = true ;
+        $sshParams["guess"] = true ;
+//        $sshParams["servers"] = $init["encoded_box"] ;
+//        $sshParams["driver"] = $this->virtufile->config["ssh"]["driver"] ;
+//        if (isset($this->virtufile->config["ssh"]["port"])) {
+//            $sshParams["port"] = $this->virtufile->config["ssh"]["port"] ; }
+//        if (isset($this->virtufile->config["ssh"]["timeout"])) {
+//            $sshParams["timeout"] = $this->virtufile->config["ssh"]["timeout"] ; }
+        $sshFactory = new \Model\VirtualKeyboard();
         $ssh = $sshFactory->getModel($sshParams) ;
         return $ssh->performInvokeSSHData() ;
     }
