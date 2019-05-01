@@ -10,14 +10,14 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public function getPTConfigureInitSSHData($provisionFile, $provisionerSettings) {
 
-        $comms  = "" ;
+        $comms = "" ;
         if ($this->updated !== true) {
             $comms .= "apt-get -qq update -y ; sleep 3  ; " ;
             $this->updated = true ;
         }
 
         $comms .= "( apt-get -qq install -y php5 php5-curl || true ) && " ;
-        $comms .= "( apt-get -qq install -y php7.* php7.*-curl php7.*-xml || true ) && " ;
+        $comms .= "( (apt-get -qq install -y php7.* php7.*-curl php7.*-xml || true) && (apt-get -qq remove -y php7.*-snmp || true) ) && " ;
         $comms .= "( apt-get -qq install -y php php-curl php-xml || true ) ; " ;
 
         $comms .= " apt-get -qq install -y git ; " ;
@@ -26,17 +26,28 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         $comms .= " php /tmp/ptconfigure/install-silent ; " ;
         $comms .= "" ;
 
+        system('ptconfigure > /dev/null', $ptc_exit_code) ;
+        if ($ptc_exit_code !== 0) {
+           $is_installed = false ;
+        } else {
+            $is_installed = true ;
+        }
 
 		$sshData = "" ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
-//        $is_force = isset($provisionerSettings['force']) && ($provisionerSettings['force']==true || $provisionerSettings['force']==true) ;
-//        if ($is_force == false) {
-//            $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$check_deps} || {$comms}' \n" ;
-//        } else {
+        $is_force = ( isset($provisionerSettings['force']) && $provisionerSettings['force']==true ) ;
+        if ($is_force == false) {
+            if ($is_installed == false) {
+                $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' \n" ;
+            } else {
+                $logging->log("Pharaoh Configure is already installed", $this->getModuleName());
+                $sshData .= "" ;
+            }
+        } else {
             $logging->log("Force install for Pharaoh Configure", $this->getModuleName());
             $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' \n" ;
-//        }
+        }
         return $sshData ;
     }
 
@@ -48,7 +59,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
             $this->updated = true ;
         }
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | " .
-            " sudo -S apt-get -qq install -y virtualbox-guest-dkms virtualbox-guest-additions-iso"."\n" ;
+            " sudo -S apt-get -qq install -y virtualbox-guest-x11 virtualbox-guest-dkms virtualbox-guest-additions-iso"."\n" ;
 
         $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
             .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
