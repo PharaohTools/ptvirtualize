@@ -31,8 +31,8 @@ class AutoSSHAllOS extends BaseLinuxApp {
             "password" => $this->virtufile->config["ssh"]["password"] ,
             "target" => $this->virtufile->config["ssh"]["target"]  ,
             "driver" => $this->virtufile->config["ssh"]["driver"]  );
-        $sshParams["yes"] = true ;
-        $sshParams["guess"] = true ;
+        $sshParams["yes"] = 'true' ;
+        $sshParams["guess"] = 'true' ;
         if (isset($this->papyrus["port"]) || isset($this->virtufile->config["ssh"]["port"])) {
 
             // @todo two ternarys and an if - bleurgh
