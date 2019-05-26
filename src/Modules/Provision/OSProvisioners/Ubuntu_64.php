@@ -75,6 +75,17 @@ class OSProvisioner extends ProvisionDefaultAllOS {
                 .'| sudo -S mkdir -p '.$guestPath."\n" ;
             $one .= "echo {$this->virtufile->config["ssh"]["password"]} "
                 . '| sudo -S mount -t vboxsf ' . $sharedFolder["name"].' '.$guestPath.' ' ;
+
+            $types = ['user', 'group'] ;
+            foreach ($types as $type) {
+                if (isset($sharedFolder[$type])){
+                    if ($type === 'user') {
+                        $one .= ' -o uid="'.$sharedFolder[$type].'"' ;
+                    } else {
+                        $one .= ' -o gid="'.$sharedFolder[$type].'"' ;
+                    }
+                }
+            }
             $all[] = $one ; }
         $str = implode("\n", $all) ;
         $sshData .= $str ;
