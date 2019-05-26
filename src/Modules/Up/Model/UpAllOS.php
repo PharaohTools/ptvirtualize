@@ -109,6 +109,11 @@ class UpAllOS extends BaseFunctionModel {
             \Core\BootStrap::setExitCode(1);
             $logging->log("Starting VM Failed. This is most likely an issue", $this->getModuleName());
             return false; }
+        $res = $provision->provisionDefaults(true, $this->params);
+        if ($res == false) {
+            \Core\BootStrap::setExitCode(1);
+            $logging->log("Provisioning Virtual Machine Defaults Failed", $this->getModuleName());
+            return false; }
         $res = $provision->provisionVm(true, $this->params);
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
@@ -192,7 +197,7 @@ class UpAllOS extends BaseFunctionModel {
         $res = $provision->provisionDefaults(true, $this->params);
         if ($res == false) {
             \Core\BootStrap::setExitCode(1);
-            $logging->log("Provisioning Virtual Machine Failed", $this->getModuleName());
+            $logging->log("Provisioning Virtual Machine Defaults Failed", $this->getModuleName());
             return false; }
         $res = $provision->provisionVm(true, $this->params);
         if ($res == false) {
