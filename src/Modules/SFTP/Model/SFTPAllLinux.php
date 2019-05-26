@@ -182,6 +182,7 @@ class SFTPAllLinux extends Base {
         $current_error_level = error_reporting();
         error_reporting(0) ;
         foreach ($this->servers as $srvId => &$server) {
+//            var_dump(' a serv', $server) ;
             if (isset($this->params["environment-box-id-include"])) {
                 if ($srvId != $this->params["environment-box-id-include"] ) {
                     $logging->log("Skipping {$server["name"]} for box id Include constraint", $this->getModuleName());
@@ -225,7 +226,7 @@ class SFTPAllLinux extends Base {
                 $srcFolder =  str_replace("/Model", "/Libraries", dirname(__FILE__) ) ;
                 $sftpFile = $srcFolder."/seclib/Net/SFTP.php" ;
                 require_once($sftpFile) ; }
-            $sftp = new \Net_SFTP($server["target"], $this->params["port"], $this->params["timeout"]);
+            $sftp = new \Net_SFTP($server["target"], $server["port"], $this->params["timeout"]);
             $pword = (isset($server["pword"])) ? $server["pword"] : false ;
             $pword = (isset($server["password"])) ? $server["password"] : $pword ;
             $pword = $this->getKeyIfAvailable($pword);
