@@ -55,30 +55,32 @@ class ProvisionDefaultAllOS extends Base {
         $provisionOuts = array() ;
 
         // default provisioners
-        if (isset($this->virtufile->config["vm"]['defaults'])) {
-            if (is_string($this->virtufile->config["vm"]['defaults'])) {
-                $these_defaults = explode(',', $this->virtufile->config["vm"]['defaults']) ;
-            } else {
-                $these_defaults = $this->virtufile->config["vm"]['defaults'] ;
-            }
-            foreach ($these_defaults as $default_script) {
+        if ($module==='default' && $hook==='default') {
+            if (isset($this->virtufile->config["vm"]['defaults'])) {
+                if (is_string($this->virtufile->config["vm"]['defaults'])) {
+                    $these_defaults = explode(',', $this->virtufile->config["vm"]['defaults']) ;
+                } else {
+                    $these_defaults = $this->virtufile->config["vm"]['defaults'] ;
+                }
+                foreach ($these_defaults as $default_script) {
 
-                $default_script_parsed = $this->findDefaultFromAcronym($default_script) ;
-                $one_default_script_settings =
-                    [ "provisioner" => "Shell",
-                      "tool" => "shell",
-                      "target" => "guest",
-                      "default" => "$default_script_parsed",
-                      "force" => true ] ;
+                    $default_script_parsed = $this->findDefaultFromAcronym($default_script) ;
+                    $one_default_script_settings =
+                        [ "provisioner" => "Shell",
+                          "tool" => "shell",
+                          "target" => "guest",
+                          "default" => "$default_script_parsed",
+                          "force" => true ] ;
 
-                $curout = $this->doSingleProvision($one_default_script_settings) ;
-                $provisionOuts[] = $curout ;
-                $cur_xc = \Core\BootStrap::getExitCode() ;
+                    $curout = $this->doSingleProvision($one_default_script_settings) ;
+                    $provisionOuts[] = $curout ;
+                    $cur_xc = \Core\BootStrap::getExitCode() ;
 
-                if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
-                    $logging->log("Provisioning Failed ...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-                    return $provisionOuts ; }
+                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
+                        $logging->log("Provisioning Failed ...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                        return $provisionOuts ; }
 
+                }
             }
         }
 

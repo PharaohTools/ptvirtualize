@@ -41,6 +41,8 @@ class ProvisionAllOS extends BaseFunctionModel {
             if ($gpsp !== true ) {
                 $logging->log("Not provisioning as provision parameter not set", $this->getModuleName());
                 return true; } }
+
+
         if (isset($this->params["hooks"])) {
             $logging->log("Specific execution hooks requested, {$this->params["hooks"]}", $this->getModuleName());
             $hooks = $this->getParameterHooks();
@@ -52,6 +54,10 @@ class ProvisionAllOS extends BaseFunctionModel {
                     return false ;
                 } } }
 //        return (in_array(false, $pns)) ? false : true ;
+        $pn = $this->runHook("default", "default");
+        if ($pn === false) {
+            return $pn ;
+        }
         $pn = $this->runHook("up", "default");
         $this->postProvisionMessage();
         return $pn ;
@@ -67,19 +73,7 @@ class ProvisionAllOS extends BaseFunctionModel {
             if ($gpsp !== true ) {
                 $logging->log("Not provisioning defaults as provision parameter not set", $this->getModuleName());
                 return true; } }
-//        if (isset($this->params["hooks"])) {
-//            $logging->log("Specific execution hooks requested, {$this->params["hooks"]}", $this->getModuleName());
-//            $hooks = $this->getParameterHooks();
-//            $pns = array();
-//            foreach ($hooks as $hook) {
-//                $res = $this->runHook("up", $hook);
-//                $pns[] = $res ;
-//                if ($res == false) {
-//                    return false ;
-//                } } }
-//        return (in_array(false, $pns)) ? false : true ;
         $pn = $this->runHook("default", "default");
-        $this->postProvisionMessage();
         return $pn ;
     }
 
