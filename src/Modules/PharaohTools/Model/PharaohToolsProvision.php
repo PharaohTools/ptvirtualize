@@ -157,7 +157,11 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $command = $prefix.PTDCOMM." auto x --af={$provisionerSettings["script"]}" ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
-                    $command .= " --$paramkey=\"$paramval\"" ; } }
+                    if (is_array($paramval)) {
+                        $command .= " --$paramkey=\"".implode(',', $paramval)."\"";
+                    } else {
+                        $command .= " --$paramkey=\"$paramval\"" ;
+                    } } }
             echo $command."\n" ;
 //            self::executeAndOutput() ;
             $rc = self::executeAndGetReturnCode($command, true, true) ;

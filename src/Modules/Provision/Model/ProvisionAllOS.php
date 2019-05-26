@@ -57,11 +57,38 @@ class ProvisionAllOS extends BaseFunctionModel {
         return $pn ;
     }
 
+    public function provisionDefaults($onlyIfRequestedByParam = false, $extra_params = null) {
+        if (isset($extra_params) && is_array($extra_params)) {
+            $this->params = array_merge($this->params, $extra_params) ; }
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params) ;
+        if ($onlyIfRequestedByParam == true) {
+            $gpsp = $this->getParamBySynonym("provision") ;
+            if ($gpsp !== true ) {
+                $logging->log("Not provisioning defaults as provision parameter not set", $this->getModuleName());
+                return true; } }
+//        if (isset($this->params["hooks"])) {
+//            $logging->log("Specific execution hooks requested, {$this->params["hooks"]}", $this->getModuleName());
+//            $hooks = $this->getParameterHooks();
+//            $pns = array();
+//            foreach ($hooks as $hook) {
+//                $res = $this->runHook("up", $hook);
+//                $pns[] = $res ;
+//                if ($res == false) {
+//                    return false ;
+//                } } }
+//        return (in_array(false, $pns)) ? false : true ;
+        $pn = $this->runHook("default", "default");
+        $this->postProvisionMessage();
+        return $pn ;
+    }
+
     protected function postProvisionMessage() {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
         $logging->log("{$this->virtufile->config["vm"]["post_up_message"]}", $this->getModuleName());
     }
+
     public function runHook($hook, $type) {
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params) ;
