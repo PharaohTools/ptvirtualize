@@ -564,7 +564,8 @@ COMPLETION;
             $inputLine = fgets($fp, 1024);
             if ($required && strlen($inputLine)==0 ) {
                 print "You must enter a value. Please try again.\n"; }
-            else {$last_line = true;} }
+            else {
+                $last_line = true; } }
         $inputLine = $this->stripNewLines($inputLine);
         return $inputLine;
     }
