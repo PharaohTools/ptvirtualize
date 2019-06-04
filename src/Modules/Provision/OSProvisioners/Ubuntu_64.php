@@ -31,11 +31,11 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 		$sshData = "" ;
         $is_force = ( isset($provisionerSettings['force']) && $provisionerSettings['force']==true ) ;
         if ($is_force == false) {
-            $sshData .= 'ptconfigure > /dev/null ; '."\n" ;
-            $sshData .= 'ptc_exit_status=$? ; '."\n" ;
-            $sshData .= 'if [ "$ptc_exit_status" = "0" ] ; then '."\n" ;
-            $sshData .= "  echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' ; \n" ;
-            $sshData .= 'fi'."\n" ;
+            $sshData .= 'ptconfigure > /dev/null ; ' ;
+            $sshData .= 'ptc_exit_status=$? ; ' ;
+            $sshData .= 'if [ "$ptc_exit_status" = "0" ] ; then ' ;
+            $sshData .= "  echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' ; " ;
+            $sshData .= 'fi' ;
         } else {
             $logging->log("Force install for Pharaoh Configure", $this->getModuleName());
             $sshData .= "echo ".$this->virtufile->config["ssh"]["password"]." | sudo -S bash -c '{$comms}' \n" ;
