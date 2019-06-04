@@ -37,30 +37,9 @@ class Virtufile extends VirtufileBase {
                 'symlinks' => 'enable'
             ) ;
 
-        # /usr/share/virtualbox/VBoxGuestAdditions.iso
-
         # Provisioning
-//        $this->config["vm"]["provision"][] =
-//            array(
-//                "provisioner" => "Shell",
-//                "tool" => "shell",
-//                "target" => "guest",
-//                "default" => "GuestAdditions"
-//            ) ;
-        $this->config["vm"]["provision"][] =
-            array(
-                "provisioner" => "Shell",
-                "tool" => "shell",
-                "target" => "guest",
-                "default" => "MountShares"
-            ) ;
-        $this->config["vm"]["provision"][] =
-            array(
-                "provisioner" => "Shell",
-                "tool" => "shell",
-                "target" => "guest",
-                "default" => "PTConfigureInit"
-            ) ;
+        $this->config["vm"]["defaults"] = ['ga', 'mountshares', 'ptc'] ;
+
         $this->config["vm"]["post_up_message"] = "Your Virtualize Box has been brought up. This box is configured to be " .
             "provisioned by PTConfigure's default Virtualize provisioning.";
     }
