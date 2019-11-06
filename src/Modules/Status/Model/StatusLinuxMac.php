@@ -64,6 +64,8 @@ class StatusLinuxMac extends BaseFunctionModel {
     public function listVms($extended = false) {
         $timefile = '/tmp/vf'.time() ;
 
+//        echo "list vms start: " . date('H:i:s d/m/Y', time())."\n" ;
+
         if (isset($this->params['search'])) {
             $directories = json_decode($this->params['search']);
             if (json_last_error() !== JSON_ERROR_NONE) {
@@ -76,7 +78,11 @@ class StatusLinuxMac extends BaseFunctionModel {
         }
         $vms = array() ;
         foreach ($directories as $one_directory) {
-            $comm = 'find '.$one_directory.' -name Virtufile 1> '.$timefile ;
+
+
+//            echo "list vms $one_directory: " . date('H:i:s d/m/Y', time())."\n" ;
+
+            $comm = 'find '.$one_directory.' -maxdepth 2 -name Virtufile 1> '.$timefile ;
             ob_start() ;
             $res = self::executeAndGetReturnCode($comm) ;
             $empty = ob_get_clean();
@@ -86,12 +92,24 @@ class StatusLinuxMac extends BaseFunctionModel {
             $lines = explode("\n", $raw) ;
             $vms = $this->getVMFromLines($vms, $lines, $extended) ;
         }
+
+//        echo "list vms end: " . date('H:i:s d/m/Y', time())."\n" ;
         unlink($timefile) ;
         return $vms;
     }
 
     public function getVMFromLines($vms, $lines, $extended) {
+
+//        echo "start from lines: " . date('H:i:s d/m/Y', time())."\n" ;
+
+        $line_count = count($lines) ;
+        $lines_complete = 1 ;
+
         foreach ($lines as $line) {
+
+//            echo "process one line: " . date('H:i:s d/m/Y', time())."\n" ;
+//            echo "counting : {$lines_complete} / {$line_count}\n" ;
+
             if (strpos($line, 'find: ') === 0) {
                 continue ;
             } else if (in_array($line, ['', ' '])) {
@@ -107,11 +125,14 @@ class StatusLinuxMac extends BaseFunctionModel {
                     $vms[] = $line ;
                 }
             }
+            $lines_complete ++ ;
         }
+//        echo "end from lines: " . date('H:i:s d/m/Y', time())."\n" ;
         return $vms ;
     }
 
     public function loadVirtufileAsRandomClass($virtufile_path) {
+//        var_dump('vp', $virtufile_path) ;
         $string = file_get_contents($virtufile_path);
         $micro = microtime(true) ;
         $micro = str_replace('.', '', $micro) ;
@@ -122,18 +143,53 @@ class StatusLinuxMac extends BaseFunctionModel {
         $string_search = 'require' ;
         $string_replace = 'include' ;
         $string = str_replace($string_search, $string_replace, $string) ;
+        $virtufile_dir = dirname($virtufile_path) ;
+        $string = str_replace('__DIR__', 'self::__CUSTOM_DIR__', $string) ;
+        $string = str_replace('__FILE__', 'self::__CUSTOM_FILE__', $string) ;
+
+        $search = 'extends VirtufileBase {' ;
+        $replace  = 'extends VirtufileBase {' ;
+        $replace .= "\n\n".'    const __CUSTOM_DIR__ = "'.$virtufile_dir.'" ;' ;
+        $replace .= "\n".'    const __CUSTOM_FILE__ = "'.$virtufile_path.'" ;' ;
+
+        $string = str_replace($search, $replace, $string) ;
+
         $display_errors = ini_get('display_errors') ;
         $error_reporting = ini_get('error_reporting') ;
-        set_error_handler(function(){});
-        ini_set('display_errors', 'Off') ;
-        ini_set('error_reporting', 0) ;
+//        set_error_handler(function(){});
+//        ini_set('display_errors', 'Off') ;
+//        ini_set('error_reporting', 0) ;
+/*        var_dump('string', '?>' . $string) ;*/
+//
+//        die() ;
+
         ob_start() ;
+
+
         eval( '?>' . $string );
+//        eval( $string );
         ob_end_clean() ;
         ini_set('display_errors', $display_errors) ;
         error_reporting($error_reporting) ;
         $full_class = '\Model\\'.$random_class_name ;
-        $virtufile_object = new $full_class() ;
+//        try {
+//
+//            $virtufile_object = new $full_class() ;
+//        } catch (\Exception $e) {
+//
+/*            var_dump('string', '?>' . $string) ;*/
+//
+//        }
+
+        if (class_exists($full_class)) {
+            $virtufile_object = new $full_class() ;
+        } else {
+            $virtufile_object = false ;
+        }
+
+//
+//        die() ;
+
         return $virtufile_object ;
     }
 
