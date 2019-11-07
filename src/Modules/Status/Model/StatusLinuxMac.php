@@ -63,9 +63,7 @@ class StatusLinuxMac extends BaseFunctionModel {
 
     public function listVms($extended = false) {
         $timefile = '/tmp/vf'.time() ;
-
 //        echo "list vms start: " . date('H:i:s d/m/Y', time())."\n" ;
-
         if (isset($this->params['search'])) {
             $directories = json_decode($this->params['search']);
             if (json_last_error() !== JSON_ERROR_NONE) {
@@ -78,10 +76,7 @@ class StatusLinuxMac extends BaseFunctionModel {
         }
         $vms = array() ;
         foreach ($directories as $one_directory) {
-
-
 //            echo "list vms $one_directory: " . date('H:i:s d/m/Y', time())."\n" ;
-
             $comm = 'find '.$one_directory.' -maxdepth 2 -name Virtufile 1> '.$timefile ;
             ob_start() ;
             $res = self::executeAndGetReturnCode($comm) ;
