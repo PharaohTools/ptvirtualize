@@ -117,7 +117,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $logging->log("Provisioning Host with PTConfigure Starting...", $this->getModuleName()) ;
             $sys = new \Model\SystemDetectionAllOS();
             $prefix = (!in_array($sys->os, array("Windows", "WINNT"))) ? "sudo " : "" ;
-            $command = $prefix.PTCCOMM." auto x --af={$provisionerSettings["script"]}" ;
+            $command = $prefix.PTCCOMM.' auto x --af="'.$provisionerSettings["script"].'"' ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     $command .= " --$paramkey=\"$paramval\"" ; } }
@@ -154,7 +154,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
             $logging->log("Provisioning Host with PTDeploy Starting...", $this->getModuleName()) ;
             $sys = new \Model\SystemDetectionAllOS();
             $prefix = (!in_array($sys->os, array("Windows", "WINNT"))) ? "sudo " : "" ;
-            $command = $prefix.PTDCOMM." auto x --af={$provisionerSettings["script"]}" ;
+            $command = $prefix.PTDCOMM.' auto x --af="'.$provisionerSettings["script"].'"' ;
             if (isset($provisionerSettings["params"])) {
                 foreach ($provisionerSettings["params"] as $paramkey => $paramval) {
                     if (is_array($paramval)) {
@@ -305,7 +305,7 @@ class PharaohToolsProvision extends BasePharaohToolsAllOS {
         $t = 0;
         $totalTime =
             (isset($this->virtufile->config["vm"]["ssh_find_timeout"])) ?
-            $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
+                $this->virtufile->config["vm"]["ssh_find_timeout"] : 300 ;
         $loggingFactory = new \Model\Logging();
         $logging = $loggingFactory->getModel($this->params);
         $logging->log("Waiting for ssh...", $this->getModuleName()) ;
