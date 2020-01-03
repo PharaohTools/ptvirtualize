@@ -144,7 +144,7 @@ class AutoSSHAllOS extends BaseLinuxApp {
         while ($t < $totalTime) {
             $command = PTCCOMM." port is-responding --ip=$ip --port-number=$thisPort" ;
             $vmInfo = self::executeAndLoad($command) ;
-            if (strpos($vmInfo, "Port: Success") != false) {
+            if (strpos($vmInfo, "Success") != false) {
                 $logging->log("IP $ip and Port $thisPort are responding, we'll use those...", $this->getModuleName()) ;
                 return true; }
             echo "." ;
