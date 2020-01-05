@@ -122,7 +122,7 @@ class OSProvisioner extends ProvisionDefaultAllOS {
 
     public function getStandardShellSSHData($provisionFile) {
         $sshData = <<<"SSHDATA"
-echo {$this->virtufile->config["ssh"]["password"]} | sudo -S sh $provisionFile
+echo {$this->virtufile->config["ssh"]["password"]} | sudo -S bash $provisionFile
 SSHDATA;
         return $sshData ;
     }
