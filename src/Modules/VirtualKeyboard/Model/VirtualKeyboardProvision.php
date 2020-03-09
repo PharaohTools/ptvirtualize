@@ -40,7 +40,13 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
             $methodName = "get".ucfirst($provisionerSettings["default"])."SSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
                 $logging->log("Found {$provisionerSettings["default"]} method in OS Provisioner", $this->getModuleName());
-                $keyboard_data = $osProvisioner->$methodName($init["provision_file"], $provisionerSettings) ; }
+                $service_up = $this->waitForGuestAdditionsService() ;
+                if ($service_up == true) {
+                    $keyboard_data = $osProvisioner->$methodName($init["provision_file"], $provisionerSettings) ;
+                } else {
+                    $logging->log("Unable to locate Guest Additions Service", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+                    return false ;
+                } }
             else {
                 $logging->log("No method {$provisionerSettings["default"]} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ; } }
@@ -49,7 +55,13 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
             $methodName = "getStandardShellSSHData" ;
             if (method_exists($osProvisioner, $methodName)) {
                 $logging->log("Found {$methodName} method in OS Provisioner", $this->getModuleName());
-                $keyboard_data = $osProvisioner->$methodName($provisionerSettings["default"]) ; }
+                $service_up = $this->waitForGuestAdditionsService() ;
+                if ($service_up == true) {
+                    $keyboard_data = $osProvisioner->$methodName($init["provision_file"], $provisionerSettings) ;
+                } else {
+                    $logging->log("Unable to locate Guest Additions Service", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+                    return false ;
+                } }
             else {
                 $logging->log("No method {$methodName} found in OS Provisioner, cannot continue", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
                 return false ; }
@@ -90,8 +102,10 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
             ' --password '.$this->virtufile->config["ssh"]["password"].
             ' run --exe "/usr/bin/sudo" -- "-u root" "'.$tempfile.'"' ;
 
-        $rc = self::executeAndGetReturnCode($c3) ;
-        if ($rc['rc'] !== 0) {
+//        $rc = self::executeAndGetReturnCode($c3) ;
+        passthru ($c3, $return_var) ;
+//        if ($rc['rc'] !== 0) {
+        if ($return_var !== 0) {
             $logging->log("Provision execution failed. ".var_export($rc, true), $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             unlink($tempfile) ;
             return false ;
@@ -124,7 +138,6 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
                 "user" => "{$this->virtufile->config["ssh"]["user"]}",
                 "password" => "{$this->virtufile->config["ssh"]["password"]}"
             ))) ;
-//            $this->storeInPapyrus($this->virtufile->config["ssh"]["user"], $this->virtufile->config["ssh"]["password"], 'keyboard') ;
             $provisionFile = $this->virtufile->config["vm"]["default_tmp_dir"]."provision.sh" ;
             $ray = array() ;
             $ray["provision_file"] = $provisionFile ;
@@ -133,6 +146,45 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
         else {
             $ray = array() ; }
         return $ray ;
+    }
+
+    protected function waitForGuestAdditionsService() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Waiting for Guest Additions Service", $this->getModuleName());
+        $timeout = 180 ;
+        for ($time_passed = 0; $time_passed < $timeout; $time_passed++) {
+            if ($time_passed % 5 == 0) {
+                $vm_info = $this->loadFullVMInfo() ;
+                if ($vm_info['GuestAdditionsRunLevel'] == "2") {
+                    $logging->log("Found Guest Additions Service", $this->getModuleName());
+                    return true ;
+                }
+            } else {
+                sleep(1) ;
+                continue ;
+            }
+        }
+        $logging->log("Unable to find Guest Additions Service", $this->getModuleName());
+        return false ;
+    }
+
+    protected function loadFullVMInfo() {
+        $loggingFactory = new \Model\Logging();
+        $logging = $loggingFactory->getModel($this->params);
+        $logging->log("Loading VM Information", $this->getModuleName());
+        $name = $this->virtufile->config['vm']['name'] ;
+        $comm = VBOXMGCOMM.' showvminfo "'.$name.'" --machinereadable' ;
+        $data = self::executeAndLoad($comm) ;
+        $lines = explode("\n", $data) ;
+        $all_vm_info = array() ;
+        foreach ($lines as $line) {
+            $equals_sign = strpos($line, '=') ;
+            $key = substr($line, 0, $equals_sign-1) ;
+            $value = substr($line, $equals_sign) ;
+            $all_vm_info[$key] = $value ;
+        }
+        return $all_vm_info ;
     }
 
 }

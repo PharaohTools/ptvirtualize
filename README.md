@@ -16,7 +16,7 @@ Deployment, Build and Release Management, Development Environment Management and
 as code in PHP.
 
 Its easy to write modules for any Operating System but we've begun with Ubuntu and adding more as soon as possible.
-Currently, PTVirtualize works smoothly Windows and Ubuntu.
+Currently, PTVirtualize works smoothly Windows, OSx and Ubuntu.
 
     
 ## Installation
@@ -80,8 +80,8 @@ Fire up a virtual machine with a standard configuration of PHP.
  # add a default PTConfigure Configuration Management Autopilot file for
  sudo ptconfigure cleofy install-generic-autopilots --yes --guess --template-group=ptvirtualize
 
- # flirtify
- ptvirtualize flirt now --template-group=default-php
+ # init
+ ptvirtualize init now --template-group=default-php
 
  # install, configure and start the virtual machine
  ptvirtualize up now
