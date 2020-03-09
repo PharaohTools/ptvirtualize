@@ -88,11 +88,11 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
         $c3 = VBOXMGCOMM.' guestcontrol '.$this->virtufile->config["vm"]["name"].
             ' --username '.$this->virtufile->config["ssh"]["user"].
             ' --password '.$this->virtufile->config["ssh"]["password"].
-            ' run --exe "'.$tempfile.'"' ;
+            ' run --exe "/usr/bin/sudo" -- "-u root" "'.$tempfile.'"' ;
 
         $rc = self::executeAndGetReturnCode($c3) ;
         if ($rc['rc'] !== 0) {
-            $logging->log("Provision execution failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            $logging->log("Provision execution failed. ".var_export($rc, true), $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             unlink($tempfile) ;
             return false ;
         }
@@ -104,12 +104,12 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
 
         $rc = self::executeAndGetReturnCode($c4) ;
         if ($rc['rc'] !== 0) {
-            $logging->log("Provision Script command failed", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            $logging->log("Provision Script removal command failed ".var_export($rc, true), $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             unlink($tempfile) ;
             return false ;
         }
 
-        $logging->log("Provision Complete", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+        $logging->log("Provision Completed Successfully", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
         unlink($tempfile) ;
         return true ;
 
