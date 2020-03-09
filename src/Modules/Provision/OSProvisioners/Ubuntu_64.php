@@ -77,10 +77,8 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         foreach ($this->virtufile->config["vm"]["shared_folders"] as $sharedFolder) {
             $guestPath = (isset($sharedFolder["guest_path"])) ? $sharedFolder["guest_path"] : $sharedFolder["host_path"] ;
             // @todo might be better not to sudo this creation, or allow it more params (owner, perms)
-            $one = "echo {$this->virtufile->config["ssh"]["password"]} "
-                .'| sudo -S mkdir -p '.$guestPath."\n" ;
-            $one .= "echo {$this->virtufile->config["ssh"]["password"]} "
-                . '| sudo -S mount -t vboxsf ' . $sharedFolder["name"].' '.$guestPath.' ' ;
+            $one = 'mkdir -p '.$guestPath."\n" ;
+            $one .= 'mount -t vboxsf ' . $sharedFolder["name"].' '.$guestPath.' '."\n" ;
 
             $types = ['user', 'group'] ;
             foreach ($types as $type) {
@@ -126,9 +124,14 @@ class OSProvisioner extends ProvisionDefaultAllOS {
         return $sshData ;
     }
 
-    public function getStandardShellSSHData($provisionFile) {
+    public function getStandardShellSSHData($provisionFile, $provisionerSettings) {
+        if (isset($provisionerSettings['data'])) {
+            $ssh_data_string = $provisionerSettings['data'] ;
+        } else {
+            $ssh_data_string = $provisionFile ;
+        }
         $sshData = <<<"SSHDATA"
-echo {$this->virtufile->config["ssh"]["password"]} | sudo -S bash $provisionFile
+$ssh_data_string ;
 SSHDATA;
         return $sshData ;
     }
