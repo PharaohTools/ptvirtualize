@@ -47,20 +47,26 @@ class OSProvisioner extends ProvisionDefaultAllOS {
     public function getGuestAdditionsSSHData($provisionFile) {
         $sshData = "" ;
 
+        $cstart = "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S " ;
+
         if ($this->updated !== true) {
-            $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S apt-get -qq update "."\n" ;
+            $sshData .= "apt-get -qq update "."\n" ;
             $this->updated = true ;
         }
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | " .
-            " sudo -S apt-get -qq install -y virtualbox-guest-x11 virtualbox-guest-dkms virtualbox-guest-additions-iso > /dev/null "."\n" ;
-
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} "
-            .'| sudo -S ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'."\n" ;
-
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S mkdir -p /mnt/guestadditionsiso/ "."\n" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt/guestadditionsiso/"."\n" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S /mnt/guestadditionsiso/VBoxLinuxAdditions.run"."\n" ;
-        $sshData .= "echo {$this->virtufile->config["ssh"]["password"]} | sudo -S umount /mnt/guestadditionsiso/ "."\n" ;
+        $sshData .= "apt-get -qq install -y expect virtualbox-guest-x11 " ;
+        $sshData .= "virtualbox-guest-dkms virtualbox-guest-additions-iso > /dev/null "."\n" ;
+        $sshData .= "ln -sf /opt/VBoxGuestAdditions-*/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions\n" ;
+        $sshData .= "mkdir -p /mnt/guestadditionsiso/ "."\n" ;
+        $sshData .= "if grep -qs '/mnt/guestadditionsiso' /proc/mounts; then echo \"Guest Additions ISO is mounted\"; else mount -o loop /usr/share/virtualbox/VBoxGuestAdditions.iso /mnt/guestadditionsiso ; fi ; "."\n" ;
+        $sshData .= "usermod -a -G vboxsf root"."\n" ;
+        $sshData .= "usermod -a -G vboxsf {$this->virtufile->config["ssh"]["user"]}"."\n" ;
+//        $sshData .= "rm -rf /tmp/ga-expect.expect"."\n" ;
+//        $sshData .= "echo -e '#!/usr/bin/expect\\nset timeout 180\\nspawn /mnt/guestadditionsiso/VBoxLinuxAdditions.run\\nexpect \"yes or no\"\\nsend \"yes\\r\" \\ninteract\\n' > /tmp/ga-expect.expect ;\n" ;
+        $sshData .= "/mnt/guestadditionsiso/VBoxLinuxAdditions.run || true"."\n" ;
+//        $sshData .= "chmod +x /tmp/ga-expect.expect"."\n" ;
+//        $sshData .= "/tmp/ga-expect.expect"."\n" ;
+        $sshData .= "umount /mnt/guestadditionsiso/ "."\n" ;
+//        $sshData .= "rm -rf /tmp/ga-expect.expect"."\n" ;
         return $sshData ;
     }
 
