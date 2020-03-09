@@ -159,6 +159,10 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
                 if ($vm_info['GuestAdditionsRunLevel'] == "2") {
                     $logging->log("Found Guest Additions Service", $this->getModuleName());
                     return true ;
+                } else {
+                    $logging->log("Waiting for Guest Additions Service", $this->getModuleName());
+//                    $logging->log("Waiting for Guest Additions Service ".var_export($vm_info, true), $this->getModuleName());
+                    continue ;
                 }
             } else {
                 sleep(1) ;
@@ -170,9 +174,9 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
     }
 
     protected function loadFullVMInfo() {
-        $loggingFactory = new \Model\Logging();
-        $logging = $loggingFactory->getModel($this->params);
-        $logging->log("Loading VM Information", $this->getModuleName());
+//        $loggingFactory = new \Model\Logging();
+//        $logging = $loggingFactory->getModel($this->params);
+//        $logging->log("Loading VM Information", $this->getModuleName());
         $name = $this->virtufile->config['vm']['name'] ;
         $comm = VBOXMGCOMM.' showvminfo "'.$name.'" --machinereadable' ;
         $data = self::executeAndLoad($comm) ;
@@ -180,8 +184,8 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
         $all_vm_info = array() ;
         foreach ($lines as $line) {
             $equals_sign = strpos($line, '=') ;
-            $key = substr($line, 0, $equals_sign-1) ;
-            $value = substr($line, $equals_sign) ;
+            $key = substr($line, 0, $equals_sign) ;
+            $value = substr($line, $equals_sign+1) ;
             $all_vm_info[$key] = $value ;
         }
         return $all_vm_info ;
