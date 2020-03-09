@@ -18,7 +18,7 @@ class ProvisionDefaultAllOS extends Base {
             $provisionOuts[] = $curout ;
             $cur_xc = \Core\BootStrap::getExitCode() ;
             if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
-                $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+                $logging->log("Provisioning Failed at Stage 1...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                 return $provisionOuts ; } }
         return $provisionOuts ;
     }
@@ -66,8 +66,8 @@ class ProvisionDefaultAllOS extends Base {
 
                     $default_script_parsed = $this->findDefaultFromAcronym($default_script) ;
                     $one_default_script_settings =
-                        [ "provisioner" => "Shell",
-                          "tool" => "shell",
+                        [ "provisioner" => "VirtualKeyboard",
+                          "tool" => "keyboard",
                           "target" => "guest",
                           "default" => "$default_script_parsed",
                           "force" => true ] ;
@@ -76,8 +76,9 @@ class ProvisionDefaultAllOS extends Base {
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
 
-                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
-                        $logging->log("Provisioning Failed ...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+//                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
+                    if ($curout !== true) {
+                        $logging->log("Provisioning Failed at Stage 2 ...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; }
 
                 }
@@ -96,16 +97,18 @@ class ProvisionDefaultAllOS extends Base {
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
                     // var_dump('pf1', $curout, $cur_xc) ;
-                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
-                        $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+//                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
+                    if ($curout !== true) {
+                        $logging->log("Provisioning Failed at Stage 3...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; }  }
                 else {
                     $curout = $this->doSingleProvision($provisionerSettings) ;
                     $provisionOuts[] = $curout ;
                     $cur_xc = \Core\BootStrap::getExitCode() ;
                     // var_dump('pf2', $curout, $cur_xc) ;
-                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
-                        $logging->log("Provisioning Failed...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+//                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
+                    if ($curout !== true) {
+                        $logging->log("Provisioning Failed at Stage 4...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
                         return $provisionOuts ; } } } }
         return $provisionOuts ;
     }
