@@ -106,7 +106,8 @@ class VirtualKeyboardProvision extends BaseVirtualKeyboardAllOS {
         passthru ($c3, $return_var) ;
 //        if ($rc['rc'] !== 0) {
         if ($return_var !== 0) {
-            $logging->log("Provision execution failed. ".var_export($rc, true), $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+//            $logging->log("Provision execution failed. ".var_export($return_var, true), $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
+            $logging->log("Provision execution failed.", $this->getModuleName(), LOG_FAILURE_EXIT_CODE);
             unlink($tempfile) ;
             return false ;
         }
