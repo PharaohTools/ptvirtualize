@@ -77,9 +77,10 @@ class ProvisionDefaultAllOS extends Base {
                     $cur_xc = \Core\BootStrap::getExitCode() ;
 
 //                    if (!is_null($cur_xc) && (is_int($cur_xc) && $cur_xc !== 0)) {
-                    if ($curout !== true) {
-                        $logging->log("Provisioning Failed at Stage 2 ...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
-                        return $provisionOuts ; }
+//                    if ($curout !== true) {
+//                        $logging->log("Provisioning Failed at Stage 2 ...", $this->getModuleName(), LOG_FAILURE_EXIT_CODE) ;
+//                        return $provisionOuts ;
+//                    }
 
                 }
             }
