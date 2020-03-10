@@ -94,6 +94,7 @@ class BoxLinuxMac extends BaseLinuxApp {
 
     protected function askForDescription() {
         if (isset($this->params["description"])) { return $this->params["description"]; }
+        else if (isset($this->params["guess"])) { return "Default Description"; }
         else {
             $source = self::askForInput("Enter Description for Box Metadata:", true);
             return $source ; }
